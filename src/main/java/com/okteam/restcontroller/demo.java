@@ -11,4 +11,9 @@ public class demo {
 		return "hellooooooooo";
 	}
 	
+	@GetMapping("/ge1t")
+	public String post() {
+		return "hello232";
+	}
+	
 }
