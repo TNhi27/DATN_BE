@@ -26,7 +26,7 @@ public class Ncc {
 	String ncclogo;
 	String description;
 	
-	@JsonManagedReference
+	@JsonBackReference
 	@OneToOne @JoinColumn(name = "username")
 	Accounts acc_ncc;
 	
