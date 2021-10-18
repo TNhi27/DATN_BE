@@ -28,7 +28,7 @@ public class Ctv {
 	String image;
 	Date createdate;
 	
-	@JsonManagedReference
+	@JsonBackReference
 	@OneToOne @JoinColumn(name = "username")
 	Accounts acc_ctv;
 	
