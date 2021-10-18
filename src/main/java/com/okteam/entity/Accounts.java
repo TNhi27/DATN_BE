@@ -31,7 +31,7 @@ public class Accounts {
 	Ctv ctv;
 	
 	
-	@JsonBackReference
+	@JsonManagedReference
 	@OneToOne(mappedBy = "acc_ncc")
 	Ncc ncc;
 	
