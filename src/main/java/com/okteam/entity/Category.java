@@ -18,7 +18,7 @@ public class Category {
 	@Id
 	String idcate;
 	String typename;
-	String imgl;
+	String img;
 	
 	@JsonBackReference
 	@OneToMany(mappedBy = "category")
