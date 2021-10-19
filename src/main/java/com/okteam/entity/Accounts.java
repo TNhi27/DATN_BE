@@ -26,12 +26,12 @@ public class Accounts {
 	String email;
 	boolean active=true;
 	
-	@JsonBackReference
+	@JsonManagedReference
 	@OneToOne(mappedBy = "acc_ctv")
 	Ctv ctv;
 	
 	
-	@JsonBackReference
+	@JsonManagedReference
 	@OneToOne(mappedBy = "acc_ncc")
 	Ncc ncc;
 	
