@@ -46,5 +46,13 @@ public class Accounts {
 	@JsonBackReference
 	@OneToMany(mappedBy = "acc_tran")
 	List<Transaction> transaction;
+
+	@JsonBackReference
+	@OneToMany(mappedBy = "acc_bank")
+	List<InfoBanks> infoBanks;
+
+	@JsonBackReference
+	@OneToMany(mappedBy = "acc_post")
+	List<Post> post;
 	
 }

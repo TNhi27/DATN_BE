@@ -37,6 +37,9 @@ public class Ncc {
 	@JsonBackReference
 	@OneToMany(mappedBy = "ncc")
 	List<Orders> orders;
-	
+
+	@JsonBackReference
+	@OneToMany(mappedBy = "fl_ncc")
+	List<FollowSell> followSell;
 	
 }

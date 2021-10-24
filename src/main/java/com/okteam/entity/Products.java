@@ -26,7 +26,7 @@ public class Products {
 	String name;
 	String description;
 	int pricectv;
-	
+	boolean active=true;	
 	@Temporal(TemporalType.DATE)
 	Date createdate;
 	
@@ -57,5 +57,13 @@ public class Products {
 	@JsonManagedReference
 	@ManyToOne @JoinColumn(name="idncc")
 	Ncc ncc;
+
+	@JsonManagedReference
+	@OneToMany(mappedBy = "p_properties")
+	List<Properties> properties;
+
+	@JsonManagedReference
+	@ManyToOne @JoinColumn(name = "brand")
+	Brand p_brand;
 	
 }
