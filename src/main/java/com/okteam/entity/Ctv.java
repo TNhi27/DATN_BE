@@ -39,4 +39,8 @@ public class Ctv {
 	@JsonBackReference
 	@OneToMany(mappedBy = "ctv")
 	List<Orders> orders;
+
+	@JsonBackReference
+	@OneToMany(mappedBy = "fl_ctv")
+	List<FollowSell> followSell;
 }

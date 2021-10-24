@@ -18,9 +18,14 @@ public class Category {
 	@Id
 	String idcate;
 	String typename;
-	String imgl;
+	String img;
+	String patent;
 	
 	@JsonBackReference
 	@OneToMany(mappedBy = "category")
 	List<Products> products;
+
+	@JsonBackReference
+	@OneToMany(mappedBy = "br_category")
+	List<Brand> brands;
 }
