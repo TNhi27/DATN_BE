@@ -19,7 +19,9 @@ public class Category {
 	String idcate;
 	String typename;
 	String img;
+
 	String patent;
+
 	
 	@JsonBackReference
 	@OneToMany(mappedBy = "category")
