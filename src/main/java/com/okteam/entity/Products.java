@@ -37,6 +37,7 @@ public class Products {
 	String image2;
 	String image3;
 	String origin;
+	String tags;
 	
 	@JsonBackReference
 	@OneToMany(mappedBy = "products")
