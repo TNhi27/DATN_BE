@@ -23,9 +23,7 @@ public class FollowSell {
     
     @Id @GeneratedValue(strategy =GenerationType.IDENTITY)
     int followid;
-    int ncc;
-    int ctv;
-
+    
     @Temporal(TemporalType.DATE)
     Date date;
 

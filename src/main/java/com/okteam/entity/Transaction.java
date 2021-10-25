@@ -19,22 +19,21 @@ import lombok.Data;
 
 @Entity
 @Data
-@Table(name="transaction")
+@Table(name = "transaction")
 public class Transaction {
-	@Id @GeneratedValue(strategy =GenerationType.IDENTITY)
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	int idtran;
 	int type;
 	String value;
 	String note;
-	
+	boolean done;
+
 	@Temporal(TemporalType.TIMESTAMP)
 	Date createdate;
-	
-	@JsonManagedReference
-	@ManyToOne @JoinColumn(name = "username")
-	Accounts acc_tran;
 
 	@JsonManagedReference
-	@ManyToOne @JoinColumn(name = "idbank")
+	@ManyToOne
+	@JoinColumn(name = "idbank")
 	InfoBanks tran_bank;
 }

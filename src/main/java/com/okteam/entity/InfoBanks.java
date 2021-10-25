@@ -25,11 +25,9 @@ public class InfoBanks {
     String bankname;
     String banksnumber;
     String username;
+    boolean isctv;
 
-    @JsonManagedReference
-    @ManyToOne @JoinColumn(name = "username")
-    Accounts acc_banks;
-
+   
     @JsonBackReference
     @OneToMany(mappedBy = "tran_bank")
     List<Transaction> transaction;

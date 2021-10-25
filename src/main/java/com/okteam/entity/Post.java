@@ -8,23 +8,25 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import lombok.Data;
 
 @Entity
-@Table(name="post")
+@Table(name = "post")
 @Data
 public class Post {
-    
-    @Id @GeneratedValue(strategy =GenerationType.IDENTITY)
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
     String title;
     String content;
     String image;
-    String username;
 
     @JsonManagedReference
-    @ManyToOne @JoinColumn(name = "username")
-    Accounts acc_post;
+    @ManyToOne
+    @JoinColumn(name = "username")
+    Admin acc_post;
 }
