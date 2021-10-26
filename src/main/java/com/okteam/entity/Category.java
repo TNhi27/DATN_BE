@@ -20,7 +20,9 @@ public class Category {
 	String typename;
 	String img;
 
+
 	String patent;
+
 
 	
 	@JsonBackReference
