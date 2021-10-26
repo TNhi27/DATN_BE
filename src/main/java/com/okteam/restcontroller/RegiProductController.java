@@ -15,34 +15,34 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.okteam.dao.RegiProductRepository;
 import com.okteam.entity.RegiProducts;
+
 @RestController
 @CrossOrigin("*")
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/regi_products")
 public class RegiProductController {
 	@Autowired
 	RegiProductRepository RegiPro;
- 
-	@GetMapping()
+
+	@GetMapping
 	public ResponseEntity<List<RegiProducts>> rest() {
 		return new ResponseEntity<List<RegiProducts>>(RegiPro.findAll(), HttpStatus.OK);
 	}
-	
-	@GetMapping("{idregi}")
-	public ResponseEntity<RegiProducts> getOne(@PathVariable("idregi")Integer idregi){
-		if(!RegiPro.existsById(idregi)) {
+
+	@GetMapping("/{idregi}")
+	public ResponseEntity<RegiProducts> getOne(@PathVariable("idregi") Integer idregi) {
+		if (!RegiPro.existsById(idregi)) {
 			return ResponseEntity.notFound().build();
 		}
 		return ResponseEntity.ok(RegiPro.findById(idregi).get());
 	}
-	
-	@PostMapping("/regi_products")
-	public ResponseEntity<RegiProducts> post(@RequestBody RegiProducts regipro){
-		if(RegiPro.existsById(regipro.getIdregi())) {
+
+	@PostMapping
+	public ResponseEntity<RegiProducts> post(@RequestBody RegiProducts regipro) {
+		if (RegiPro.existsById(regipro.getIdregi())) {
 			return ResponseEntity.badRequest().build();
 		}
 		RegiPro.save(regipro);
 		return ResponseEntity.ok(regipro);
 	}
 
-	
 }
