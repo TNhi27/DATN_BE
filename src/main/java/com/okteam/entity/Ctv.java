@@ -11,6 +11,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -21,16 +23,20 @@ import lombok.Data;
 @Table(name="ctv")
 @Data
 public class Ctv {
-	@Id @GeneratedValue(strategy =GenerationType.IDENTITY)
-	int idctv;
+	@Id
+	String username;
+	String password;
+	String email;
+	String sdt;
+	boolean active;
 	String fullname;
+	String address;
 	String sex;
-	String image;
+	String veryfy;
+	@Temporal(TemporalType.DATE)
 	Date createdate;
-	
-	@JsonBackReference
-	@OneToOne @JoinColumn(name = "username")
-	Accounts acc_ctv;
+	String image;
+	int money;
 	
 	@JsonManagedReference
 	@OneToMany(mappedBy = "ctv")
@@ -39,4 +45,14 @@ public class Ctv {
 	@JsonBackReference
 	@OneToMany(mappedBy = "ctv")
 	List<Orders> orders;
+
+	@JsonBackReference
+	@OneToMany(mappedBy = "fl_ctv")
+	List<FollowSell> followSell;
+
+	@JsonBackReference
+	@OneToMany(mappedBy = "ctv_cmt")
+	List<Comments> comments;
+
+	
 }
