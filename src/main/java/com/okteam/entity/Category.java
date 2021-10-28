@@ -19,9 +19,7 @@ public class Category {
 	String idcate;
 	String typename;
 	String img;
-
-
-	String patent;
+	String parent;
 
 
 	
