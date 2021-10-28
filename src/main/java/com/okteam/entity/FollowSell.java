@@ -12,28 +12,26 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import lombok.Data;
 
 @Entity
+@Table(name="followsell")
 @Data
-@Table(name="comments")
-public class Comments {
-	@Id @GeneratedValue(strategy =GenerationType.IDENTITY)
-	int idcmt;
-	int star;
-	String content;
-	
-	@Temporal(TemporalType.TIMESTAMP)
-	Date createdate;
+public class FollowSell {
+    
+    @Id @GeneratedValue(strategy =GenerationType.IDENTITY)
+    int followid;
+    
+    @Temporal(TemporalType.DATE)
+    Date date;
 
-	@JsonManagedReference
-	@ManyToOne @JoinColumn(name = "username")
-	Ctv ctv_cmt;
-	
-	@JsonBackReference
-	@ManyToOne @JoinColumn(name = "idpro")
-	Products products;
+    @JsonManagedReference
+    @ManyToOne @JoinColumn(name = "ncc")
+    Ncc fl_ncc;
+
+    @JsonManagedReference
+    @ManyToOne @JoinColumn(name = "ctv")
+    Ctv fl_ctv;
 }
