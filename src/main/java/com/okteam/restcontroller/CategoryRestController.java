@@ -1,7 +1,5 @@
 package com.okteam.restcontroller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,9 +26,19 @@ public class CategoryRestController {
 	}
 	
 	@PostMapping("/category/add")
-	public String addCategory(@RequestBody Category category) {
-		categoryRepo.save(category);
-		return "Thêm loại thành công!";
+	public Response<Category> addCategory(@RequestBody Category category) {
+		String message = "OK";
+		if(categoryRepo.existsById(category.getIdcate())) {
+			message = "Mã loại đã tồn tại!";
+		}
+		else if(category.getParent() != null && !categoryRepo.existsById(category.getParent())) {
+			message = "Không tìm thấy menu!";
+		}
+		else {
+			categoryRepo.save(category);
+		}
+		
+		return new Response<Category>(categoryRepo.findAll(), message);
 	}
 	
 }
