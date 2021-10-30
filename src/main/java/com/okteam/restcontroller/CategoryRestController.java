@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.okteam.dao.CategoryRepository;
 import com.okteam.entity.Category;
+import com.okteam.entity.Response;
 
 @CrossOrigin("*")
 @RequestMapping("/api/v1")
@@ -22,8 +23,8 @@ public class CategoryRestController {
 	CategoryRepository categoryRepo;
 	
 	@GetMapping("/category/list")
-	public List<Category> getCategories(){
-		return categoryRepo.findAll();
+	public Response<Category> getCategories(){
+		return new Response<Category>(categoryRepo.findAll(), "OK");
 	}
 	
 	@PostMapping("/category/add")
