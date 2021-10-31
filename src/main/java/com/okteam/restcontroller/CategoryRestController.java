@@ -55,6 +55,11 @@ public class CategoryRestController {
 				message = "OK";
 			}
 		}
+		if(thaotac == 1) {
+			category.setImg(value);
+			categoryRepo.save(category);
+			message = "OK";
+		}
 		if(thaotac == 2) {
 			if(!value.isEmpty() && !categoryRepo.existsById(value)) {
 				message = "Không tìm thấy menu!";
