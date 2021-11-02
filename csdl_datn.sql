@@ -211,9 +211,3 @@ CREATE TABLE `transaction` (
  
   CONSTRAINT `transaction_ibfk_2` FOREIGN KEY (`idbank`) REFERENCES `infobanks` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8_unicode_ci;
-
-INSERT INTO category VALUES ('LT', 'Laptop', null, 'TBDT'),
-							('PC', 'Máy tính để bàn', null, 'TBDT'),
-                            ('XM', 'Xe máy', null, null),
-                            ('TV', 'Tivi', null, 'TBDT'),
-                            ('TBDT', 'Thiết bị điện tử', null, null)
