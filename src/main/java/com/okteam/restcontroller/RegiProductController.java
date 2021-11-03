@@ -29,6 +29,7 @@ import com.okteam.entity.RegiProducts;
 public class RegiProductController {
 	@Autowired
 	RegiProductRepository RegiPro;
+
 	@Autowired
 	CtvRepository CtvRep;
 	@Autowired
@@ -58,4 +59,6 @@ public class RegiProductController {
 		regiproduct.setProducts(products);
 	return new ResponseEntity<RegiProducts>(RegiPro.save(regiproduct), HttpStatus.CREATED);
 	}
+
+
 }
