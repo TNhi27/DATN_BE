@@ -1,4 +1,8 @@
+
 CREATE SCHEMA `datn` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ;
+=======
+
+
 use datn;
 
 CREATE TABLE `admin` (
@@ -13,7 +17,7 @@ CREATE TABLE `admin` (
     `veryfy` varchar(64) COLLATE utf8_unicode_ci DEFAULT NULL,
      `createdate` date DEFAULT NULL,
   PRIMARY KEY (`username`)
- 
+
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb3 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE `category` (
