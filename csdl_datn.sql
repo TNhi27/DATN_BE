@@ -1,9 +1,9 @@
 
 CREATE SCHEMA `datn` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ;
+=======
+
 
 use datn;
-
-
 
 CREATE TABLE `admin` (
    `username` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
@@ -20,15 +20,6 @@ CREATE TABLE `admin` (
 
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb3 COLLATE=utf8_unicode_ci;
 
-CREATE TABLE `brand` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
-  `idcate` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `idcate` (`idcate`),
-  CONSTRAINT `brand_ibfk_1` FOREIGN KEY (`idcate`) REFERENCES `category` (`idcate`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb3 COLLATE=utf8_unicode_ci;
-
 CREATE TABLE `category` (
   `idcate` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
   `typename` varchar(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -37,19 +28,14 @@ CREATE TABLE `category` (
   PRIMARY KEY (`idcate`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8_unicode_ci;
 
-CREATE TABLE `comments` (
-  `idcmt` int NOT NULL AUTO_INCREMENT,
-  `username` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `idpro` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `star` int DEFAULT NULL,
-  `content` varchar(250) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
-  `createdate` datetime DEFAULT NULL,
-  PRIMARY KEY (`idcmt`),
-  KEY `username` (`username`),
-  KEY `idpro` (`idpro`),
-  CONSTRAINT `comments_ibfk_1` FOREIGN KEY (`username`) REFERENCES `ctv` (`username`),
-  CONSTRAINT `comments_ibfk_2` FOREIGN KEY (`idpro`) REFERENCES `products` (`idpro`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8_unicode_ci;
+CREATE TABLE `brand` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  `idcate` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `idcate` (`idcate`),
+  CONSTRAINT `brand_ibfk_1` FOREIGN KEY (`idcate`) REFERENCES `category` (`idcate`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb3 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE `ctv` (
   `username` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
@@ -66,31 +52,6 @@ CREATE TABLE `ctv` (
      `money` int null,
   PRIMARY KEY (`username`)
 ) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb3 COLLATE=utf8_unicode_ci;
-
-CREATE TABLE `details` (
-  `iddetails` int NOT NULL AUTO_INCREMENT,
-  `qty` int DEFAULT NULL,
-  `idpro` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `idorder` int DEFAULT NULL,
-  PRIMARY KEY (`iddetails`),
-  KEY `idpro` (`idpro`),
-  KEY `idorder` (`idorder`),
-  CONSTRAINT `details_ibfk_1` FOREIGN KEY (`idpro`) REFERENCES `products` (`idpro`),
-  CONSTRAINT `details_ibfk_2` FOREIGN KEY (`idorder`) REFERENCES `orders` (`idorder`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8_unicode_ci;
-
-CREATE TABLE `followsell` (
-  `followid` int NOT NULL AUTO_INCREMENT,
-  `ncc` varchar(50) DEFAULT NULL,
-  `ctv` varchar(50) DEFAULT NULL,
-  `date` date DEFAULT NULL,
-  PRIMARY KEY (`followid`),
-  KEY `ncc` (`ncc`),
-  KEY `ctv` (`ctv`),
-  CONSTRAINT `followsell_ibfk_1` FOREIGN KEY (`ncc`) REFERENCES `ncc` (`username`),
-  CONSTRAINT `followsell_ibfk_2` FOREIGN KEY (`ctv`) REFERENCES `ctv` (`username`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8_unicode_ci;
-
 
 CREATE TABLE `infobanks` (
   `id` int NOT NULL AUTO_INCREMENT,
@@ -122,6 +83,18 @@ CREATE TABLE `ncc` (
   PRIMARY KEY (`username`)
  
 ) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb3 COLLATE=utf8_unicode_ci;
+
+CREATE TABLE `followsell` (
+  `followid` int NOT NULL AUTO_INCREMENT,
+  `ncc` varchar(50) DEFAULT NULL,
+  `ctv` varchar(50) DEFAULT NULL,
+  `date` date DEFAULT NULL,
+  PRIMARY KEY (`followid`),
+  KEY `ncc` (`ncc`),
+  KEY `ctv` (`ctv`),
+  CONSTRAINT `followsell_ibfk_1` FOREIGN KEY (`ncc`) REFERENCES `ncc` (`username`),
+  CONSTRAINT `followsell_ibfk_2` FOREIGN KEY (`ctv`) REFERENCES `ctv` (`username`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE `orders` (
   `idorder` int NOT NULL AUTO_INCREMENT,
@@ -179,6 +152,32 @@ CREATE TABLE `products` (
   CONSTRAINT `products_ibfk_3` FOREIGN KEY (`brand`) REFERENCES `brand` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8_unicode_ci;
 
+CREATE TABLE `details` (
+  `iddetails` int NOT NULL AUTO_INCREMENT,
+  `qty` int DEFAULT NULL,
+  `idpro` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `idorder` int DEFAULT NULL,
+  PRIMARY KEY (`iddetails`),
+  KEY `idpro` (`idpro`),
+  KEY `idorder` (`idorder`),
+  CONSTRAINT `details_ibfk_1` FOREIGN KEY (`idpro`) REFERENCES `products` (`idpro`),
+  CONSTRAINT `details_ibfk_2` FOREIGN KEY (`idorder`) REFERENCES `orders` (`idorder`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8_unicode_ci;
+
+CREATE TABLE `comments` (
+  `idcmt` int NOT NULL AUTO_INCREMENT,
+  `username` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `idpro` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `star` int DEFAULT NULL,
+  `content` varchar(250) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  `createdate` datetime DEFAULT NULL,
+  PRIMARY KEY (`idcmt`),
+  KEY `username` (`username`),
+  KEY `idpro` (`idpro`),
+  CONSTRAINT `comments_ibfk_1` FOREIGN KEY (`username`) REFERENCES `ctv` (`username`),
+  CONSTRAINT `comments_ibfk_2` FOREIGN KEY (`idpro`) REFERENCES `products` (`idpro`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8_unicode_ci;
+
 CREATE TABLE `properties` (
   `id` int NOT NULL AUTO_INCREMENT,
   `key` varchar(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -216,5 +215,3 @@ CREATE TABLE `transaction` (
  
   CONSTRAINT `transaction_ibfk_2` FOREIGN KEY (`idbank`) REFERENCES `infobanks` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8_unicode_ci;
-
-

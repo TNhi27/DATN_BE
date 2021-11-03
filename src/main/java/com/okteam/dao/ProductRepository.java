@@ -20,7 +20,6 @@ public interface ProductRepository extends JpaRepository<Products, String> {
 
 
 	@Query("SELECT o FROM Products o WHERE o.ncc.username=?1")
-
 	public Page<Products> getProductWithNcc(String idncc, Pageable pageable);
 
 }
