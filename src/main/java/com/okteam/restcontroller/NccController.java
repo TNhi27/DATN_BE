@@ -1,10 +1,14 @@
 package com.okteam.restcontroller;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
 import com.okteam.dao.NccRepository;
 import com.okteam.dao.ProductRepository;
+import com.okteam.dto.NccResponseDTO;
 import com.okteam.entity.Ncc;
 import com.okteam.entity.Products;
 
@@ -32,16 +36,36 @@ public class NccController {
 
     //
     @GetMapping("/get/{idncc}")
-    public ResponseEntity<Ncc> getNcc(@PathVariable("idncc") String idncc) {
+    public ResponseEntity<Ncc> get10Ncc(@PathVariable("idncc") String idncc) {
         Ncc n = nccRepository.findById(idncc).get();
 
         return new ResponseEntity<Ncc>(n, HttpStatus.OK);
     }
 
     @GetMapping("/top")
-    public ResponseEntity<List<Ncc>> getNcc2() {
-        List<Ncc> list = nccRepository.get10ncc();
-        return new ResponseEntity<List<Ncc>>(list, HttpStatus.OK);
+    public ResponseEntity<List<NccResponseDTO>> getNcc2() {
+    	 List<Ncc> list = nccRepository.findAll();
+         Collections.sort(list, new Comparator<Ncc>() {
+
+			@Override
+			public int compare(Ncc o1, Ncc o2) {
+				if (o1.getFollowSell().size()<=o2.getFollowSell().size()) {
+					return 1;
+				} else {
+					return -1;
+				}
+			}
+           
+         });
+         
+        List<NccResponseDTO> list_dto = new ArrayList<>();
+        for (Ncc ncc : list) {
+			NccResponseDTO dto= new NccResponseDTO();
+			dto.createByEntity(ncc);
+			list_dto.add(dto);
+		}
+       
+        return new ResponseEntity<List<NccResponseDTO>>(list_dto.subList(0, 3), HttpStatus.OK);
     }
 
     @GetMapping("/products")
@@ -51,4 +75,15 @@ public class NccController {
                 PageRequest.of(pageNumber.orElse(0), size.orElse(10)));
         return new ResponseEntity<Page<Products>>(page, HttpStatus.OK);
     }
+    
+    @GetMapping("/get_ncc_by_product")
+    public ResponseEntity<NccResponseDTO> getNccDTOByPro(@RequestParam("idpro") String id) {
+		Ncc ncc = nccRepository.getNccByProduct(id);
+		NccResponseDTO dto = new NccResponseDTO();
+		dto.createByEntity(ncc);
+		return new ResponseEntity<NccResponseDTO>(dto, HttpStatus.OK);
+				
+	}
+    
+   
 }

@@ -13,6 +13,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import lombok.AllArgsConstructor;
@@ -47,7 +48,7 @@ public class Products {
 	@OneToMany(mappedBy = "products")
 	List<RegiProducts> list_regi;
 	
-	@JsonManagedReference
+	@JsonBackReference
 	@OneToMany(mappedBy = "products")
 	List<Comments> comments;
 	
@@ -59,7 +60,7 @@ public class Products {
 	@ManyToOne @JoinColumn(name = "idcate")
 	Category category;
 	
-	@JsonManagedReference
+	@JsonIgnore
 	@ManyToOne @JoinColumn(name="idncc")
 	Ncc ncc;
 

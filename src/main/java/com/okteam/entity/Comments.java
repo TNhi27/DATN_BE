@@ -33,7 +33,7 @@ public class Comments {
 	@ManyToOne @JoinColumn(name = "username")
 	Ctv ctv_cmt;
 	
-	@JsonBackReference
+	@JsonManagedReference
 	@ManyToOne @JoinColumn(name = "idpro")
 	Products products;
 }

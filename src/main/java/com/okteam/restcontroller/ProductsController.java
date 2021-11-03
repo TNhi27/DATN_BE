@@ -7,11 +7,18 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import com.okteam.dao.CategoryRepository;
+import com.okteam.dao.CommentRepository;
 import com.okteam.dao.ProductRepository;
+import com.okteam.dto.NccResponseDTO;
 import com.okteam.entity.Category;
+import com.okteam.entity.Comments;
 import com.okteam.entity.Products;
+import com.okteam.entity.Rating;
+import com.okteam.exception.NotFoundSomething;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -40,12 +47,15 @@ public class ProductsController {
     ProductRepository proDAO;
     @Autowired
     CategoryRepository cateDAO;
+    
+    @Autowired
+    CommentRepository commentRepository;
 
     // Lấy 1 sản phẩm theo ID
-    @GetMapping("/getone/{id}")
+    @GetMapping("/getone/{id}")	
     public ResponseEntity<Products> getProduct(@PathVariable("id") String id) {
-        Products pro = proDAO.findById(id).get();
-
+        Products pro = proDAO.findById(id).orElseThrow(()->new NotFoundSomething("Khong tim thay san pham"));
+       
         return new ResponseEntity<Products>(pro, HttpStatus.OK);
     }
 
@@ -81,4 +91,21 @@ public class ProductsController {
         return new ResponseEntity<Page<Products>>(page, HttpStatus.OK);
 
     }
+    
+    @GetMapping("/top_star")
+    public ResponseEntity<List<Rating>> get5star() {
+		Page<Rating> list = proDAO.getProductsWith5Star(PageRequest.of(0, 10));
+		
+		List<Rating> l = list.stream().filter(rating-> rating.getRating()>=4).collect(Collectors.toList());
+		return new ResponseEntity<List<Rating>>(l, HttpStatus.OK);
+	}
+    
+    @GetMapping("/comments")
+    public ResponseEntity<Page<Comments>> getComments(@RequestParam String idpro) {
+		Page<Comments> list = commentRepository.getCommentsOfProduct(idpro, PageRequest.of(0, 10));
+		
+		return new ResponseEntity<Page<Comments>>(list, HttpStatus.OK);
+	}
+    
+    
 }

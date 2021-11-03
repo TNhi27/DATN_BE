@@ -26,7 +26,7 @@ public class Brand {
     String name;
     
 
-    @JsonManagedReference
+    @JsonBackReference
     @ManyToOne @JoinColumn(name="idcate")
     Category br_category;
 

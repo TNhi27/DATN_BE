@@ -8,6 +8,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import lombok.Data;
 
@@ -21,7 +23,7 @@ public class Category {
 	String img;
 
 
-	String patent;
+	String parent;
 
 
 	
@@ -29,7 +31,7 @@ public class Category {
 	@OneToMany(mappedBy = "category")
 	List<Products> products;
 
-	@JsonBackReference
+	@JsonIgnore
 	@OneToMany(mappedBy = "br_category")
 	List<Brand> brands;
 }
