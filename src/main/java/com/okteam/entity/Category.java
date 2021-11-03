@@ -9,10 +9,9 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-<<<<<<< HEAD
+
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-=======
->>>>>>> 6c1e618fb3e2acbc76f3c8273d9de874ed1079b0
+
 
 import lombok.Data;
 
@@ -24,11 +23,7 @@ public class Category {
 	String idcate;
 	String typename;
 	String img;
-<<<<<<< HEAD
 
-
-=======
->>>>>>> 6c1e618fb3e2acbc76f3c8273d9de874ed1079b0
 	String parent;
 
 
