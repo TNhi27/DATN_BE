@@ -19,6 +19,10 @@ public interface ProductRepository extends JpaRepository<Products, String> {
 	@Query("Select o from Products o Where o.category.idcate=?1")
 	public List<Products> getProductsByCate(String category);
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 6c1e618fb3e2acbc76f3c8273d9de874ed1079b0
 	@Query("SELECT o FROM Products o WHERE o.ncc.username=?1")
 	public Page<Products> getProductWithNcc(String idncc, Pageable pageable);
 	
