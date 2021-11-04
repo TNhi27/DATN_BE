@@ -39,15 +39,15 @@ public class RegiProductController {
 	public ResponseEntity<List<RegiProducts>> getAllRegi() {
 		return new ResponseEntity<List<RegiProducts>>(RegiPro.findAll(), HttpStatus.OK);
 	}
-	
+
 	@GetMapping("{idregi}")
 	public ResponseEntity<RegiProducts> getRegiById(@PathVariable("idregi") Integer idregi) {
 		RegiProducts rige = RegiPro.findById(idregi).get();
 		ResponseEntity.notFound().build();
-		
+
 		return new ResponseEntity<RegiProducts>(rige, HttpStatus.OK);
 	}
-	
+
 	@PostMapping
 	public ResponseEntity<RegiProducts> postRegi(@RequestBody RegiProductsDTO regiproDto) {
 		Ctv ctv = CtvRep.findById(regiproDto.getUsername()).get();
@@ -57,8 +57,7 @@ public class RegiProductController {
 		regiproduct.setCtv(ctv);
 		Products products = ProRep.findById(regiproDto.getIdpro()).get();
 		regiproduct.setProducts(products);
-	return new ResponseEntity<RegiProducts>(RegiPro.save(regiproduct), HttpStatus.CREATED);
+		return new ResponseEntity<RegiProducts>(RegiPro.save(regiproduct), HttpStatus.CREATED);
 	}
-
 
 }
