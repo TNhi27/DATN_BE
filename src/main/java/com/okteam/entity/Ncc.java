@@ -33,15 +33,7 @@ public class Ncc {
 	String nccname;
 	String ncclogo;
 	int money;
-	
-	
-<<<<<<< HEAD
-	@JsonBackReference
-	@OneToOne @JoinColumn(name = "username")
-	Accounts acc_ncc;
-=======
->>>>>>> b3ee7eb10314c1a3d004a8a5c247d5924847da9e
-	
+
 	@JsonBackReference
 	@OneToMany(mappedBy = "ncc")
 	List<Products> products;

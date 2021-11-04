@@ -23,23 +23,13 @@ public class Category {
 	String idcate;
 	String typename;
 	String img;
-<<<<<<< HEAD
-=======
-
 	String parent;
-
-
->>>>>>> b3ee7eb10314c1a3d004a8a5c247d5924847da9e
 	
 	@JsonIgnore
 	@OneToMany(mappedBy = "category")
 	List<Products> products;
-<<<<<<< HEAD
-}
-=======
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "br_category")
 	List<Brand> brands;
 }
->>>>>>> b3ee7eb10314c1a3d004a8a5c247d5924847da9e
