@@ -10,10 +10,14 @@ import java.util.Optional;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
+import com.okteam.dao.BrandRepository;
 import com.okteam.dao.CategoryRepository;
 import com.okteam.dao.CommentRepository;
+import com.okteam.dao.NccRepository;
 import com.okteam.dao.ProductRepository;
 import com.okteam.dto.NccResponseDTO;
+import com.okteam.dto.Productdto;
+import com.okteam.entity.Brand;
 import com.okteam.entity.Category;
 import com.okteam.entity.Comments;
 import com.okteam.entity.Products;
@@ -33,8 +37,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -47,15 +55,20 @@ public class ProductsController {
     ProductRepository proDAO;
     @Autowired
     CategoryRepository cateDAO;
-    
+
     @Autowired
     CommentRepository commentRepository;
 
+    @Autowired
+    NccRepository nccRepository;
+    @Autowired
+    BrandRepository brandRepository;
+
     // Lấy 1 sản phẩm theo ID
-    @GetMapping("/getone/{id}")	
+    @GetMapping("/getone/{id}")
     public ResponseEntity<Products> getProduct(@PathVariable("id") String id) {
-        Products pro = proDAO.findById(id).orElseThrow(()->new NotFoundSomething("Khong tim thay san pham"));
-       
+        Products pro = proDAO.findById(id).orElseThrow(() -> new NotFoundSomething("Khong tim thay san pham"));
+
         return new ResponseEntity<Products>(pro, HttpStatus.OK);
     }
 
@@ -91,21 +104,85 @@ public class ProductsController {
         return new ResponseEntity<Page<Products>>(page, HttpStatus.OK);
 
     }
-    
+
     @GetMapping("/top_star")
     public ResponseEntity<List<Rating>> get5star() {
-		Page<Rating> list = proDAO.getProductsWith5Star(PageRequest.of(0, 10));
-		
-		List<Rating> l = list.stream().filter(rating-> rating.getRating()>=4).collect(Collectors.toList());
-		return new ResponseEntity<List<Rating>>(l, HttpStatus.OK);
-	}
-    
+        Page<Rating> list = proDAO.getProductsWith5Star(PageRequest.of(0, 10));
+
+        List<Rating> l = list.stream().filter(rating -> rating.getRating() >= 4).collect(Collectors.toList());
+        return new ResponseEntity<List<Rating>>(l, HttpStatus.OK);
+    }
+
     @GetMapping("/comments")
     public ResponseEntity<Page<Comments>> getComments(@RequestParam String idpro) {
-		Page<Comments> list = commentRepository.getCommentsOfProduct(idpro, PageRequest.of(0, 10));
-		
-		return new ResponseEntity<Page<Comments>>(list, HttpStatus.OK);
-	}
-    
-    
+        Page<Comments> list = commentRepository.getCommentsOfProduct(idpro, PageRequest.of(0, 10));
+
+        return new ResponseEntity<Page<Comments>>(list, HttpStatus.OK);
+    }
+
+    @GetMapping("/get_by_category")
+    public ResponseEntity<Page<Products>> getproductbycate(@RequestParam String category) {
+        Page<Products> page = proDAO.getProductsByCategory(category, PageRequest.of(0, 10));
+
+        return new ResponseEntity<Page<Products>>(page, HttpStatus.OK);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Products>> newProducts() {
+        return new ResponseEntity<List<Products>>(proDAO.findAll(), HttpStatus.OK);
+    }
+
+    // post
+    @PostMapping
+    public ResponseEntity<Products> saveProducts(@RequestBody Productdto productdto) {
+        Products pro = new Products();
+        pro.setIdpro(productdto.getIdpro());
+        pro.setName(productdto.getName());
+        pro.setDescription(productdto.getDescription());
+        pro.setPricectv(productdto.getPricectv());
+        pro.setCreatedate(productdto.getCreatedate());
+        pro.setTags(productdto.getTags());
+        pro.setQty(productdto.getQty());
+        pro.setDvt(productdto.getDvt());
+        pro.setImage0(productdto.getImage0());
+        pro.setImage1(productdto.getImage1());
+        pro.setImage2(productdto.getImage2());
+        pro.setImage3(productdto.getImage3());
+        pro.setOrigin(productdto.getOrigin());
+        pro.setCategory(cateDAO.findById(productdto.getIdcate()).get());
+        pro.setNcc(nccRepository.findById(productdto.getUsername()).get());
+        pro.setActive(productdto.isActive());
+        pro.setP_brand(brandRepository.findById(productdto.getIdbrand()).get());
+        return new ResponseEntity<Products>(proDAO.save(pro), HttpStatus.OK);
+    }
+
+    // put=update
+    @PutMapping("/{id}")
+    public ResponseEntity<Products> updateProducts(@PathVariable("id") String id, @RequestBody Productdto productdto) {
+        Products pro = proDAO.findById(id).get();
+        pro.setName(productdto.getName());
+        pro.setDescription(productdto.getDescription());
+        pro.setPricectv(productdto.getPricectv());
+        pro.setCreatedate(productdto.getCreatedate());
+        pro.setTags(productdto.getTags());
+        pro.setQty(productdto.getQty());
+        pro.setDvt(productdto.getDvt());
+        pro.setImage0(productdto.getImage0());
+        pro.setImage1(productdto.getImage1());
+        pro.setImage2(productdto.getImage2());
+        pro.setImage3(productdto.getImage3());
+        pro.setOrigin(productdto.getOrigin());
+        pro.setCategory(cateDAO.findById(productdto.getIdcate()).get());
+        pro.setNcc(nccRepository.findById(productdto.getUsername()).get());
+        pro.setActive(productdto.isActive());
+        pro.setP_brand(brandRepository.findById(productdto.getIdbrand()).get());
+        return new ResponseEntity<Products>(proDAO.save(pro), HttpStatus.OK);
+    }
+
+    // xóa
+    @DeleteMapping("/{id}")
+    public void deleteProduct(@PathVariable("id") String id) {
+        proDAO.deleteById(id);
+    }
+
 }

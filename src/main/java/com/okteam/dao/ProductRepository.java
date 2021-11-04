@@ -20,6 +20,8 @@ public interface ProductRepository extends JpaRepository<Products, String> {
 	public List<Products> getProductsByCate(String category);
 
 
+	@Query("SELECT o FROM Products o WHERE o.category.idcate=?1")
+	public Page<Products> getProductsByCategory(String category, Pageable pageable);
 
 
 	@Query("SELECT o FROM Products o WHERE o.ncc.username=?1")
