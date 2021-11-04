@@ -26,6 +26,7 @@ public class Transaction {
 	int type;
 	String value;
 	String note;
+	String username;
 	boolean done;
 
 	@Temporal(TemporalType.TIMESTAMP)
