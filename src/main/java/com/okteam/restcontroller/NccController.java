@@ -1,10 +1,21 @@
 package com.okteam.restcontroller;
 
+<<<<<<< HEAD
+=======
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+>>>>>>> b3ee7eb10314c1a3d004a8a5c247d5924847da9e
 import java.util.List;
 import java.util.Optional;
 
 import com.okteam.dao.NccRepository;
+<<<<<<< HEAD
 import com.okteam.dao.ProductDAO;
+=======
+import com.okteam.dao.ProductRepository;
+import com.okteam.dto.NccResponseDTO;
+>>>>>>> b3ee7eb10314c1a3d004a8a5c247d5924847da9e
 import com.okteam.entity.Ncc;
 import com.okteam.entity.Products;
 
@@ -21,12 +32,18 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+<<<<<<< HEAD
 @CrossOrigin
+=======
+@CrossOrigin("*")
+@RequestMapping("/api/v1/ncc")
+>>>>>>> b3ee7eb10314c1a3d004a8a5c247d5924847da9e
 public class NccController {
 
     @Autowired
     NccRepository nccRepository;
     @Autowired
+<<<<<<< HEAD
     ProductDAO productDAO;
 
     //
@@ -49,4 +66,60 @@ public class NccController {
     Page<Products> page = productDAO.getproductwithncc(idncc, PageRequest.of(pageNumber.orElse(0), size.orElse(10)));
     return new ResponseEntity<Page<Products>>(page, HttpStatus.OK);       
     }
+=======
+    ProductRepository productDAO;
+
+    //
+    @GetMapping("/get/{idncc}")
+    public ResponseEntity<Ncc> get10Ncc(@PathVariable("idncc") String idncc) {
+        Ncc n = nccRepository.findById(idncc).get();
+
+        return new ResponseEntity<Ncc>(n, HttpStatus.OK);
+    }
+
+    @GetMapping("/top")
+    public ResponseEntity<List<NccResponseDTO>> getNcc2() {
+    	 List<Ncc> list = nccRepository.findAll();
+         Collections.sort(list, new Comparator<Ncc>() {
+
+			@Override
+			public int compare(Ncc o1, Ncc o2) {
+				if (o1.getFollowSell().size()<=o2.getFollowSell().size()) {
+					return 1;
+				} else {
+					return -1;
+				}
+			}
+           
+         });
+         
+        List<NccResponseDTO> list_dto = new ArrayList<>();
+        for (Ncc ncc : list) {
+			NccResponseDTO dto= new NccResponseDTO();
+			dto.createByEntity(ncc);
+			list_dto.add(dto);
+		}
+       
+        return new ResponseEntity<List<NccResponseDTO>>(list_dto.subList(0, 3), HttpStatus.OK);
+    }
+
+    @GetMapping("/products")
+    public ResponseEntity<Page<Products>> getProduct(@RequestParam String idncc,
+            @RequestParam Optional<Integer> pageNumber, @RequestParam Optional<Integer> size) {
+        Page<Products> page = productDAO.getProductWithNcc(idncc,
+                PageRequest.of(pageNumber.orElse(0), size.orElse(10)));
+        return new ResponseEntity<Page<Products>>(page, HttpStatus.OK);
+    }
+    
+    @GetMapping("/get_ncc_by_product")
+    public ResponseEntity<NccResponseDTO> getNccDTOByPro(@RequestParam("idpro") String id) {
+		Ncc ncc = nccRepository.getNccByProduct(id);
+		NccResponseDTO dto = new NccResponseDTO();
+		dto.createByEntity(ncc);
+		return new ResponseEntity<NccResponseDTO>(dto, HttpStatus.OK);
+				
+	}
+    
+   
+>>>>>>> b3ee7eb10314c1a3d004a8a5c247d5924847da9e
 }

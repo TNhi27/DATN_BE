@@ -13,6 +13,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import lombok.Data;
 
@@ -28,11 +29,11 @@ public class Comments {
 	@Temporal(TemporalType.TIMESTAMP)
 	Date createdate;
 
-	@JsonBackReference
+	@JsonManagedReference
 	@ManyToOne @JoinColumn(name = "username")
-	Accounts acc_cmt;
+	Ctv ctv_cmt;
 	
-	@JsonBackReference
+	@JsonManagedReference
 	@ManyToOne @JoinColumn(name = "idpro")
 	Products products;
 }

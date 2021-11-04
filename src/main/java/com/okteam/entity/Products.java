@@ -13,12 +13,17 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name="products")
 public class Products {
 	@Id
@@ -26,7 +31,7 @@ public class Products {
 	String name;
 	String description;
 	int pricectv;
-	
+	boolean active=true;	
 	@Temporal(TemporalType.DATE)
 	Date createdate;
 	
@@ -37,12 +42,13 @@ public class Products {
 	String image2;
 	String image3;
 	String origin;
+	String tags;
 	
 	@JsonBackReference
 	@OneToMany(mappedBy = "products")
 	List<RegiProducts> list_regi;
 	
-	@JsonManagedReference
+	@JsonBackReference
 	@OneToMany(mappedBy = "products")
 	List<Comments> comments;
 	
@@ -54,8 +60,16 @@ public class Products {
 	@ManyToOne @JoinColumn(name = "idcate")
 	Category category;
 	
-	@JsonManagedReference
+	@JsonIgnore
 	@ManyToOne @JoinColumn(name="idncc")
 	Ncc ncc;
+
+	@JsonManagedReference
+	@OneToMany(mappedBy = "p_properties")
+	List<Properties> properties;
+
+	@JsonManagedReference
+	@ManyToOne @JoinColumn(name = "brand")
+	Brand p_brand;
 	
 }

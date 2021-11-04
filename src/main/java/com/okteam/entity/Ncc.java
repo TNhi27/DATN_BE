@@ -1,34 +1,46 @@
 package com.okteam.entity;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import lombok.Data;
 
 @Entity
+@Table(name = "ncc")
 @Data
-@Table(name="ncc")
 public class Ncc {
-	@Id @GeneratedValue(strategy =GenerationType.IDENTITY)
-	int idncc;
+	@Id
+	String username;
+	String password;
+	String email;
+	String sdt;
+	boolean active;
+	String fullname;
+	String address;
+	String sex;
+	String veryfy;
+	@Temporal(TemporalType.DATE)
+	Date createdate;
 	String nccname;
 	String ncclogo;
-	String description;
+	int money;
 	
+	
+<<<<<<< HEAD
 	@JsonBackReference
 	@OneToOne @JoinColumn(name = "username")
 	Accounts acc_ncc;
+=======
+>>>>>>> b3ee7eb10314c1a3d004a8a5c247d5924847da9e
 	
 	@JsonBackReference
 	@OneToMany(mappedBy = "ncc")
@@ -37,6 +49,10 @@ public class Ncc {
 	@JsonBackReference
 	@OneToMany(mappedBy = "ncc")
 	List<Orders> orders;
+
+	@JsonBackReference
+	@OneToMany(mappedBy = "fl_ncc")
+	List<FollowSell> followSell;
 	
 	
 }
