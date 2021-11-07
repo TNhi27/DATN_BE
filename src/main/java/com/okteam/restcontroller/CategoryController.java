@@ -46,7 +46,6 @@ public class CategoryController {
 		} else {
 			categoryRepo.save(category);
 		}
-
 		return new Response<Category>(categoryRepo.findAll(), message);
 	}
 
@@ -96,12 +95,6 @@ public class CategoryController {
 			} else {
 				if(categoryRepo.findByParent(idcate).size() > 0) {
 					message = "Loại hàng này có loại con!";
-					// update các loại hàng có menu cha là loại cần xóa
-//					List<Category> categories = categoryRepo.findByParent(idcate);
-//					categories.stream().forEach(cate -> {
-//						cate.setParent(null);
-//						categoryRepo.save(cate);
-//					});
 				} else {
 					categoryRepo.deleteById(idcate);
 					message = "OK";
