@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,18 +19,14 @@ import com.okteam.dto.CommentsDTO;
 import com.okteam.entity.Comments;
 import com.okteam.entity.Ctv;
 import com.okteam.entity.Products;
+import com.okteam.entity.RegiProducts;
 
 @RestController
-
-
-@RequestMapping("/api/v2/comments")
-@CrossOrigin("*")
-
+@RequestMapping("/api/v1/comments")
 public class CommentController {
 
 	@Autowired
 	CommentRepository CmtRep;
-
 	@Autowired
 	CtvRepository CtvRep;
 	@Autowired
@@ -39,7 +34,6 @@ public class CommentController {
 	
 	@GetMapping()
 	public ResponseEntity<List<Comments>> getAllComments(){
-		
 		return new ResponseEntity<List<Comments>>(CmtRep.findAll(), HttpStatus.OK);
 	}
 
@@ -53,19 +47,27 @@ public class CommentController {
 
 	@PostMapping
 	public ResponseEntity<Comments> postComment(@RequestBody CommentsDTO commentsDto) {
+		
+		Comments comment = new Comments();
+		if(!CmtRep.existsById(commentsDto.getIdcmt())) {
+			System.out.println("ko tìm thấy ID");
+			   return new ResponseEntity<Comments>(comment, HttpStatus.NOT_FOUND);
+		}else if(!CtvRep.existsById(commentsDto.getUsername())){
+			System.out.println("CTV không tim thấy");
+			   return new ResponseEntity<Comments>(comment, HttpStatus.NOT_FOUND);
+		}else if(!ProRep.existsById(commentsDto.getProducts())) {
+			System.out.println("Sản phẩm không tìm thấy");
+		}
+		else {
 			Ctv ctv = CtvRep.findById(commentsDto.getUsername()).get();
-			Comments comment = new Comments();
+			Products products = ProRep.findById(commentsDto.getProducts()).get();
 			comment.setContent(commentsDto.getContent());
 			comment.setCreatedate(commentsDto.getCreatedate());
 			comment.setStar(commentsDto.getStar());
 			comment.setCtv_cmt(ctv);
-			Products products = ProRep.findById(commentsDto.getProducts()).get();
 			comment.setProducts(products);
+		}
 		return new ResponseEntity<Comments>(CmtRep.save(comment), HttpStatus.CREATED);
-
-
-	
-
 	}
 
 }
