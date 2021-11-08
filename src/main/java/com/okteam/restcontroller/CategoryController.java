@@ -116,27 +116,42 @@ public class CategoryController {
 	@PostMapping
 	public ResponseEntity<Category> saveCaterogy(@RequestBody Categorydto categorydto) {
 		Category cate = new Category();
-		cate.setIdcate(categorydto.getIdcate());
-		cate.setTypename(categorydto.getTypename());
-		cate.setImg(categorydto.getImg());
-		cate.setParent(categorydto.getParent());
-		return new ResponseEntity<Category>(categoryRepo.save(cate), HttpStatus.OK);
+		try {
+			if (categoryRepo.existsById(categorydto.getIdcate())) {
+				System.out.print("ID loại sản phẩm đã tồn tại");
+				return new ResponseEntity<Category>(cate, HttpStatus.NOT_FOUND);
+			} else {
+				cate.setIdcate(categorydto.getIdcate());
+				cate.setTypename(categorydto.getTypename());
+				cate.setImg(categorydto.getImg());
+				cate.setParent(categorydto.getParent());
+			}
+			return new ResponseEntity<Category>(categoryRepo.save(cate), HttpStatus.OK);
+		} catch (Exception e) {
+			// TODO: handle exception
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
 	}
 
 	// Update cate
 	@PutMapping("/{id}")
 	public ResponseEntity<Category> updateCategory(@PathVariable("id") String id,
 			@RequestBody Categorydto categorydto) {
-		Category cate = categoryRepo.findById(id).get();
-		cate.setTypename(categorydto.getTypename());
-		cate.setImg(categorydto.getImg());
-		cate.setParent(categorydto.getParent());
-		return new ResponseEntity<Category>(categoryRepo.save(cate), HttpStatus.OK);
+		try {
+			Category cate = categoryRepo.findById(id).get();
+			cate.setTypename(categorydto.getTypename());
+			cate.setImg(categorydto.getImg());
+			cate.setParent(categorydto.getParent());
+			return new ResponseEntity<Category>(categoryRepo.save(cate), HttpStatus.OK);
+		} catch (Exception e) {
+			// TODO: handle exception
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
 	}
 
 	// Delete cate
 	@DeleteMapping("/{id}")
-	public void deleteProduct(@PathVariable("id") String id) {
-		categoryRepo.deleteById(id);
+	public void deleteCate(@PathVariable("id") String id) {
+			categoryRepo.deleteById(id);
 	}
 }
