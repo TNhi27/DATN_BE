@@ -1,6 +1,8 @@
 package com.okteam.restcontroller;
 
+import java.lang.StackWalker.Option;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -33,7 +35,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -121,15 +123,56 @@ public class ProductsController {
     }
 
     @GetMapping("/get_by_category")
-    public ResponseEntity<Page<Products>> getproductbycate(@RequestParam String category) {
-        Page<Products> page = proDAO.getProductsByCategory(category, PageRequest.of(0, 10));
+    public ResponseEntity<Page<Products>> getproductbycate(@RequestParam Optional<String> category) {
+        Page<Products> page = proDAO.getProductsByCate1(category.orElse("%%"), PageRequest.of(0, 15));
 
         return new ResponseEntity<Page<Products>>(page, HttpStatus.OK);
     }
 
     @GetMapping
-    public ResponseEntity<List<Products>> newProducts() {
-        return new ResponseEntity<List<Products>>(proDAO.findAll(), HttpStatus.OK);
+    public ResponseEntity<Page<Products>> newProducts(@RequestParam Optional<Integer> p,
+            @RequestParam Optional<Integer> size, @RequestParam Optional<String> category,
+            @RequestParam Optional<Integer> min_price, @RequestParam Optional<Integer> max_price,
+            @RequestParam Optional<List<String>> origin, @RequestParam Optional<List<String>> city,
+            @RequestParam Optional<Integer> brand, @RequestParam Optional<String> sort,
+            @RequestParam Optional<Boolean> des) {
+
+        Sort s;
+        Page page;
+        if (des.orElse(true) == true) {
+            s = Sort.by(sort.orElse("createdate")).descending();
+        } else {
+            s = Sort.by(sort.orElse("createdate"));
+        }
+
+        List<String> root_origin = proDAO.getRootOrigin();
+        List<String> root_city_ncc = proDAO.getRootCityNcc();
+
+        if (brand.isPresent()) {
+            page = proDAO.getProductsByCategoryHasBrand(category.orElse("%%"), min_price.orElse(0),
+                    max_price.orElse(1000000000), origin.orElse(root_origin), city.orElse(root_city_ncc), brand.get(),
+                    PageRequest.of(p.orElse(0), size.orElse(25), s));
+
+        } else {
+            page = proDAO.getProductsByCategory(category.orElse("%%"), min_price.orElse(0),
+                    max_price.orElse(1000000000), origin.orElse(root_origin), city.orElse(root_city_ncc),
+                    PageRequest.of(p.orElse(0), size.orElse(25), s));
+        }
+        // page = proDAO.getProductsByCategoryHasBrand("PK1", 0, 10000000,
+        // origin.orElse(root_origin),
+        // city.orElse(root_city_ncc), 17, PageRequest.of(0, 10));
+
+        return new ResponseEntity<Page<Products>>(page, HttpStatus.OK);
+    }
+
+    @GetMapping("/origins")
+    public ResponseEntity<List<String>> get_origin() {
+        return new ResponseEntity<List<String>>(proDAO.getRootOrigin(), HttpStatus.OK);
+    }
+
+    @GetMapping("/city_ncc")
+    public ResponseEntity<List<String>> get_city_ncc() {
+        return new ResponseEntity<List<String>>(proDAO.getRootCityNcc(), HttpStatus.OK);
     }
 
     // post
@@ -185,4 +228,9 @@ public class ProductsController {
         proDAO.deleteById(id);
     }
 
+    @GetMapping("/search")
+    public List<Products> search(@RequestParam String q) {
+        List<Products> list = proDAO.search(q);
+        return list;
+    }
 }
