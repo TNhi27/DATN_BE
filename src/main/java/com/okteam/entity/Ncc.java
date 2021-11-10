@@ -26,6 +26,7 @@ public class Ncc {
 	boolean active;
 	String fullname;
 	String address;
+	String city;
 	String sex;
 	String veryfy;
 	@Temporal(TemporalType.DATE)
@@ -33,13 +34,11 @@ public class Ncc {
 	String nccname;
 	String ncclogo;
 	int money;
-	
-	
-	
+
 	@JsonBackReference
 	@OneToMany(mappedBy = "ncc")
 	List<Products> products;
-	
+
 	@JsonBackReference
 	@OneToMany(mappedBy = "ncc")
 	List<Orders> orders;
@@ -47,6 +46,5 @@ public class Ncc {
 	@JsonBackReference
 	@OneToMany(mappedBy = "fl_ncc")
 	List<FollowSell> followSell;
-	
-	
+
 }
