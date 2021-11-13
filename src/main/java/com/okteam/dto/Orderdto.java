@@ -6,14 +6,14 @@ import lombok.Data;
 
 @Data
 public class Orderdto {
+
 	Date dateorder;
-	int total;
-	int status=0;
+
+	int status = 0;
 	String address;
 	String customer;
 	String sdtcustomer;
-	String payment;
+	int payment;
 
-    String idctv;
-    String idncc;
+	String idncc;
 }
