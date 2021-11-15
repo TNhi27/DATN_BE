@@ -59,6 +59,19 @@ public class RegisterService {
 		}
 	}
 	
+	public void changePW(String username, String newPass) {
+		if(ctvRepo.existsById(username)) {
+			Ctv ctv = ctvRepo.findById(username).get();
+			ctv.setPassword(newPass);
+			ctvRepo.save(ctv);
+		}
+		if(nccRepo.existsById(username)) {
+			Ncc ncc = nccRepo.findById(username).get();
+			ncc.setPassword(newPass);
+			nccRepo.save(ncc);
+		}
+	}
+	
 	 private void sendVerificationEmail(Object account, Integer thaotac) throws UnsupportedEncodingException, MessagingException{
 	    	String toAddress = thaotac == 0 ? ((Ctv) account).getEmail() : ((Ncc) account).getEmail();
 	    	String fromAddress = "dinhtppc00576@fpt.edu.vn";
