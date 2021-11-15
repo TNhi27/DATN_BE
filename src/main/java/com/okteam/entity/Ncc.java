@@ -24,16 +24,16 @@ public class Ncc {
 	String email;
 	String sdt;
 	boolean active;
-	String fullname;
+	String fullname = "Ẩn danh";
 	String address;
 	String city;
 	String sex;
-	String veryfy;
+	String verify;
 	@Temporal(TemporalType.DATE)
-	Date createdate;
-	String nccname;
+	Date createdate = new Date();
+	String nccname = "Ẩn danh";
 	String ncclogo;
-	int money;
+	int money = 0;
 
 	@JsonBackReference
 	@OneToMany(mappedBy = "ncc")

@@ -15,6 +15,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import lombok.Data;
@@ -28,29 +29,29 @@ public class Ctv {
 	String password;
 	String email;
 	String sdt;
-	boolean active;
-	String fullname;
+	boolean active = false;
+	String fullname = "Ẩn danh";
 	String address;
 	String sex;
-	String veryfy;
+	String verify;
 	@Temporal(TemporalType.DATE)
-	Date createdate;
+	Date createdate = new Date();
 	String image;
-	int money;
+	int money = 0;
 	
-	@JsonManagedReference
+	@JsonIgnore
 	@OneToMany(mappedBy = "ctv")
 	List<RegiProducts> list_regi;
 	
-	@JsonBackReference
+	@JsonIgnore
 	@OneToMany(mappedBy = "ctv")
 	List<Orders> orders;
 
-	@JsonBackReference
+	@JsonIgnore
 	@OneToMany(mappedBy = "fl_ctv")
 	List<FollowSell> followSell;
 
-	@JsonBackReference
+	@JsonIgnore
 	@OneToMany(mappedBy = "ctv_cmt")
 	List<Comments> comments;
 

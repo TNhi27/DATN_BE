@@ -33,7 +33,7 @@ public class Admin {
 	String fullname;
 	String address;
 	String sex;
-	String veryfy;
+	String verify;
 	@Temporal(TemporalType.DATE)
 	Date createdate;
 
