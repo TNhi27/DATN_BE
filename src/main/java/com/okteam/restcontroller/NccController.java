@@ -1,16 +1,21 @@
 package com.okteam.restcontroller;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
+import javax.mail.MessagingException;
+
 import com.okteam.dao.NccRepository;
 import com.okteam.dao.ProductRepository;
 import com.okteam.dto.NccResponseDTO;
 import com.okteam.entity.Ncc;
 import com.okteam.entity.Products;
+import com.okteam.entity.Response;
+import com.okteam.utils.RegisterService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -20,6 +25,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,6 +40,8 @@ public class NccController {
     NccRepository nccRepository;
     @Autowired
     ProductRepository productDAO;
+    @Autowired
+    RegisterService service;
 
     //
     @GetMapping("/get/{idncc}")
@@ -86,4 +95,24 @@ public class NccController {
 	}
     
    
+    @PostMapping("/register")
+    public Response<Ncc> register(@RequestBody Ncc ncc) throws UnsupportedEncodingException, MessagingException{
+    	String message = "OK";
+//    	Ncc ncc = new Ncc();
+//    	ncc.setUsername("test22");
+//    	ncc.setPassword("test");
+//    	ncc.setEmail("hatdaunho1453@gmail.com");
+//    	ncc.setSdt("1111111111111");
+//    	ncc.setFullname("Định");
+//    	ncc.setNccname("Apple");
+    	List<Ncc> list = new ArrayList<>();
+    	if(!service.checkUsername(ncc.getUsername())) {
+    		message = "Username đã tồn tại!";
+    	} else {
+    		ncc = service.registerNcc(ncc);
+    		list.add(ncc);
+    	}
+    	return new Response<Ncc>(list, message);
+    }
+    
 }
