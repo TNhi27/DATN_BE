@@ -96,23 +96,18 @@ public class NccController {
     
    
     @PostMapping("/register")
-    public Response<Ncc> register(@RequestBody Ncc ncc) throws UnsupportedEncodingException, MessagingException{
+    public Response<NccResponseDTO> register(@RequestBody Ncc ncc) throws UnsupportedEncodingException, MessagingException{
     	String message = "OK";
-//    	Ncc ncc = new Ncc();
-//    	ncc.setUsername("test22");
-//    	ncc.setPassword("test");
-//    	ncc.setEmail("hatdaunho1453@gmail.com");
-//    	ncc.setSdt("1111111111111");
-//    	ncc.setFullname("Định");
-//    	ncc.setNccname("Apple");
-    	List<Ncc> list = new ArrayList<>();
-    	if(!service.checkUsername(ncc.getUsername())) {
+    	List<NccResponseDTO> list = new ArrayList<>();
+    	if(service.checkUsername(ncc.getUsername())) {
     		message = "Username đã tồn tại!";
     	} else {
     		ncc = service.registerNcc(ncc);
-    		list.add(ncc);
+    		NccResponseDTO nccDTO = new NccResponseDTO();
+    		nccDTO.createByEntity(ncc);
+    		list.add(nccDTO);
     	}
-    	return new Response<Ncc>(list, message);
+    	return new Response<NccResponseDTO>(list, message);
     }
     
 }

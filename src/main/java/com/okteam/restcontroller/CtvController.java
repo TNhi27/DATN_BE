@@ -10,15 +10,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.okteam.dao.CtvRepository;
+import com.okteam.dto.CtvResponseDTO;
 import com.okteam.entity.Ctv;
 import com.okteam.entity.Response;
 import com.okteam.utils.RegisterService;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
 @RestController
 @CrossOrigin
@@ -31,23 +32,17 @@ public class CtvController {
 	CtvRepository repo;
 
 	@PostMapping("/register")
-	public Response<Ctv> register(@RequestBody Ctv ctv) throws UnsupportedEncodingException, MessagingException {
+	public Response<CtvResponseDTO> register(@RequestBody Ctv ctv) throws UnsupportedEncodingException, MessagingException {
 		String message = "OK";
-//		Ctv ctv = new Ctv();
-//		ctv.setUsername("test");
-//		ctv.setPassword("test");
-//		ctv.setEmail("hatdaunho1453@gmail.com");
-//		ctv.setSdt("111111111111111");
-//		ctv.setFullname("test");
-//		ctv.setAddress("test");
-		List<Ctv> list = new ArrayList<>();
-		if(!service.checkUsername(ctv.getUsername())) {
+		List<CtvResponseDTO> list = new ArrayList<>();
+		if(service.checkUsername(ctv.getUsername())) {
 			message = "Username đã tồn tại!";
 		} else {
 			ctv = service.registerCtv(ctv);
-			list.add(ctv);
+			CtvResponseDTO ctvDTO = new CtvResponseDTO();
+			list.add(ctvDTO.createByEntity(ctv));
 		}
-		return new Response<Ctv>(list, message);
+		return new Response<CtvResponseDTO>(list, message);
 	}
 	
 	@GetMapping("/list")

@@ -50,16 +50,25 @@ public class RegisterService {
 		return ncc;
 	}
 	
+	public void forgetPW(String username) throws UnsupportedEncodingException, MessagingException {
+		if(ctvRepo.existsById(username)) {
+			sendMail(ctvRepo.findById(username).get(), 0);
+		}
+		if(nccRepo.existsById(username)) {
+			sendMail(nccRepo.findById(username).get(), 1);
+		}
+	}
+	
 	 private void sendVerificationEmail(Object account, Integer thaotac) throws UnsupportedEncodingException, MessagingException{
 	    	String toAddress = thaotac == 0 ? ((Ctv) account).getEmail() : ((Ncc) account).getEmail();
 	    	String fromAddress = "dinhtppc00576@fpt.edu.vn";
-	    	String senderName = "Okteam shop";
+	    	String senderName = "Okteam Shop";
 	    	String subject = "Kích hoạt tài khoản!";
-	    	String content = "Chào "+ (thaotac == 0 ? ((Ctv) account).getFullname() : ((Ncc) account).getEmail()) +",<br>"
+	    	String content = "Chào "+ (thaotac == 0 ? ((Ctv) account).getFullname() : ((Ncc) account).getFullname()) +",<br>"
 	                + "Mã kích hoạt tài khoản của ban là:<br>"
 	                + "<h3>[[VERIFY]]</h3>"
 	                + "Cảm ơn bạn đã chọn chúng tôi!,<br>"
-	                + "Okteam shop.";
+	                + "Okteam Shop.";
 	    	MimeMessage message = mailSender.createMimeMessage();
 	    	MimeMessageHelper helper = new MimeMessageHelper(message);
 	    	helper.setFrom(fromAddress, senderName);
@@ -71,6 +80,24 @@ public class RegisterService {
 	    	queue(message);
 	    }
 
+	 public void sendMail(Object account, Integer thaotac) throws UnsupportedEncodingException, MessagingException {
+	    	String toAddress = thaotac == 0 ? ((Ctv) account).getEmail() : ((Ncc) account).getEmail();
+	    	String fromAddress = "dinhtppc00576@fpt.edu.vn";
+	    	String senderName = "Okteam Shop";
+	    	String subject = "Cấp lại mật khẩu!";
+	    	String content = "Chào "+ (thaotac == 0 ? ((Ctv) account).getFullname() : ((Ncc) account).getFullname()) +","
+	                + "Mật khẩu tài khoản của bạn là : <h3>[[password]]</h3>"
+	                + "Okteam Shop.";
+	    	MimeMessage message = mailSender.createMimeMessage();
+	    	MimeMessageHelper helper = new MimeMessageHelper(message);
+	    	helper.setFrom(fromAddress, senderName);
+	    	helper.setTo(toAddress);
+	    	helper.setSubject(subject);
+	    	content = content.replace("[[password]]", thaotac ==0 ? ((Ctv) account).getPassword() : ((Ncc) account).getPassword());
+	    	helper.setText(content, true);
+	    	queue(message);
+	    }
+	 
 	 public void queue(MimeMessage message) {
 			list.add(message);
 		}
@@ -89,9 +116,29 @@ public class RegisterService {
 	 
 	 public Boolean checkUsername(String username) {
 		 if(ctvRepo.existsById(username) || nccRepo.existsById(username) || adRepo.existsById(username)) {
-			 return false;
+			 return true;
 		 }
-		 return true;
+		 return false;
+	 }
+	 
+	 public Boolean isAdmin(String username) {
+		 if(adRepo.existsById(username)) {
+			 return true;
+		 }
+		 return false;
+	 }
+	 
+	 public Boolean isCtv(String username) {
+		 if(ctvRepo.existsById(username)) {
+			 return true;
+		 }
+		 return false;
+	 }
+	 public Boolean isNcc(String username) {
+		 if(nccRepo.existsById(username)) {
+			 return true;
+		 }
+		 return false;
 	 }
 	 
 }

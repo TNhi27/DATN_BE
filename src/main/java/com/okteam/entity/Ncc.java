@@ -10,7 +10,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Data;
 
@@ -35,15 +35,15 @@ public class Ncc {
 	String ncclogo;
 	int money = 0;
 
-	@JsonBackReference
+	@JsonIgnore
 	@OneToMany(mappedBy = "ncc")
 	List<Products> products;
 
-	@JsonBackReference
+	@JsonIgnore
 	@OneToMany(mappedBy = "ncc")
 	List<Orders> orders;
 
-	@JsonBackReference
+	@JsonIgnore
 	@OneToMany(mappedBy = "fl_ncc")
 	List<FollowSell> followSell;
 
