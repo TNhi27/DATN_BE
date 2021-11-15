@@ -22,7 +22,7 @@ import com.okteam.entity.Category;
 import com.okteam.entity.Response;
 
 @CrossOrigin("*")
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/brand")
 @RestController
 public class BrandController {
 
@@ -31,7 +31,7 @@ public class BrandController {
 	@Autowired
 	CategoryRepository categoryRepo;
 
-	@GetMapping("/brand/list")
+	@GetMapping("/list")
 	public Response<Brand> getBrands(@RequestParam(value = "idcate", required = false) String idcate) {
 		String message = "Không lấy được dữ liệu";
 		List<Brand> list = new ArrayList<>();
@@ -45,7 +45,7 @@ public class BrandController {
 		return new Response<Brand>(list, message);
 	}
 
-	@PostMapping("/brand/addTo/{idcate}")
+	@PostMapping("/addTo/{idcate}")
 	public Response<Brand> addBrand(@PathVariable("idcate") String idcate, @RequestBody Brand brand) {
 		String message = "OK";
 		boolean check = brandRepo.findByIdcate(idcate).stream()
@@ -60,7 +60,7 @@ public class BrandController {
 		return new Response<Brand>(brandRepo.findByIdcate(idcate), message);
 	}
 
-	@DeleteMapping("/brand/delete/{id}/{idcate}")
+	@DeleteMapping("/delete/{id}/{idcate}")
 	public Response<Brand> deleteBrand(@PathVariable("id") Integer id, @PathVariable("idcate") String idcate) {
 		String message = "Không tìm thấy nhãn hàng!";
 		if (brandRepo.existsById(id)) {
@@ -74,7 +74,7 @@ public class BrandController {
 		return new Response<Brand>(brandRepo.findByIdcate(idcate), message);
 	}
 
-	@PutMapping("/brand/update")
+	@PutMapping("/update")
 	public Response<Brand> updateBrand(@RequestParam("id") Integer id, @RequestParam("value") String value) {
 		String message = "OK";
 		List<Brand>list = new ArrayList<>();
