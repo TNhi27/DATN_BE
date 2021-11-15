@@ -11,23 +11,25 @@ import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import lombok.Data;
+
 @Entity
-@Table(name="details")
+@Table(name = "details")
+@Data
 public class Details {
-	@Id @GeneratedValue(strategy =GenerationType.IDENTITY)
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	int iddetails;
 	int qty;
-	
-	
-	
+
 	@ManyToOne
-	@JoinColumn(name="idpro")
+	@JoinColumn(name = "idpro")
 	@JsonManagedReference
 	Products products;
-	
+
 	@ManyToOne
-	@JoinColumn(name="idorder")
+	@JoinColumn(name = "idorder")
 	@JsonBackReference
 	Orders orders;
-	
+
 }

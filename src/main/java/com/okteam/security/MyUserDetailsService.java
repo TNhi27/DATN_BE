@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 public class MyUserDetailsService implements UserDetailsService {
 
 	@Autowired
-	 NccRepository nccdao;
+	NccRepository nccdao;
 
 	@Autowired
 	AdminRepository addao;
@@ -32,25 +32,23 @@ public class MyUserDetailsService implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String username) {
-	
-		
+
 		var ctv = ctvdao.findById(username);
-		if (ctv.isPresent()){
+		if (ctv.isPresent()) {
 			Ctv o = ctv.get();
-			return User.withUsername(o.getUsername()).password(pe.encode(o.getPassword())).roles("ctv").build();
+			return User.withUsername(o.getUsername()).password(pe.encode(o.getPassword())).roles("CTV").build();
 		}
 		var ncc = nccdao.findById(username);
-		if (ncc.isPresent()){
+		if (ncc.isPresent()) {
 			Ncc o = ncc.get();
-			return User.withUsername(o.getUsername()).password(pe.encode(o.getPassword())).roles("ncc").build();
+			return User.withUsername(o.getUsername()).password(pe.encode(o.getPassword())).roles("NCC").build();
 		}
 		var admin = addao.findById(username);
 		if (admin.isPresent()) {
 			Admin o = admin.get();
-			return User.withUsername(o.getUsername()).password(pe.encode(o.getPassword())).roles("admin").build();
+			return User.withUsername(o.getUsername()).password(pe.encode(o.getPassword())).roles("ADMIN").build();
 		}
-		
-		
+
 		throw new UsernameNotFoundException(":(");
 
 	}
