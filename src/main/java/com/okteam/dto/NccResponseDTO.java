@@ -44,7 +44,7 @@ public class NccResponseDTO {
 		this.sdt = ncc.getSdt();
 		this.sex = ncc.getSex();
 		this.username = ncc.getUsername();
-		this.veryfy = ncc.getVeryfy();
+		this.veryfy = ncc.getVerify();
 		this.countProducts = ncc.getProducts().size();
 		this.products = ncc.getProducts();
 		this.countOrders = ncc.getOrders().size();
