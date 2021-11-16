@@ -16,6 +16,7 @@ import com.okteam.dto.RegiProductsDTO;
 import com.okteam.entity.Orders;
 import com.okteam.entity.Products;
 import com.okteam.entity.RegiProducts;
+import com.okteam.entity.Report;
 import com.okteam.exception.NotFoundSomething;
 import com.okteam.entity.Details;
 
@@ -137,5 +138,12 @@ public class OrderController {
             }
         }
 
+    }
+
+    @GetMapping("/report")
+    public Report getaaa() {
+        Report re = oRepository.getget(15, 11, 2021);
+
+        return re;
     }
 }

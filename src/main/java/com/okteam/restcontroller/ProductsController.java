@@ -135,7 +135,8 @@ public class ProductsController {
             @RequestParam Optional<Integer> min_price, @RequestParam Optional<Integer> max_price,
             @RequestParam Optional<List<String>> origin, @RequestParam Optional<List<String>> city,
             @RequestParam Optional<Integer> brand, @RequestParam Optional<String> sort,
-            @RequestParam Optional<Boolean> des) {
+            @RequestParam Optional<Boolean> des, @RequestParam Optional<String> q,
+            @RequestParam Optional<String> parent) {
 
         Sort s;
         Page page;
@@ -147,17 +148,24 @@ public class ProductsController {
 
         List<String> root_origin = proDAO.getRootOrigin();
         List<String> root_city_ncc = proDAO.getRootCityNcc();
+        List<Category> children = cateDAO.findByParent(parent.orElse(""));
+        if (children.size() > 0) {
+            List<String> cate = children.stream().map((e) -> {
 
-        if (brand.isPresent()) {
-            page = proDAO.getProductsByCategoryHasBrand(category.orElse("%%"), min_price.orElse(0),
-                    max_price.orElse(1000000000), origin.orElse(root_origin), city.orElse(root_city_ncc), brand.get(),
-                    PageRequest.of(p.orElse(0), size.orElse(25), s));
+                return e.getIdcate();
 
-        } else {
-            page = proDAO.getProductsByCategory(category.orElse("%%"), min_price.orElse(0),
-                    max_price.orElse(1000000000), origin.orElse(root_origin), city.orElse(root_city_ncc),
+            }).collect(Collectors.toList());
+            page = proDAO.getProductsByParentCategory(cate, min_price.orElse(0), max_price.orElse(1000000000),
+                    origin.orElse(root_origin), city.orElse(root_city_ncc), q.orElse(""),
                     PageRequest.of(p.orElse(0), size.orElse(25), s));
+            return new ResponseEntity<Page<Products>>(page, HttpStatus.OK);
+
         }
+
+        page = proDAO.getProductsByCategory(category.orElse("%%"), min_price.orElse(0), max_price.orElse(1000000000),
+                origin.orElse(root_origin), city.orElse(root_city_ncc), q.orElse(""),
+                PageRequest.of(p.orElse(0), size.orElse(25), s));
+
         // page = proDAO.getProductsByCategoryHasBrand("PK1", 0, 10000000,
         // origin.orElse(root_origin),
         // city.orElse(root_city_ncc), 17, PageRequest.of(0, 10));
@@ -228,9 +236,4 @@ public class ProductsController {
         proDAO.deleteById(id);
     }
 
-    @GetMapping("/search")
-    public List<Products> search(@RequestParam String q) {
-        List<Products> list = proDAO.search(q);
-        return list;
-    }
 }

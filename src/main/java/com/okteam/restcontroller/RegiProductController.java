@@ -7,10 +7,12 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -46,10 +48,14 @@ public class RegiProductController {
 		return new ResponseEntity<List<RegiProducts>>(RegiPro.findAll(), HttpStatus.OK);
 	}
 
-	@GetMapping("/ncc/{usernamectv}")
-	public ResponseEntity<Page<RegiProducts>> geriproductwithncc(@PathVariable("usernamectv") String idncc,
-			@RequestParam Optional<Integer> page, @RequestParam Optional<Integer> size) {
-		Page p = RegiPro.getRegiProductsWithNcc(idncc, PageRequest.of(page.orElse(0), size.orElse(20)));
+	@GetMapping("/ctv/{username}")
+	public ResponseEntity<Page<RegiProducts>> geriproductwithncc(@PathVariable("username") String idctv,
+			@RequestParam Optional<Integer> page, @RequestParam Optional<Integer> size,
+			@RequestParam Optional<String> category, @RequestParam Optional<String> name) {
+
+		Sort sort = Sort.by("regidate").descending();
+		Page p = RegiPro.getRegiProductsWithCtv(idctv, category.orElse("%%"), "%" + name.orElse("%%") + "%",
+				PageRequest.of(page.orElse(0), size.orElse(100), sort));
 		return new ResponseEntity<Page<RegiProducts>>(p, HttpStatus.OK);
 	}
 
@@ -75,6 +81,12 @@ public class RegiProductController {
 		regiproduct.setProducts(products);
 		regiproduct.setPrice(regiproDto.getPrice());
 		return new ResponseEntity<RegiProducts>(RegiPro.save(regiproduct), HttpStatus.CREATED);
+	}
+
+	@DeleteMapping("/{id}")
+	public ResponseEntity<String> detele(@PathVariable int id) {
+		RegiPro.deleteById(id);
+		return new ResponseEntity<String>("OK", HttpStatus.OK);
 	}
 
 }

@@ -9,7 +9,7 @@ import com.okteam.entity.RegiProducts;
 
 public interface RegiProductRepository extends JpaRepository<RegiProducts, Integer> {
 
-    @Query("select o from RegiProducts o where o.ctv.username=?1")
-    public Page<RegiProducts> getRegiProductsWithNcc(String id, Pageable pageable);
+    @Query("select o from RegiProducts o where o.ctv.username=?1 and o.products.category.idcate like ?2 and o.products.name like ?3")
+    public Page<RegiProducts> getRegiProductsWithCtv(String id, String category, String name, Pageable pageable);
 
 }
