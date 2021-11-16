@@ -10,7 +10,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Data;
 
@@ -24,26 +24,26 @@ public class Ncc {
 	String email;
 	String sdt;
 	boolean active;
-	String fullname;
+	String fullname = "Ẩn danh";
 	String address;
 	String city;
 	String sex;
-	String veryfy;
+	String verify;
 	@Temporal(TemporalType.DATE)
-	Date createdate;
-	String nccname;
+	Date createdate = new Date();
+	String nccname = "Ẩn danh";
 	String ncclogo;
-	int money;
+	int money = 0;
 
-	@JsonBackReference
+	@JsonIgnore
 	@OneToMany(mappedBy = "ncc")
 	List<Products> products;
 
-	@JsonBackReference
+	@JsonIgnore
 	@OneToMany(mappedBy = "ncc")
 	List<Orders> orders;
 
-	@JsonBackReference
+	@JsonIgnore
 	@OneToMany(mappedBy = "fl_ncc")
 	List<FollowSell> followSell;
 

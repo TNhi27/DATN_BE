@@ -1,7 +1,5 @@
 
 CREATE SCHEMA `datn` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ;
-=======
-
 
 use datn;
 
@@ -14,7 +12,7 @@ CREATE TABLE `admin` (
   `fullname` varchar(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `address` varchar(250) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
    `sex` varchar(4) COLLATE utf8_unicode_ci DEFAULT NULL,
-    `veryfy` varchar(64) COLLATE utf8_unicode_ci DEFAULT NULL,
+    `verify` varchar(64) COLLATE utf8_unicode_ci DEFAULT NULL,
      `createdate` date DEFAULT NULL,
   PRIMARY KEY (`username`)
 
@@ -46,7 +44,7 @@ CREATE TABLE `ctv` (
   `fullname` varchar(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `address` varchar(250) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
    `sex` varchar(4) COLLATE utf8_unicode_ci DEFAULT NULL,
-    `veryfy` varchar(64) COLLATE utf8_unicode_ci DEFAULT NULL,
+    `verify` varchar(64) COLLATE utf8_unicode_ci DEFAULT NULL,
      `createdate` date DEFAULT NULL,
      `image` text COLLATE utf8_unicode_ci DEFAULT NULL,
      `money` int null,
@@ -70,8 +68,9 @@ CREATE TABLE `ncc` (
   `active` bit(1) DEFAULT NULL,
   `fullname` varchar(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `address` varchar(250) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  `city` VARCHAR(100) CHARACTER SET 'utf8' COLLATE 'utf8_unicode_ci' DEFAULT NULL ,
    `sex` varchar(4) COLLATE utf8_unicode_ci DEFAULT NULL,
-    `veryfy` varchar(64) COLLATE utf8_unicode_ci DEFAULT NULL,
+    `verify` varchar(64) COLLATE utf8_unicode_ci DEFAULT NULL,
      `createdate` date DEFAULT NULL,
     
      `money` int null,
@@ -104,7 +103,7 @@ CREATE TABLE `orders` (
   `address` text CHARACTER SET utf8 COLLATE utf8_unicode_ci,
   `customer` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
   `sdtcustomer` varchar(15) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `payment` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `payment` INT NULL DEFAULT NULL,
   `idctv` varchar(50) DEFAULT NULL,
   `idncc` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`idorder`),

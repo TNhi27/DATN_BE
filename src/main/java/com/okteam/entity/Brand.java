@@ -12,6 +12,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import lombok.Data;
@@ -26,11 +27,11 @@ public class Brand {
     String name;
     
 
-    @JsonBackReference
+    @JsonIgnore
     @ManyToOne @JoinColumn(name="idcate")
     Category br_category;
 
-    @JsonBackReference
+    @JsonIgnore
     @OneToMany(mappedBy = "p_brand")
     List<Products> products;
 }

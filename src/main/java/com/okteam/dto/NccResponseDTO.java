@@ -35,7 +35,7 @@ public class NccResponseDTO {
 	public void createByEntity(Ncc ncc) {
 		this.active = ncc.isActive();
 		this.address = ncc.getAddress();
-		this.countFollow = ncc.getFollowSell().size();
+		this.countFollow = ncc.getFollowSell() != null ? ncc.getFollowSell().size() : 0;
 		this.createdate = ncc.getCreatedate();
 		this.email = ncc.getEmail();
 		this.fullname = ncc.getFullname();
@@ -44,10 +44,10 @@ public class NccResponseDTO {
 		this.sdt = ncc.getSdt();
 		this.sex = ncc.getSex();
 		this.username = ncc.getUsername();
-		this.veryfy = ncc.getVeryfy();
-		this.countProducts = ncc.getProducts().size();
+		this.veryfy = ncc.getVerify();
+		this.countProducts = ncc.getProducts() != null ? ncc.getProducts().size() : 0;
 		this.products = ncc.getProducts();
-		this.countOrders = ncc.getOrders().size();
+		this.countOrders = ncc.getOrders() != null ? ncc.getOrders().size() : 0;
 		this.city = ncc.getCity();
 	}
 }
