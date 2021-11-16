@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.okteam.dao.AdminRepository;
 import com.okteam.dao.CtvRepository;
 import com.okteam.dao.NccRepository;
-import com.okteam.entity.Ctv;
 import com.okteam.entity.Response;
 import com.okteam.utils.RegisterService;
 
@@ -29,6 +29,8 @@ public class PasswordController {
 	CtvRepository ctvRepo;
 	@Autowired
 	NccRepository nccRepo;
+	@Autowired
+	AdminRepository adRepo;
 
 	@PostMapping("/forget")
 	public Response<Object> forget(@RequestParam("username") String username, @RequestParam("email") String email)
@@ -36,13 +38,14 @@ public class PasswordController {
 		String message = "OK";
 		if (!service.checkUsername(username)) {
 			message = "Không tìm thấy tài khoản!";
-		} else if (service.isAdmin(username)) {
-			message = "Tài khoản quản trị không dùng chức năng này!";
 		} else {
 			if (service.isCtv(username) && !email.equalsIgnoreCase(ctvRepo.findById(username).get().getEmail())) {
 				return new Response<Object>(null, "Email tài khoản không đúng!");
 			}
 			if (service.isNcc(username) && !email.equalsIgnoreCase(nccRepo.findById(username).get().getEmail())) {
+				return new Response<Object>(null, "Email tài khoản không đúng!");
+			}
+			if (service.isAdmin(username) && !email.equalsIgnoreCase(adRepo.findById(username).get().getEmail())) {
 				return new Response<Object>(null, "Email tài khoản không đúng!");
 			}
 			service.forgetPW(username);

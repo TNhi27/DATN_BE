@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import com.okteam.dao.AdminRepository;
 import com.okteam.dao.CtvRepository;
 import com.okteam.dao.NccRepository;
+import com.okteam.entity.Admin;
 import com.okteam.entity.Ctv;
 import com.okteam.entity.Ncc;
 
@@ -57,6 +58,9 @@ public class RegisterService {
 		if(nccRepo.existsById(username)) {
 			sendMail(nccRepo.findById(username).get(), 1);
 		}
+		if(adRepo.existsById(username)) {
+			sendMail(adRepo.findById(username).get(), 2);
+		}
 	}
 	
 	public void changePW(String username, String newPass) {
@@ -94,19 +98,39 @@ public class RegisterService {
 	    }
 
 	 public void sendMail(Object account, Integer thaotac) throws UnsupportedEncodingException, MessagingException {
-	    	String toAddress = thaotac == 0 ? ((Ctv) account).getEmail() : ((Ncc) account).getEmail();
+	    	String toAddress = "" ;
 	    	String fromAddress = "dinhtppc00576@fpt.edu.vn";
 	    	String senderName = "Okteam Shop";
 	    	String subject = "Cấp lại mật khẩu!";
-	    	String content = "Chào "+ (thaotac == 0 ? ((Ctv) account).getFullname() : ((Ncc) account).getFullname()) +","
+	    	String fullname = "";
+	    	String password = "";
+	    	if(thaotac == 0) {
+	    		toAddress = ((Ctv) account).getEmail();
+	    		fullname = ((Ctv) account).getFullname();
+	    		password = ((Ctv) account).getPassword();
+	    	}
+	    	if(thaotac == 1) {
+	    		toAddress = ((Ncc) account).getEmail();
+	    		fullname = ((Ncc) account).getFullname();
+	    		password = ((Ncc) account).getPassword();
+	    	}
+	    	String content = "Chào "+ fullname +",<br>"
 	                + "Mật khẩu tài khoản của bạn là : <h3>[[password]]</h3>"
 	                + "Okteam Shop.";
+	    	if(thaotac == 2) {
+	    		toAddress = ((Admin) account).getEmail();
+	    		content = "Chào "+ ((Admin) account).getFullname() +",<br>"
+		                + "Vì đây là tài khoản quản trị viên, bạn vui lòng liên hệ địa chỉ <b>dinhtppc00576@gmail.com</b> để giải quyết"
+		                + "Okteam Shop.";
+	    	}
 	    	MimeMessage message = mailSender.createMimeMessage();
 	    	MimeMessageHelper helper = new MimeMessageHelper(message);
 	    	helper.setFrom(fromAddress, senderName);
 	    	helper.setTo(toAddress);
 	    	helper.setSubject(subject);
-	    	content = content.replace("[[password]]", thaotac ==0 ? ((Ctv) account).getPassword() : ((Ncc) account).getPassword());
+	    	if(thaotac != 2) {
+	    		content = content.replace("[[password]]", thaotac == 0 ? ((Ctv) account).getPassword() : ((Ncc) account).getPassword());
+	    	}
 	    	helper.setText(content, true);
 	    	queue(message);
 	    }
