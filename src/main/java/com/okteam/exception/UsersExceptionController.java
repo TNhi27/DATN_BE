@@ -1,5 +1,7 @@
 package com.okteam.exception;
 
+import com.okteam.entity.Response;
+
 import org.apache.catalina.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,11 +27,9 @@ public class UsersExceptionController {
         return new ResponseEntity<>(notFoundSomething.getMessage(), HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(value = DataEmpty.class)
-    public ResponseEntity<Object> empty(DataEmpty dataEmpty) {
-        return new ResponseEntity<>("Data is blank", HttpStatus.BAD_REQUEST);
+    @ExceptionHandler(value = NotEnoughMoney.class)
+    public ResponseEntity<Response> empty(NotEnoughMoney dataEmpty) {
+        return new ResponseEntity<Response>(new Response<String>(null, "khong du tien"), HttpStatus.BAD_REQUEST);
     }
-
-   
 
 }

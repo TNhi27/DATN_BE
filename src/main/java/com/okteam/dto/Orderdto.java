@@ -1,19 +1,19 @@
 package com.okteam.dto;
 
 import java.util.Date;
-
+import java.util.List;
 import lombok.Data;
 
 @Data
 public class Orderdto {
 
-	Date dateorder;
-
-	int status = 0;
+	int status;
 	String address;
 	String customer;
 	String sdtcustomer;
 	int payment;
+	int total;
 
 	String idncc;
+
 }

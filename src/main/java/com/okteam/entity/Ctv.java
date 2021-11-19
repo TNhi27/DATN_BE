@@ -15,11 +15,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 @Entity
-@Table(name="ctv")
+@Table(name = "ctv")
 @Data
 public class Ctv {
 	@Id
 	String username;
+	@JsonIgnore
 	String password;
 	String email;
 	String sdt;
@@ -32,11 +33,11 @@ public class Ctv {
 	Date createdate = new Date();
 	String image;
 	int money = 0;
-	
+
 	@JsonIgnore
 	@OneToMany(mappedBy = "ctv")
 	List<RegiProducts> list_regi;
-	
+
 	@JsonIgnore
 	@OneToMany(mappedBy = "ctv")
 	List<Orders> orders;
@@ -49,5 +50,4 @@ public class Ctv {
 	@OneToMany(mappedBy = "ctv_cmt")
 	List<Comments> comments;
 
-	
 }

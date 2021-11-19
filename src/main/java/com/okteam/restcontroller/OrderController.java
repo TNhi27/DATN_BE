@@ -12,15 +12,20 @@ import com.okteam.dao.OrderRepository;
 import com.okteam.dao.ProductRepository;
 import com.okteam.dto.DetailsDTO;
 import com.okteam.dto.Orderdto;
+import com.okteam.dto.OrdersRequest;
 import com.okteam.dto.RegiProductsDTO;
 import com.okteam.entity.Orders;
 import com.okteam.entity.Products;
 import com.okteam.entity.RegiProducts;
 import com.okteam.entity.Report;
+import com.okteam.exception.NotEnoughMoney;
 import com.okteam.exception.NotFoundSomething;
+import com.okteam.entity.Ctv;
 import com.okteam.entity.Details;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -60,43 +65,61 @@ public class OrderController {
         return new ResponseEntity<Orders>(o, HttpStatus.OK);
     }
 
+    @GetMapping("/ctv/{ctv}")
+    public ResponseEntity<Page<Orders>> selectOrdersWithCtv(@PathVariable("ctv") String ctv,
+            @RequestParam Optional<String> status, @RequestParam Optional<Integer> id) {
+
+        if (id.orElse(-1) <= 0) {
+            Page<Orders> page = oRepository.getOrdersWithCtvStatus(ctv, status.orElse("%%"), PageRequest.of(0, 20));
+            return new ResponseEntity<Page<Orders>>(page, HttpStatus.OK);
+        } else {
+            Page<Orders> page = oRepository.getOrdersWithCtvId(ctv, id.orElse(0), PageRequest.of(0, 20));
+            return new ResponseEntity<Page<Orders>>(page, HttpStatus.OK);
+        }
+
+    }
+
     // post
     @PostMapping
-    public ResponseEntity<Orders> saveOrder(@RequestBody Orderdto orderdto,
-            @RequestParam Optional<List<RegiProductsDTO>> details) {
+    public ResponseEntity<Orders> saveOrder(@RequestBody OrdersRequest orderdto) {
 
         Orders order = new Orders();
 
         order.setDateorder(new Date());
 
-        order.setStatus(orderdto.getStatus());
+        order.setStatus(0);
         order.setAddress(orderdto.getAddress());
         order.setCustomer(orderdto.getCustomer());
         order.setSdtcustomer(orderdto.getSdtcustomer());
         order.setPayment(orderdto.getPayment());
+        order.setTotal(orderdto.getTotal());
 
         // lay ctv hien tai
-        var ctv = SecurityContextHolder.getContext().getAuthentication().getName();
-        order.setCtv(cRepository.findById(ctv).get());
+        var username_ctv = SecurityContextHolder.getContext().getAuthentication().getName();
+        Ctv ctv = cRepository.findById(username_ctv).get();
+
+        if (ctv.getMoney() < orderdto.getTotal()) {
+            throw new NotEnoughMoney();
+        }
+        order.setCtv(ctv);
 
         order.setNcc(nRepository.findById(orderdto.getIdncc()).orElseThrow(() -> new NotFoundSomething(":(")));
 
         Orders rsOrder = oRepository.save(order);
-        int total = 0;
-        int payment = 0;
-        for (int i = 0; i < details.get().size(); i++) {
-            Products products = pRepository.findById(details.get().get(i).getIdpro()).get();
+
+        List<Details> details = new ArrayList<>();
+
+        for (int i = 0; i < orderdto.getDetails().size(); i++) {
+            Products products = pRepository.findById(orderdto.getDetails().get(i).getIdpro()).get();
             Details d = new Details();
-            d.setQty(details.get().get(i).getSl());
+            d.setQty(orderdto.getDetails().get(i).getSl());
             d.setOrders(rsOrder);
             d.setProducts(products);
+            details.add(d);
             detaildao.save(d);
-            total += d.getQty() * products.getPricectv();
-            payment += d.getQty() * details.get().get(i).getPrice();
         }
-        rsOrder.setTotal(total);
-        rsOrder.setPayment(payment);
-        return new ResponseEntity<Orders>(oRepository.save(rsOrder), HttpStatus.OK);
+
+        return new ResponseEntity<Orders>(oRepository.findById(rsOrder.getIdorder()).get(), HttpStatus.OK);
     }
 
     // put
@@ -107,7 +130,6 @@ public class OrderController {
             System.out.print("Không tìm thấy NCC");
             return new ResponseEntity<Orders>(orders, HttpStatus.NOT_FOUND);
         } else {
-            orders.setDateorder(orderdto.getDateorder());
 
             orders.setStatus(orderdto.getStatus());
             orders.setAddress(orderdto.getAddress());
@@ -140,10 +162,4 @@ public class OrderController {
 
     }
 
-    @GetMapping("/report")
-    public Report getaaa() {
-        Report re = oRepository.getget(15, 11, 2021);
-
-        return re;
-    }
 }

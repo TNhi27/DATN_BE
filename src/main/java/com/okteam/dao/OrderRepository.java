@@ -5,12 +5,22 @@ import java.util.Date;
 import com.okteam.entity.Orders;
 import com.okteam.entity.Report;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 public interface OrderRepository extends JpaRepository<Orders, Integer> {
 
-    @Query("SELECT new Report(1,COUNT(o.orders.idorder),SUM(o.orders.total),SUM(o.qty)  ) from Details o where DAY(o.orders.dateorder)=?1 and MONTH(o.orders.dateorder) =?2 and YEAR(o.orders.dateorder)=?3 ")
-    public Report getget(int day, int m, int y);
+    @Query("SELECT o from Orders o where o.ctv.username=?1 and CAST(o.status AS string) LIKE ?2 ")
+    public Page<Orders> getOrdersWithCtvStatus(String ctv, String status, Pageable pageable);
+
+    @Query("SELECT o from Orders o where o.ctv.username=?1 and o.idorder =?2 ")
+    public Page<Orders> getOrdersWithCtvId(String ctv, int id, Pageable pageable);
+
+    // @Query("SELECT o from Orders o where o.ctv.username=?1 and o.status like ?1
+    // and o.idorder=?2")
+    // public Page<Orders> getOrdersWithCtv(String ctv, int status, int id, Pageable
+    // pageable);
 
 }
