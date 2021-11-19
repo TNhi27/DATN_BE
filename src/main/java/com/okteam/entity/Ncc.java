@@ -33,9 +33,14 @@ public class Ncc {
 	Date createdate = new Date();
 	String nccname = "Ẩn danh";
 	String ncclogo;
-	int money = 0;
 
-	@JsonIgnore
+	int money;
+	String city;
+	
+	
+	
+	@JsonBackReference
+
 	@OneToMany(mappedBy = "ncc")
 	List<Products> products;
 

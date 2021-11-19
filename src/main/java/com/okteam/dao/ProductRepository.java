@@ -40,10 +40,12 @@ public interface ProductRepository extends JpaRepository<Products, String> {
 	@Query("SELECT new Rating(o.products.idpro,o.products.name,o.products.pricectv,o.products.origin,o.products.image0,avg(o.star)) FROM Comments o group by o.products.id")
 	public Page<Rating> getProductsWith5Star(Pageable pageable);
 
+
 	@Query("SELECT o.origin FROM Products o group by o.origin")
 	public List<String> getRootOrigin();
 
 	@Query("SELECT o.ncc.city FROM Products o group by o.ncc.city")
 	public List<String> getRootCityNcc();
+
 
 }
