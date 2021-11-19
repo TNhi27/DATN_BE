@@ -19,19 +19,23 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Data
-@Table(name="Regi_products")
+@Table(name = "Regi_products")
 public class RegiProducts {
-	@Id @GeneratedValue(strategy =GenerationType.IDENTITY)
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	int idregi;
-	
+	int price;
+
 	@Temporal(TemporalType.TIMESTAMP)
 	Date regidate;
-	
+
 	@JsonManagedReference
-	@ManyToOne @JoinColumn(name = "idpro")
+	@ManyToOne
+	@JoinColumn(name = "idpro")
 	Products products;
-	
+
 	@JsonBackReference
-	@ManyToOne @JoinColumn(name="idctv")
+	@ManyToOne
+	@JoinColumn(name = "idctv")
 	Ctv ctv;
 }

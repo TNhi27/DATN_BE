@@ -1,6 +1,10 @@
 package com.okteam.restcontroller;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,7 +23,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.okteam.dao.CategoryRepository;
 import com.okteam.dto.Categorydto;
 import com.okteam.entity.Category;
+import com.okteam.entity.CategoryResponse;
 import com.okteam.entity.Response;
+import com.okteam.exception.NotFoundSomething;
 
 @RestController
 @CrossOrigin
@@ -48,7 +54,6 @@ public class CategoryController {
 		} else {
 			categoryRepo.save(category);
 		}
-
 		return new Response<Category>(categoryRepo.findAll(), message);
 	}
 
@@ -98,12 +103,7 @@ public class CategoryController {
 			} else {
 				if (categoryRepo.findByParent(idcate).size() > 0) {
 					message = "Loại hàng này có loại con!";
-					// update các loại hàng có menu cha là loại cần xóa
-					// List<Category> categories = categoryRepo.findByParent(idcate);
-					// categories.stream().forEach(cate -> {
-					// cate.setParent(null);
-					// categoryRepo.save(cate);
-					// });
+
 				} else {
 					categoryRepo.deleteById(idcate);
 					message = "OK";
@@ -154,4 +154,31 @@ public class CategoryController {
 	public void deleteCate(@PathVariable("id") String id) {
 			categoryRepo.deleteById(id);
 	}
+
+	@GetMapping("/get_parent")
+	public ResponseEntity<List<CategoryResponse>> gResponseEntity() {
+		List<Category> list = categoryRepo.findAll();
+
+		List<CategoryResponse> rs = new ArrayList<>();
+		for (Category category : list) {
+			if (category.getParent() == null) {
+				CategoryResponse cate = new CategoryResponse();
+				List<Category> child = list.stream().filter((e) -> e.getParent() != null)
+						.filter((e) -> e.getParent().equals(category.getIdcate())).collect(Collectors.toList());
+
+				cate.setCategory(category);
+				cate.setChild(child);
+				rs.add(cate);
+			}
+		}
+		return new ResponseEntity<List<CategoryResponse>>(rs, HttpStatus.OK);
+
+	}
+
+	@GetMapping("/getone/{id}")
+	public ResponseEntity<Category> getcate1(@PathVariable("id") String id) {
+		Category cate = categoryRepo.findById(id).orElseThrow(() -> new NotFoundSomething(":("));
+		return new ResponseEntity<Category>(cate, HttpStatus.OK);
+	}
+
 }

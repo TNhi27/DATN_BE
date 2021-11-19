@@ -19,19 +19,33 @@ public interface ProductRepository extends JpaRepository<Products, String> {
 	@Query("Select o from Products o Where o.category.idcate=?1")
 	public List<Products> getProductsByCate(String category);
 
+	@Query("Select o from Products o Where o.category.idcate=?1")
+	public Page<Products> getProductsByCate1(String category, Pageable pageable);
 
-	@Query("SELECT o FROM Products o WHERE o.category.idcate=?1")
-	public Page<Products> getProductsByCategory(String category, Pageable pageable);
+	@Query("SELECT o FROM Products o WHERE  o.category.idcate like ?1 and o.pricectv>= ?2 and o.pricectv<=?3 and o.origin in ?4 and o.ncc.city in (?5) and o.p_brand.id = ?6 and o.tags like %?7%")
+	public Page<Products> getProductsByCategoryHasBrand(String category, Integer min, Integer max, List<String> origin,
+			List<String> address_ncc, Integer brand, String q, Pageable pageable);
 
+	@Query("SELECT o FROM Products o WHERE o.category.idcate like ?1 and o.pricectv>= ?2 and o.pricectv<=?3 and o.origin IN (?4) and o.ncc.city in (?5) and o.tags like %?6%")
+	public Page<Products> getProductsByCategory(String category, Integer min, Integer max, List<String> origin,
+			List<String> address_ncc, String q, Pageable pageable);
+
+	@Query("SELECT o FROM Products o WHERE  o.category.idcate in ?1 and o.pricectv>= ?2 and o.pricectv<=?3 and o.origin in ?4 and o.ncc.city in (?5) and o.tags like %?6%")
+	public Page<Products> getProductsByParentCategory(List<String> category, Integer min, Integer max,
+			List<String> origin, List<String> address_ncc, String q, Pageable pageable);
 
 	@Query("SELECT o FROM Products o WHERE o.ncc.username=?1")
 	public Page<Products> getProductWithNcc(String idncc, Pageable pageable);
-	
+
 	@Query("SELECT new Rating(o.products.idpro,o.products.name,o.products.pricectv,o.products.origin,o.products.image0,avg(o.star)) FROM Comments o group by o.products.id")
 	public Page<Rating> getProductsWith5Star(Pageable pageable);
 
-	
-		
-	
+
+	@Query("SELECT o.origin FROM Products o group by o.origin")
+	public List<String> getRootOrigin();
+
+	@Query("SELECT o.ncc.city FROM Products o group by o.ncc.city")
+	public List<String> getRootCityNcc();
+
 
 }

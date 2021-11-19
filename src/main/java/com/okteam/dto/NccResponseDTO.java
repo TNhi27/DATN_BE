@@ -23,7 +23,7 @@ public class NccResponseDTO {
 	String address;
 	String sex;
 	String veryfy;
-	
+	String city;
 	Date createdate;
 	String nccname;
 	String ncclogo;
@@ -31,23 +31,23 @@ public class NccResponseDTO {
 	int countProducts;
 	int countOrders;
 	List<Products> products;
-	
+
 	public void createByEntity(Ncc ncc) {
-		this.active=ncc.isActive();
-		this.address=ncc.getAddress();
-		this.countFollow=ncc.getFollowSell().size();
-		this.createdate=ncc.getCreatedate();
-		this.email=ncc.getEmail();
-		this.fullname=ncc.getFullname();
-		this.ncclogo=ncc.getNcclogo();
-		this.nccname=ncc.getNccname();
-		this.sdt=ncc.getSdt();
-		this.sex=ncc.getSex();
-		this.username=ncc.getUsername();
-		this.veryfy=ncc.getVeryfy();
-		this.countProducts=ncc.getProducts().size();
-		this.products=ncc.getProducts();
-		this.countOrders=ncc.getOrders().size();
-		
+		this.active = ncc.isActive();
+		this.address = ncc.getAddress();
+		this.countFollow = ncc.getFollowSell() != null ? ncc.getFollowSell().size() : 0;
+		this.createdate = ncc.getCreatedate();
+		this.email = ncc.getEmail();
+		this.fullname = ncc.getFullname();
+		this.ncclogo = ncc.getNcclogo();
+		this.nccname = ncc.getNccname();
+		this.sdt = ncc.getSdt();
+		this.sex = ncc.getSex();
+		this.username = ncc.getUsername();
+		this.veryfy = ncc.getVerify();
+		this.countProducts = ncc.getProducts() != null ? ncc.getProducts().size() : 0;
+		this.products = ncc.getProducts();
+		this.countOrders = ncc.getOrders() != null ? ncc.getOrders().size() : 0;
+		this.city = ncc.getCity();
 	}
 }
