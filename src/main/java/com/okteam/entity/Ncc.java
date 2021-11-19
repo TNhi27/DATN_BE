@@ -33,6 +33,7 @@ public class Ncc {
 	String nccname;
 	String ncclogo;
 	int money;
+	String city;
 	
 	
 	

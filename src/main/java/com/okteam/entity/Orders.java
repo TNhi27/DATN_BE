@@ -31,7 +31,7 @@ public class Orders {
 	String address;
 	String customer;
 	String sdtcustomer;
-	String payment;
+	int payment;
 	
 	
 	@JsonManagedReference
