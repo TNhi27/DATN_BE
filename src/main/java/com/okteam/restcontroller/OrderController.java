@@ -26,6 +26,7 @@ import com.okteam.entity.Details;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -39,8 +40,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import javassist.NotFoundException;
 
 @RestController
 @CrossOrigin("*")
@@ -68,12 +67,14 @@ public class OrderController {
     @GetMapping("/ctv/{ctv}")
     public ResponseEntity<Page<Orders>> selectOrdersWithCtv(@PathVariable("ctv") String ctv,
             @RequestParam Optional<String> status, @RequestParam Optional<Integer> id) {
+        Sort sort = Sort.by("dateorder").descending();
 
         if (id.orElse(-1) <= 0) {
-            Page<Orders> page = oRepository.getOrdersWithCtvStatus(ctv, status.orElse("%%"), PageRequest.of(0, 20));
+            Page<Orders> page = oRepository.getOrdersWithCtvStatus(ctv, status.orElse("%%"),
+                    PageRequest.of(0, 20, sort));
             return new ResponseEntity<Page<Orders>>(page, HttpStatus.OK);
         } else {
-            Page<Orders> page = oRepository.getOrdersWithCtvId(ctv, id.orElse(0), PageRequest.of(0, 20));
+            Page<Orders> page = oRepository.getOrdersWithCtvId(ctv, id.orElse(0), PageRequest.of(0, 20, sort));
             return new ResponseEntity<Page<Orders>>(page, HttpStatus.OK);
         }
 
@@ -100,6 +101,9 @@ public class OrderController {
 
         if (ctv.getMoney() < orderdto.getTotal()) {
             throw new NotEnoughMoney();
+        } else {
+            ctv.setMoney(ctv.getMoney() - orderdto.getTotal());
+            cRepository.save(ctv);
         }
         order.setCtv(ctv);
 
@@ -120,6 +124,21 @@ public class OrderController {
         }
 
         return new ResponseEntity<Orders>(oRepository.findById(rsOrder.getIdorder()).get(), HttpStatus.OK);
+    }
+
+    @PostMapping("/cancel/{id}")
+    public ResponseEntity<Object> setStatus(@PathVariable("id") int id) {
+        String idctv = SecurityContextHolder.getContext().getAuthentication().getName();
+        Ctv ctv = cRepository.findById(idctv).get();
+        Orders o = oRepository.findById(id).orElseThrow(() -> new NotFoundSomething("Đơn không tồn tại"));
+        if (o.getStatus() == 0) {
+            o.setStatus(4);
+            ctv.setMoney(ctv.getMoney() + o.getTotal());
+            cRepository.save(ctv);
+        } else {
+            return new ResponseEntity<Object>(oRepository.save(o), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<Object>(oRepository.save(o), HttpStatus.OK);
     }
 
     // put

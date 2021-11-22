@@ -9,7 +9,8 @@ public interface NccRepository extends JpaRepository<Ncc, String> {
 
     @Query("SELECT o.ncc FROM Products o where o.idpro=?1 ")
     public Ncc getNccByProduct(String id);
-    
+
     @Query("SELECT o FROM Ncc o WHERE o.verify = ?1")
     public Ncc findByVerify(String verify);
+
 }
