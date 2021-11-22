@@ -28,6 +28,7 @@ import com.okteam.dto.CommentsDTO;
 import com.okteam.dto.RegiProductsDTO;
 import com.okteam.entity.Comments;
 import com.okteam.entity.Ctv;
+import com.okteam.entity.Ncc;
 import com.okteam.entity.Products;
 import com.okteam.entity.RegiProducts;
 
@@ -87,6 +88,19 @@ public class RegiProductController {
 	public ResponseEntity<String> detele(@PathVariable int id) {
 		RegiPro.deleteById(id);
 		return new ResponseEntity<String>("OK", HttpStatus.OK);
+	}
+
+	@GetMapping("/get_ncc/{ctv}")
+	public ResponseEntity<Page<Ncc>> getNcc(@PathVariable("ctv") String ctv) {
+		Page<Ncc> page = RegiPro.getAllNccOfCtv(ctv, PageRequest.of(0, 100));
+		return new ResponseEntity<Page<Ncc>>(page, HttpStatus.OK);
+	}
+
+	@GetMapping("/get_product/{ncc}/{ctv}")
+	public ResponseEntity<Page<RegiProducts>> getProducts(@PathVariable("ncc") Optional<String> ncc,
+			@PathVariable("ctv") String ctv) {
+		Page<RegiProducts> page = RegiPro.getProductsOfNcc(ncc.orElse("%%"), ctv, PageRequest.of(0, 100));
+		return new ResponseEntity<Page<RegiProducts>>(page, HttpStatus.OK);
 	}
 
 }

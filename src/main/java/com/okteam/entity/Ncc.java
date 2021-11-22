@@ -20,6 +20,7 @@ import lombok.Data;
 public class Ncc {
 	@Id
 	String username;
+	@JsonIgnore
 	String password;
 	String email;
 	String sdt;
@@ -35,12 +36,8 @@ public class Ncc {
 	String ncclogo;
 
 	int money;
-	String city;
-	
-	
-	
-	@JsonBackReference
 
+	@JsonIgnore
 	@OneToMany(mappedBy = "ncc")
 	List<Products> products;
 

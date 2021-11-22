@@ -15,6 +15,7 @@ import com.okteam.dto.NccResponseDTO;
 import com.okteam.entity.Ncc;
 import com.okteam.entity.Products;
 import com.okteam.entity.Response;
+import com.okteam.exception.NotFoundSomething;
 import com.okteam.utils.RegisterService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,27 +54,27 @@ public class NccController {
 
     @GetMapping("/top")
     public ResponseEntity<List<NccResponseDTO>> getNcc2() {
-    	 List<Ncc> list = nccRepository.findAll();
-         Collections.sort(list, new Comparator<Ncc>() {
+        List<Ncc> list = nccRepository.findAll();
+        Collections.sort(list, new Comparator<Ncc>() {
 
-			@Override
-			public int compare(Ncc o1, Ncc o2) {
-				if (o1.getFollowSell().size()<=o2.getFollowSell().size()) {
-					return 1;
-				} else {
-					return -1;
-				}
-			}
-           
-         });
-         
+            @Override
+            public int compare(Ncc o1, Ncc o2) {
+                if (o1.getFollowSell().size() <= o2.getFollowSell().size()) {
+                    return 1;
+                } else {
+                    return -1;
+                }
+            }
+
+        });
+
         List<NccResponseDTO> list_dto = new ArrayList<>();
         for (Ncc ncc : list) {
-			NccResponseDTO dto= new NccResponseDTO();
-			dto.createByEntity(ncc);
-			list_dto.add(dto);
-		}
-       
+            NccResponseDTO dto = new NccResponseDTO();
+            dto.createByEntity(ncc);
+            list_dto.add(dto);
+        }
+
         return new ResponseEntity<List<NccResponseDTO>>(list_dto.subList(0, 3), HttpStatus.OK);
     }
 
@@ -81,33 +82,42 @@ public class NccController {
     public ResponseEntity<Page<Products>> getProduct(@RequestParam String idncc,
             @RequestParam Optional<Integer> pageNumber, @RequestParam Optional<Integer> size) {
         Page<Products> page = productDAO.getProductWithNcc(idncc,
-                PageRequest.of(pageNumber.orElse(0), size.orElse(10)));
+                PageRequest.of(pageNumber.orElse(0), size.orElse(100)));
         return new ResponseEntity<Page<Products>>(page, HttpStatus.OK);
     }
-    
+
     @GetMapping("/get_ncc_by_product")
     public ResponseEntity<NccResponseDTO> getNccDTOByPro(@RequestParam("idpro") String id) {
-		Ncc ncc = nccRepository.getNccByProduct(id);
-		NccResponseDTO dto = new NccResponseDTO();
-		dto.createByEntity(ncc);
-		return new ResponseEntity<NccResponseDTO>(dto, HttpStatus.OK);
-				
-	}
-    
-   
-    @PostMapping("/register")
-    public Response<NccResponseDTO> register(@RequestBody Ncc ncc) throws UnsupportedEncodingException, MessagingException{
-    	String message = "OK";
-    	List<NccResponseDTO> list = new ArrayList<>();
-    	if(service.checkUsername(ncc.getUsername())) {
-    		message = "Username đã tồn tại!";
-    	} else {
-    		ncc = service.registerNcc(ncc);
-    		NccResponseDTO nccDTO = new NccResponseDTO();
-    		nccDTO.createByEntity(ncc);
-    		list.add(nccDTO);
-    	}
-    	return new Response<NccResponseDTO>(list, message);
+        Ncc ncc = nccRepository.getNccByProduct(id);
+        NccResponseDTO dto = new NccResponseDTO();
+        dto.createByEntity(ncc);
+        return new ResponseEntity<NccResponseDTO>(dto, HttpStatus.OK);
+
     }
-    
+
+    @GetMapping("/get_ncc_by_id")
+    public ResponseEntity<NccResponseDTO> getNccDTOById(@RequestParam("id") Optional<String> id) {
+        Ncc ncc = nccRepository.findById(id.orElse("")).orElseThrow(() -> new NotFoundSomething(":("));
+        NccResponseDTO dto = new NccResponseDTO();
+        dto.createByEntity(ncc);
+        return new ResponseEntity<NccResponseDTO>(dto, HttpStatus.OK);
+
+    }
+
+    @PostMapping("/register")
+    public Response<NccResponseDTO> register(@RequestBody Ncc ncc)
+            throws UnsupportedEncodingException, MessagingException {
+        String message = "OK";
+        List<NccResponseDTO> list = new ArrayList<>();
+        if (service.checkUsername(ncc.getUsername())) {
+            message = "Username đã tồn tại!";
+        } else {
+            ncc = service.registerNcc(ncc);
+            NccResponseDTO nccDTO = new NccResponseDTO();
+            nccDTO.createByEntity(ncc);
+            list.add(nccDTO);
+        }
+        return new Response<NccResponseDTO>(list, message);
+    }
+
 }

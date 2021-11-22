@@ -1,5 +1,8 @@
 package com.okteam.restcontroller;
 
+import com.okteam.dao.AdminRepository;
+import com.okteam.dao.CtvRepository;
+import com.okteam.dao.NccRepository;
 import com.okteam.entity.UserLoginResponse;
 import com.okteam.security.JwtService;
 
@@ -22,6 +25,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class LoginController {
 
     @Autowired
+    CtvRepository ctvdao;
+    @Autowired
+    NccRepository nccdao;
+
+    @Autowired
+    AdminRepository addao;
+
+    @Autowired
     AuthenticationManager authentication;
     @Autowired
     JwtService jwtService;
@@ -36,6 +47,15 @@ public class LoginController {
         rs.setUsername(username);
         rs.setRole(auth.getAuthorities().toString());
         rs.setToken(jwt);
+
+        if (auth.getAuthorities().toString().equals("[ROLE_CTV]")) {
+            String img = ctvdao.findById(username).get().getImage();
+            rs.setImage(img);
+        }
+        if (auth.getAuthorities().toString().equals("[ROLE_NCC]")) {
+            String img = nccdao.findById(username).get().getNcclogo();
+            rs.setImage(img);
+        }
 
         return new ResponseEntity<UserLoginResponse>(rs, HttpStatus.OK);
 

@@ -31,46 +31,57 @@ public class ReportNCC {
     DetailsRepository detailsRepository;
     @Autowired
     FollowSellRepository followsellRespository;
-    //get hóa đơn theo ngày
+
+    // get hóa đơn theo ngày
     @GetMapping("/getorder")
-    public ResponseEntity<ReportbyDay> getreport(@RequestParam int d,@RequestParam int m,@RequestParam int y){
-        ReportbyDay list=orderRepository.getReportOrdersByDay1(d,m,y);
-        return new ResponseEntity<ReportbyDay>(list,HttpStatus.OK);
+    public ResponseEntity<ReportbyDay> getreport(@RequestParam int d, @RequestParam int m, @RequestParam int y) {
+        ReportbyDay list = orderRepository.getReportOrdersByDay1(d, m, y, "leo10");
+        return new ResponseEntity<ReportbyDay>(list, HttpStatus.OK);
     }
-    //lấy hóa đơn theo tháng
-    @GetMapping("/getmonth")
-    public ResponseEntity<List<ReportbyDay>> getreportmonth(@RequestParam int y){
-        List<ReportbyDay> list=orderRepository.getReportOrdersByMonth(y);
-        return new ResponseEntity<List<ReportbyDay>>(list,HttpStatus.OK);
-    }
-    //thống kê hóa đơn chưa xác nhận theo ngày
-    @GetMapping("/getdelayday")
-    public ResponseEntity<ReportbyDay> getorderdelaybyday(@RequestParam int d,@RequestParam int m,@RequestParam int y){
-        ReportbyDay list=orderRepository.getOrderDelayByDay(d, m, y);
-        return new ResponseEntity<ReportbyDay>(list,HttpStatus.OK);
-    }
-    //thống kê hóa đơn chờ xác nhận theo ngày
+
+    // lấy hóa đơn theo tháng
+    // @GetMapping("/getmonth")
+    // public ResponseEntity<List<ReportbyDay>> getreportmonth(@RequestParam int y)
+    // {
+    // List<ReportbyDay> list = orderRepository.getReportOrdersByMonth(y);
+    // return new ResponseEntity<List<ReportbyDay>>(list, HttpStatus.OK);
+    // }
+
+    // // thống kê hóa đơn chưa xác nhận theo ngày
+    // @GetMapping("/getdelayday")
+    // public ResponseEntity<ReportbyDay> getorderdelaybyday(@RequestParam int d,
+    // @RequestParam int m,
+    // @RequestParam int y) {
+    // ReportbyDay list = orderRepository.getOrderDelayByDay(d, m, y);
+    // return new ResponseEntity<ReportbyDay>(list, HttpStatus.OK);
+    // }
+
+    // thống kê hóa đơn chờ xác nhận theo ngày
     @GetMapping("/getwaitingday")
-    public ResponseEntity<ReportbyDay> getorderwaitingbyday(@RequestParam int d,@RequestParam int m,@RequestParam int y){
-        ReportbyDay list=orderRepository.getOrderWaitingByDay(d, m, y);
-        return new ResponseEntity<ReportbyDay>(list,HttpStatus.OK);
+    public ResponseEntity<ReportbyDay> getorderwaitingbyday(@RequestParam int d, @RequestParam int m,
+            @RequestParam int y) {
+        ReportbyDay list = orderRepository.getOrderWaitingByDay(d, m, y);
+        return new ResponseEntity<ReportbyDay>(list, HttpStatus.OK);
     }
-    //thống kê hóa đơn đang giao theo ngày
+
+    // thống kê hóa đơn đang giao theo ngày
     @GetMapping("/getshipping")
-    public ResponseEntity<ReportbyDay> getshipping(@RequestParam int d,@RequestParam int m,@RequestParam int y){
-        ReportbyDay list=orderRepository.getShipping(d, m, y);
-        return new ResponseEntity<ReportbyDay>(list,HttpStatus.OK);
+    public ResponseEntity<ReportbyDay> getshipping(@RequestParam int d, @RequestParam int m, @RequestParam int y) {
+        ReportbyDay list = orderRepository.getShipping(d, m, y);
+        return new ResponseEntity<ReportbyDay>(list, HttpStatus.OK);
     }
-    //thống kê đơn bị hủy theo ngày
+
+    // thống kê đơn bị hủy theo ngày
     @GetMapping("/getcancelday")
-    public ResponseEntity<ReportbyDay> getcancelday(@RequestParam int d,@RequestParam int m,@RequestParam int y){
-        ReportbyDay list=orderRepository.getCancelByDate(d, m, y);
-        return new ResponseEntity<ReportbyDay>(list,HttpStatus.OK);
-    }//thống kê lượt follow theo ngày
+    public ResponseEntity<ReportbyDay> getcancelday(@RequestParam int d, @RequestParam int m, @RequestParam int y) {
+        ReportbyDay list = orderRepository.getCancelByDate(d, m, y);
+        return new ResponseEntity<ReportbyDay>(list, HttpStatus.OK);
+    }// thống kê lượt follow theo ngày
+
     @GetMapping("/getfollow")
-    public ResponseEntity<ReportFollow> getfollow(@RequestParam int d,@RequestParam int m,@RequestParam int y){
-        ReportFollow list=followsellRespository.getReportFollow(d, m, y);
-        return new ResponseEntity<ReportFollow>(list,HttpStatus.OK);
+    public ResponseEntity<ReportFollow> getfollow(@RequestParam int d, @RequestParam int m, @RequestParam int y) {
+        ReportFollow list = followsellRespository.getReportFollow(d, m, y);
+        return new ResponseEntity<ReportFollow>(list, HttpStatus.OK);
     }
-   
+
 }

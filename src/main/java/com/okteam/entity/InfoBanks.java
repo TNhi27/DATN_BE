@@ -12,23 +12,24 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import lombok.Data;
 
 @Entity
-@Table(name="infobanks")
+@Table(name = "infobanks")
 @Data
 public class InfoBanks {
-    @Id @GeneratedValue(strategy =GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
     String bankname;
-    String banksnumber;
+    String banknumber;
     String username;
     boolean isctv;
 
-   
-    @JsonBackReference
+    @JsonIgnore
     @OneToMany(mappedBy = "tran_bank")
     List<Transaction> transaction;
 }
