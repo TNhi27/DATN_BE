@@ -20,16 +20,15 @@ import lombok.Data;
 public class Ncc {
 	@Id
 	String username;
-	@JsonIgnore
 	String password;
 	String email;
 	String sdt;
-	boolean active;
+	boolean active = false;
 	String fullname = "Ẩn danh";
 	String address;
 	String city;
-	String sex;
-	String verify;
+	String sex = "Khác";
+	String verify=null;
 	@Temporal(TemporalType.DATE)
 	Date createdate = new Date();
 	String nccname = "Ẩn danh";
