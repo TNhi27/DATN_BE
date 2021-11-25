@@ -34,7 +34,7 @@ public class Ncc {
 	String nccname = "Ẩn danh";
 	String ncclogo;
 
-	int money;
+	int money = 0;
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "ncc")
