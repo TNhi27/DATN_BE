@@ -120,4 +120,9 @@ public class NccController {
         return new Response<NccResponseDTO>(list, message);
     }
 
+    @GetMapping("/list")
+    public Response<Ncc> getNccs(){
+    	return new Response<Ncc>(nccRepository.findAll(), "OK");
+    }
+    
 }
