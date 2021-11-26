@@ -7,10 +7,12 @@ import java.util.List;
 import javax.mail.MessagingException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -71,6 +73,11 @@ public class CtvController {
 
 		return new ResponseEntity<Ctv>(repo.save(ctv), HttpStatus.OK);
 
+	}
+	
+	@GetMapping("/list")
+	public Response<Ctv> getCtvs(){
+		return new Response<Ctv>(repo.findAll(Sort.by(Sort.Direction.DESC, "createdate")),"OK");
 	}
 
 }
