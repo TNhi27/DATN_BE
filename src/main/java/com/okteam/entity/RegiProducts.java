@@ -24,7 +24,7 @@ public class RegiProducts {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	int idregi;
-	int price;
+//	int price;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	Date regidate;

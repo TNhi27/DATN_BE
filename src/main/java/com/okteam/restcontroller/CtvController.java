@@ -12,12 +12,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.okteam.dao.CommentRepository;
 import com.okteam.dao.CtvRepository;
 import com.okteam.dto.CtvReqDTO;
 import com.okteam.dto.CtvResponseDTO;
@@ -35,6 +37,8 @@ public class CtvController {
 	RegisterService service;
 	@Autowired
 	CtvRepository repo;
+	@Autowired
+	CommentRepository cmtRepo;
 
 	@PostMapping("/register")
 	public Response<CtvResponseDTO> register(@RequestBody Ctv ctv)
@@ -87,6 +91,29 @@ public class CtvController {
 			message = "Tài khoản đã tồn tại, vui lòng chọn tên khác!";
 		} else {
 			repo.save(ctv);
+		}
+		return new Response<Ctv>(repo.findAll(Sort.by(Sort.Direction.DESC, "createdate")), message);
+	}
+	
+	@DeleteMapping("/delete")
+	public Response<Ctv> deleteCtv(@RequestBody Ctv ctv){
+		String message = "OK";
+		if(!service.isCtv(ctv.getUsername())) {
+			message = "Tài khoản không chính xác!";
+		} else {
+			ctv = repo.findById(ctv.getUsername()).get();
+			if(ctv.getList_regi().size() > 0) {
+				message = "Cộng tác viên đang nằm trong danh sach đăng ký sản phẩm!";
+			} else if(ctv.getOrders().size() > 0) {
+				message = "Cộng tác viên đã có đơn hàng!";
+			} else if(ctv.getFollowSell().size() > 0) {
+				message = "Cộng tác viên đang nằm trong danh sách follow!";
+			} else {
+				if(ctv.getComments().size() > 0) {
+					cmtRepo.deleteAll(ctv.getComments());
+				}
+				repo.delete(ctv);
+			}
 		}
 		return new Response<Ctv>(repo.findAll(Sort.by(Sort.Direction.DESC, "createdate")), message);
 	}
