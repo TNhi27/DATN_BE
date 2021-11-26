@@ -27,7 +27,7 @@ public class Ctv {
 	String fullname = "Ẩn danh";
 	String address;
 	String sex;
-	String verify;
+	String verify=null;
 	@Temporal(TemporalType.DATE)
 	Date createdate = new Date();
 	String image;
