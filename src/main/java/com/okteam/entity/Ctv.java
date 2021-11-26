@@ -20,7 +20,6 @@ import lombok.Data;
 public class Ctv {
 	@Id
 	String username;
-	@JsonIgnore
 	String password;
 	String email;
 	String sdt;
