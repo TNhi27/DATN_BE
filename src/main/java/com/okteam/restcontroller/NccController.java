@@ -178,6 +178,9 @@ public class NccController {
     public Response<Ncc> updateNcc(@PathVariable("username") String username, 
     		@RequestParam("thaotac") Integer thaotac, @RequestParam("value") String value){
     	String message = "OK";
+    	if(!service.isNcc(username)) {
+    		return new Response<Ncc>(null, "Tài khoản nhà cung cấp không chính xác!");
+    	}
     	Ncc ncc= nccRepository.findById(username).get();
     	switch (thaotac) {
 		case 0:
