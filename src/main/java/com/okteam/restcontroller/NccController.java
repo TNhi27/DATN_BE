@@ -125,4 +125,16 @@ public class NccController {
     	return new Response<Ncc>(nccRepository.findAll(), "OK");
     }
     
+    @PostMapping("/add")
+    public Response<Ncc> addNcc(@RequestBody Ncc ncc){
+    	String message = "OK";
+    	if(service.checkUsername(ncc.getUsername())) {
+    		message = "Tài khoản đã tồn tại, vui lòng chọn tên khác!";
+    	} else {
+    		ncc.setFullname(ncc.getNccname());
+    		nccRepository.save(ncc);
+    	}
+    	return new Response<Ncc>(nccRepository.findAll(), message);
+    }
+    
 }
