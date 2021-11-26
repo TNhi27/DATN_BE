@@ -80,4 +80,15 @@ public class CtvController {
 		return new Response<Ctv>(repo.findAll(Sort.by(Sort.Direction.DESC, "createdate")),"OK");
 	}
 
+	@PostMapping("/add")
+	public Response<Ctv> addCtv(@RequestBody Ctv ctv){
+		String message = "OK";
+		if(service.checkUsername(ctv.getUsername())) {
+			message = "Tài khoản đã tồn tại, vui lòng chọn tên khác!";
+		} else {
+			repo.save(ctv);
+		}
+		return new Response<Ctv>(repo.findAll(Sort.by(Sort.Direction.DESC, "createdate")), message);
+	}
+	
 }
