@@ -14,9 +14,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.okteam.dao.CommentRepository;
@@ -99,7 +102,7 @@ public class CtvController {
 	public Response<Ctv> deleteCtv(@RequestBody Ctv ctv){
 		String message = "OK";
 		if(!service.isCtv(ctv.getUsername())) {
-			message = "Tài khoản không chính xác!";
+			message = "Tài khoản cộng tác viên không chính xác!";
 		} else {
 			ctv = repo.findById(ctv.getUsername()).get();
 			if(ctv.getList_regi().size() > 0) {
@@ -116,6 +119,56 @@ public class CtvController {
 			}
 		}
 		return new Response<Ctv>(repo.findAll(Sort.by(Sort.Direction.DESC, "createdate")), message);
+	}
+	
+	@PutMapping("/update-trangthai")
+	public Response<Ctv> update_trangthai(@RequestParam("username") String username){
+		String message = "OK";
+		if(!service.isCtv(username)) {
+			message = "Tài khoản cộng tác viên không chính xác!";
+		} else {
+			Ctv ctv =repo.findById(username).get();
+			ctv.setActive(!ctv.isActive());
+			repo.save(ctv);
+		}
+		return new Response<Ctv>(null, message);
+	}
+	
+	@PutMapping("/reform/{username}")
+	public Response<Ctv> reformCtv(@PathVariable("username") String username,
+			@RequestParam("thaotac") Integer thaotac, @RequestParam("value") String value){
+		String message = "OK";
+		if(!service.isCtv(username)) {
+			return new Response<Ctv>(null, "Tài khoản cộng tác viên không chính xác!");
+		}
+		Ctv ctv = repo.findById(username).get();
+		switch (thaotac) {
+		case 0:
+			ctv.setPassword(value);
+			break;
+		case 1:
+			ctv.setFullname(value);
+			break;
+		case 2:
+			ctv.setImage(value);
+			break;
+		case 3:
+			ctv.setSex(value);
+			break;
+		case 4:
+			ctv.setEmail(value);
+			break;
+		case 5:
+			ctv.setSdt(value);
+			break;
+		case 6:
+			ctv.setAddress(value);
+			break;
+		default:
+			return new Response<Ctv>(null, "Thao tác không hợp lệ!");
+		}
+		repo.save(ctv);
+		return new Response<Ctv>(null, message);
 	}
 	
 }
