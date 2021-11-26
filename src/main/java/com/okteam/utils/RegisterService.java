@@ -103,16 +103,13 @@ public class RegisterService {
 	    	String senderName = "Okteam Shop";
 	    	String subject = "Cấp lại mật khẩu!";
 	    	String fullname = "";
-	    	String password = "";
 	    	if(thaotac == 0) {
 	    		toAddress = ((Ctv) account).getEmail();
 	    		fullname = ((Ctv) account).getFullname();
-	    		password = ((Ctv) account).getPassword();
 	    	}
 	    	if(thaotac == 1) {
 	    		toAddress = ((Ncc) account).getEmail();
 	    		fullname = ((Ncc) account).getFullname();
-	    		password = ((Ncc) account).getPassword();
 	    	}
 	    	String content = "Chào "+ fullname +",<br>"
 	                + "Mật khẩu tài khoản của bạn là : <h3>[[password]]</h3>"
