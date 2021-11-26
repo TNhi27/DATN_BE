@@ -21,6 +21,7 @@ import com.okteam.utils.RegisterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -83,6 +84,17 @@ public class NccController {
             @RequestParam Optional<Integer> pageNumber, @RequestParam Optional<Integer> size) {
         Page<Products> page = productDAO.getProductWithNcc(idncc,
                 PageRequest.of(pageNumber.orElse(0), size.orElse(100)));
+        return new ResponseEntity<Page<Products>>(page, HttpStatus.OK);
+    }
+
+    @GetMapping("/productsv2")
+    public ResponseEntity<Page<Products>> getProductv2(@RequestParam String idncc,
+            @RequestParam Optional<Integer> pageNumber, @RequestParam Optional<Integer> size,
+            @RequestParam Optional<String> category, @RequestParam Optional<String> name) {
+
+        Sort s = Sort.by("createdate").descending();
+        Page<Products> page = productDAO.getProductWithNccV2(idncc, category.orElse("%%"), name.orElse(""),
+                PageRequest.of(pageNumber.orElse(0), size.orElse(100), s));
         return new ResponseEntity<Page<Products>>(page, HttpStatus.OK);
     }
 

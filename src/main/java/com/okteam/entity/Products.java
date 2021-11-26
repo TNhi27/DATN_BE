@@ -24,17 +24,17 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name="products")
+@Table(name = "products")
 public class Products {
 	@Id
 	String idpro;
 	String name;
 	String description;
 	int pricectv;
-	boolean active=true;	
+	boolean active = true;
 	@Temporal(TemporalType.DATE)
 	Date createdate;
-	
+
 	int qty;
 	String dvt;
 	String image0;
@@ -43,25 +43,27 @@ public class Products {
 	String image3;
 	String origin;
 	String tags;
-	
+
 	@JsonBackReference
 	@OneToMany(mappedBy = "products")
 	List<RegiProducts> list_regi;
-	
+
 	@JsonBackReference
 	@OneToMany(mappedBy = "products")
 	List<Comments> comments;
-	
+
 	@JsonBackReference
 	@OneToMany(mappedBy = "products")
 	List<Details> details;
-	
+
 	@JsonManagedReference
-	@ManyToOne @JoinColumn(name = "idcate")
+	@ManyToOne
+	@JoinColumn(name = "idcate")
 	Category category;
-	
+
 	@JsonIgnore
-	@ManyToOne @JoinColumn(name="idncc")
+	@ManyToOne
+	@JoinColumn(name = "idncc")
 	Ncc ncc;
 
 	@JsonManagedReference
@@ -69,7 +71,8 @@ public class Products {
 	List<Properties> properties;
 
 	@JsonManagedReference
-	@ManyToOne @JoinColumn(name = "brand")
+	@ManyToOne
+	@JoinColumn(name = "brand")
 	Brand p_brand;
-	
+
 }

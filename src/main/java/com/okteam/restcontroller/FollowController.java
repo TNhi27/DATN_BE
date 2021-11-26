@@ -11,6 +11,7 @@ import com.okteam.entity.Ctv;
 import com.okteam.entity.FollowSell;
 import com.okteam.entity.Ncc;
 import com.okteam.exception.NotFoundSomething;
+import com.okteam.exception.UserAlreadyExists;
 import com.okteam.exception.UsersException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,7 +60,7 @@ public class FollowController {
         for (var fl : all) {
             if (fl.getFl_ncc().getUsername().equals(ncc.getUsername())
                     && fl.getFl_ctv().getUsername().equals(ctv.getUsername())) {
-                throw new UsersException();
+                throw new UserAlreadyExists();
             }
         }
 

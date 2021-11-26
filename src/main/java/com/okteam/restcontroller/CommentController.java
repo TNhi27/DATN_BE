@@ -1,5 +1,6 @@
 package com.okteam.restcontroller;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,11 +21,12 @@ import com.okteam.dto.CommentsDTO;
 import com.okteam.entity.Comments;
 import com.okteam.entity.Ctv;
 import com.okteam.entity.Products;
+import com.okteam.exception.UserAlreadyExists;
+import com.okteam.exception.UserCommentExists;
 
 @RestController
 
-
-@RequestMapping("/api/v2/comments")
+@RequestMapping("/api/v1/comments")
 @CrossOrigin("*")
 
 public class CommentController {
@@ -36,35 +38,46 @@ public class CommentController {
 	CtvRepository CtvRep;
 	@Autowired
 	ProductRepository ProRep;
-	
+
 	@GetMapping()
-	public ResponseEntity<List<Comments>> getAllComments(){
-		
+	public ResponseEntity<List<Comments>> getAllComments() {
+
 		return new ResponseEntity<List<Comments>>(CmtRep.findAll(), HttpStatus.OK);
 	}
 
 	@GetMapping("{idcmt}")
-	public ResponseEntity<Comments> getCommentById(@PathVariable("idcmt") Integer idcmt){
+	public ResponseEntity<Comments> getCommentById(@PathVariable("idcmt") Integer idcmt) {
 		Comments cmt = CmtRep.findById(idcmt).get();
 		ResponseEntity.notFound().build();
-		
+
 		return new ResponseEntity<Comments>(cmt, HttpStatus.OK);
 	}
 
 	@PostMapping
 	public ResponseEntity<Comments> postComment(@RequestBody CommentsDTO commentsDto) {
-			Ctv ctv = CtvRep.findById(commentsDto.getUsername()).get();
-			Comments comment = new Comments();
-			comment.setContent(commentsDto.getContent());
-			comment.setCreatedate(commentsDto.getCreatedate());
-			comment.setStar(commentsDto.getStar());
-			comment.setCtv_cmt(ctv);
-			Products products = ProRep.findById(commentsDto.getProducts()).get();
-			comment.setProducts(products);
+		Ctv ctv = CtvRep.findById(commentsDto.getUsername()).get();
+		Products products = ProRep.findById(commentsDto.getProducts()).get();
+
+		List<Comments> list = CmtRep.findAll();
+
+		for (var cmt : list) {
+			if (cmt.getIdorder() == commentsDto.getIdorder()) {
+				if (cmt.getProducts().getIdpro().equals(commentsDto.getProducts())
+						&& cmt.getCtv_cmt().getUsername().equals(commentsDto.getUsername())) {
+					throw new UserCommentExists();
+				}
+
+			}
+		}
+
+		Comments comment = new Comments();
+		comment.setContent(commentsDto.getContent());
+		comment.setCreatedate(new Date());
+		comment.setStar(commentsDto.getStar());
+		comment.setCtv_cmt(ctv);
+		comment.setIdorder(commentsDto.getIdorder());
+		comment.setProducts(products);
 		return new ResponseEntity<Comments>(CmtRep.save(comment), HttpStatus.CREATED);
-
-
-	
 
 	}
 

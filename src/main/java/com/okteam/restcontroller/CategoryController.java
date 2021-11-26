@@ -20,8 +20,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.okteam.dao.BrandRepository;
 import com.okteam.dao.CategoryRepository;
 import com.okteam.dto.Categorydto;
+import com.okteam.entity.Brand;
 import com.okteam.entity.Category;
 import com.okteam.entity.CategoryResponse;
 import com.okteam.entity.Response;
@@ -33,6 +35,8 @@ import com.okteam.exception.NotFoundSomething;
 public class CategoryController {
 	@Autowired
 	CategoryRepository categoryRepo;
+	@Autowired
+	BrandRepository brandRepository;
 
 	@GetMapping
 	public ResponseEntity<List<Category>> get_all() {
@@ -152,7 +156,7 @@ public class CategoryController {
 	// Delete cate
 	@DeleteMapping("/{id}")
 	public void deleteCate(@PathVariable("id") String id) {
-			categoryRepo.deleteById(id);
+		categoryRepo.deleteById(id);
 	}
 
 	@GetMapping("/get_parent")
@@ -165,9 +169,10 @@ public class CategoryController {
 				CategoryResponse cate = new CategoryResponse();
 				List<Category> child = list.stream().filter((e) -> e.getParent() != null)
 						.filter((e) -> e.getParent().equals(category.getIdcate())).collect(Collectors.toList());
-
+				List<Brand> brand = brandRepository.findByIdcate(category.getIdcate());
 				cate.setCategory(category);
 				cate.setChild(child);
+				cate.setBrands(brand);
 				rs.add(cate);
 			}
 		}

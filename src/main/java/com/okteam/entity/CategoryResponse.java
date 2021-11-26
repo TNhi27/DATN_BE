@@ -8,4 +8,5 @@ import lombok.Data;
 public class CategoryResponse {
     Category category;
     List<Category> child;
+    List<Brand> brands;
 }

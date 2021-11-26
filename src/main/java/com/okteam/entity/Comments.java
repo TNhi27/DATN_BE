@@ -19,21 +19,25 @@ import lombok.Data;
 
 @Entity
 @Data
-@Table(name="comments")
+@Table(name = "comments")
 public class Comments {
-	@Id @GeneratedValue(strategy =GenerationType.IDENTITY)
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	int idcmt;
 	int star;
 	String content;
-	
+	Integer idorder;
+
 	@Temporal(TemporalType.TIMESTAMP)
 	Date createdate;
 
 	@JsonManagedReference
-	@ManyToOne @JoinColumn(name = "username")
+	@ManyToOne
+	@JoinColumn(name = "username")
 	Ctv ctv_cmt;
-	
+
 	@JsonManagedReference
-	@ManyToOne @JoinColumn(name = "idpro")
+	@ManyToOne
+	@JoinColumn(name = "idpro")
 	Products products;
 }

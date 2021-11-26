@@ -18,6 +18,7 @@ import com.okteam.dao.CommentRepository;
 import com.okteam.dao.NccRepository;
 import com.okteam.dao.OrderRepository;
 import com.okteam.dao.ProductRepository;
+import com.okteam.dao.PropertiesReponsitory;
 import com.okteam.dto.NccResponseDTO;
 import com.okteam.dto.Productdto;
 import com.okteam.entity.Brand;
@@ -26,6 +27,7 @@ import com.okteam.entity.Comments;
 import com.okteam.entity.Details;
 import com.okteam.entity.Orders;
 import com.okteam.entity.Products;
+import com.okteam.entity.Properties;
 import com.okteam.entity.Rating;
 import com.okteam.entity.Response;
 import com.okteam.exception.NotFoundSomething;
@@ -73,11 +75,13 @@ public class ProductsController {
 
     @Autowired
     OrderRepository orderRepository;
+    @Autowired
+    PropertiesReponsitory propertiesReponsitory;
 
     // Lấy 1 sản phẩm theo ID
     @GetMapping("/getone/{id}")
     public ResponseEntity<Products> getProduct(@PathVariable("id") String id) {
-        Products pro = proDAO.findById(id).orElseThrow(() -> new NotFoundSomething("Khong tim thay san pham"));
+        Products pro = proDAO.findById(id, true);
 
         return new ResponseEntity<Products>(pro, HttpStatus.OK);
     }
@@ -132,7 +136,7 @@ public class ProductsController {
 
     @GetMapping("/get_by_category")
     public ResponseEntity<Page<Products>> getproductbycate(@RequestParam Optional<String> category) {
-        Page<Products> page = proDAO.getProductsByCate1(category.orElse("%%"), PageRequest.of(0, 15));
+        Page<Products> page = proDAO.getProductsByCate1(category.orElse("%%"), PageRequest.of(0, 10));
 
         return new ResponseEntity<Page<Products>>(page, HttpStatus.OK);
     }
@@ -190,96 +194,104 @@ public class ProductsController {
     public ResponseEntity<List<String>> get_city_ncc() {
         return new ResponseEntity<List<String>>(proDAO.getRootCityNcc(), HttpStatus.OK);
     }
+
     // post
     @PostMapping
     public ResponseEntity<Products> saveProducts(@RequestBody Productdto productdto) {
-      try {
+
         Products pro = new Products();
-        if (proDAO.existsById(productdto.getIdpro())){
+        if (proDAO.existsById(productdto.getIdpro())) {
             System.out.print("Mã đã tồn tại");
-            return new ResponseEntity<Products>(pro,HttpStatus.NOT_FOUND);
-        }
-        else if(!cateDAO.existsById(productdto.getIdcate())){
+            return new ResponseEntity<Products>(pro, HttpStatus.NOT_FOUND);
+        } else if (!cateDAO.existsById(productdto.getIdcate())) {
             System.out.print("ID loại sản phẩm không tồn tại");
-            return new ResponseEntity<Products>(pro,HttpStatus.NOT_FOUND);
-        }
-        else if(!brandRepository.existsById(productdto.getIdbrand())){
+            return new ResponseEntity<Products>(pro, HttpStatus.NOT_FOUND);
+        } else if (!brandRepository.existsById(productdto.getIdbrand())) {
             System.out.print("Brand không tồn tại");
-            return new ResponseEntity<Products>(pro,HttpStatus.NOT_FOUND);
+            return new ResponseEntity<Products>(pro, HttpStatus.NOT_FOUND);
         }
-        else {
-            pro.setIdpro(productdto.getIdpro());
-            pro.setName(productdto.getName());
-            pro.setDescription(productdto.getDescription());
-            pro.setPricectv(productdto.getPricectv());
-            pro.setCreatedate(productdto.getCreatedate());
-            pro.setTags(productdto.getTags());
-            pro.setQty(productdto.getQty());
-            pro.setDvt(productdto.getDvt());
-            pro.setImage0(productdto.getImage0());
-            pro.setImage1(productdto.getImage1());
-            pro.setImage2(productdto.getImage2());
-            pro.setImage3(productdto.getImage3());
-            pro.setOrigin(productdto.getOrigin());
-            pro.setCategory(cateDAO.findById(productdto.getIdcate()).get());
-            pro.setNcc(nccRepository.findById(productdto.getUsername()).get());
-            pro.setActive(productdto.isActive());
-            pro.setP_brand(brandRepository.findById(productdto.getIdbrand()).get());
+        pro.setIdpro(productdto.getIdpro());
+        pro.setName(productdto.getName());
+        pro.setDescription(productdto.getDescription());
+        pro.setPricectv(productdto.getPricectv());
+        pro.setCreatedate(new Date());
+        pro.setTags(productdto.getTags());
+        pro.setQty(productdto.getQty());
+        pro.setDvt(productdto.getDvt());
+        pro.setImage0(productdto.getImage0());
+        pro.setImage1(productdto.getImage1());
+        pro.setImage2(productdto.getImage2());
+        pro.setImage3(productdto.getImage3());
+        pro.setOrigin(productdto.getOrigin());
+        pro.setCategory(cateDAO.findById(productdto.getIdcate()).get());
+        pro.setNcc(nccRepository.findById(productdto.getUsername()).get());
+        pro.setActive(true);
+        pro.setP_brand(brandRepository.findById(productdto.getIdbrand()).get());
+
+        Products p = proDAO.save(pro);
+
+        for (var e : productdto.getProperties()) {
+            Properties properties = new Properties();
+            properties.setP_properties(p);
+            properties.setKeyp(e.getKeyp());
+            properties.setValuep(e.getValuep());
+            propertiesReponsitory.save(properties);
         }
-        return new ResponseEntity<Products>(proDAO.save(pro), HttpStatus.OK);
-    } catch (Exception e) {
-        //TODO: handle exception
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
+
+        return new ResponseEntity<Products>(p, HttpStatus.OK);
+
     }
 
     // put=update
     @PutMapping("/{id}")
     public ResponseEntity<Products> updateProducts(@PathVariable("id") String id, @RequestBody Productdto productdto) {
-        try {
-        Products pro = proDAO.findById(id).get();
-        if (proDAO.existsById(productdto.getIdpro())){
-            System.out.print("ID sản phẩm đã tồn tại");
-            return new ResponseEntity<Products>(pro,HttpStatus.NOT_FOUND);
-        }
-        else if(!cateDAO.existsById(productdto.getIdcate())){
-            System.out.print("Loại sản phẩm không tồn tại");
-            return new ResponseEntity<Products>(pro,HttpStatus.NOT_FOUND);
-        }
-        else if(!brandRepository.existsById(productdto.getIdbrand())){
+        Products pro = proDAO.findById(id).orElseThrow(() -> new NotFoundSomething(":("));
+        if (proDAO.existsById(productdto.getIdpro())) {
+            System.out.print("Mã đã tồn tại");
+            return new ResponseEntity<Products>(pro, HttpStatus.NOT_FOUND);
+        } else if (!cateDAO.existsById(productdto.getIdcate())) {
+            System.out.print("ID loại sản phẩm không tồn tại");
+            return new ResponseEntity<Products>(pro, HttpStatus.NOT_FOUND);
+        } else if (!brandRepository.existsById(productdto.getIdbrand())) {
             System.out.print("Brand không tồn tại");
-            return new ResponseEntity<Products>(pro,HttpStatus.NOT_FOUND);
+            return new ResponseEntity<Products>(pro, HttpStatus.NOT_FOUND);
         }
-        else {
-            pro.setName(productdto.getName());
-            pro.setDescription(productdto.getDescription());
-            pro.setPricectv(productdto.getPricectv());
-            pro.setCreatedate(productdto.getCreatedate());
-            pro.setTags(productdto.getTags());
-            pro.setQty(productdto.getQty());
-            pro.setDvt(productdto.getDvt());
-            pro.setImage0(productdto.getImage0());
-            pro.setImage1(productdto.getImage1());
-            pro.setImage2(productdto.getImage2());
-            pro.setImage3(productdto.getImage3());
-            pro.setOrigin(productdto.getOrigin());
-            pro.setCategory(cateDAO.findById(productdto.getIdcate()).get());
-            pro.setNcc(nccRepository.findById(productdto.getUsername()).get());
-            pro.setActive(productdto.isActive());
-            pro.setP_brand(brandRepository.findById(productdto.getIdbrand()).get());
+        pro.setName(productdto.getName());
+        pro.setDescription(productdto.getDescription());
+        pro.setPricectv(productdto.getPricectv());
+        pro.setTags(productdto.getTags());
+        pro.setQty(productdto.getQty());
+        pro.setDvt(productdto.getDvt());
+        pro.setImage0(productdto.getImage0());
+        pro.setImage1(productdto.getImage1());
+        pro.setImage2(productdto.getImage2());
+        pro.setImage3(productdto.getImage3());
+        pro.setOrigin(productdto.getOrigin());
+        pro.setCategory(cateDAO.findById(productdto.getIdcate()).get());
+        pro.setNcc(nccRepository.findById(productdto.getUsername()).get());
+        pro.setActive(true);
+        pro.setP_brand(brandRepository.findById(productdto.getIdbrand()).get());
+
+        for (var prt : pro.getProperties()) {
+            propertiesReponsitory.deleteById(prt.getId());
         }
+
+        for (var e : productdto.getProperties()) {
+            Properties properties = new Properties();
+            properties.setP_properties(pro);
+            properties.setKeyp(e.getKeyp());
+            properties.setValuep(e.getValuep());
+            propertiesReponsitory.save(properties);
+        }
+
         return new ResponseEntity<Products>(proDAO.save(pro), HttpStatus.OK);
-    } catch (Exception e) {
-        //TODO: handle exception
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
     }
     // xóa
     // @DeleteMapping("/{id}")
     // public void deleteProduct(@PathVariable("id") String idpro) {
-    //         //proDAO.getById(idpro.)
-    //         Products pro = proDAO.findById(idpro).get();
-    //         pro.setActive(false);
+    // //proDAO.getById(idpro.)
+    // Products pro = proDAO.findById(idpro).get();
+    // pro.setActive(false);
 
     // }
     @DeleteMapping("/{id}")
