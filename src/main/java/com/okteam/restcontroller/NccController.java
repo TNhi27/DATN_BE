@@ -145,7 +145,7 @@ public class NccController {
     public Response<Ncc> deleteNcc(@RequestBody Ncc ncc){
     	String message = "OK";
     	if(!service.isNcc(ncc.getUsername())) {
-    		message = "Tài khoản không chính xác!";
+    		message = "Tài khoản nhà cung cấp không chính xác!";
     	} else {
     		ncc = nccRepository.findById(ncc.getUsername()).get();
     		if(ncc.getProducts().size() > 0) {
@@ -165,7 +165,7 @@ public class NccController {
     public Response<Ncc> update_trangthai(@RequestParam("username") String username){
     	String message = "OK";
     	if(!service.isNcc(username)) {
-    		message = "Tài khoản không chính xác!";
+    		message = "Tài khoản nhà cung cấp không chính xác!";
     	} else {
     		Ncc ncc  = nccRepository.findById(username).get();
         	ncc.setActive(!ncc.isActive());
