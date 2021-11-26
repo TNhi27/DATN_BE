@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -158,6 +159,54 @@ public class NccController {
     		}
     	}
     	return new Response<Ncc>(nccRepository.findAll(Sort.by(Direction.DESC,"createdate")), message);
+    }
+    
+    @PutMapping("/update-trangthai")
+    public Response<Ncc> update_trangthai(@RequestParam("username") String username){
+    	String message = "OK";
+    	if(!service.isNcc(username)) {
+    		message = "Tài khoản không chính xác!";
+    	} else {
+    		Ncc ncc  = nccRepository.findById(username).get();
+        	ncc.setActive(!ncc.isActive());
+        	nccRepository.save(ncc);
+    	}
+    	return new Response<Ncc>(null, message);
+    }
+    
+    @PutMapping("/update/{username}")
+    public Response<Ncc> updateNcc(@PathVariable("username") String username, 
+    		@RequestParam("thaotac") Integer thaotac, @RequestParam("value") String value){
+    	String message = "OK";
+    	Ncc ncc= nccRepository.findById(username).get();
+    	switch (thaotac) {
+		case 0:
+			ncc.setPassword(value);
+			break;
+		case 1:
+			ncc.setNccname(value);
+    		ncc.setFullname(value);
+			break;
+		case 2:
+			ncc.setNcclogo(value);
+			break;
+		case 3:
+			ncc.setEmail(value);
+			break;
+		case 4:
+			ncc.setSdt(value);
+			break;
+		case 5:
+			ncc.setCity(value);
+			break;
+		case 6:
+			ncc.setAddress(value);
+			break;
+		default:
+			return new Response<Ncc>(null, "Thao tác không hợp lệ!");
+		}
+    	nccRepository.save(ncc);
+    	return new Response<Ncc>(null, message);
     }
     
 }
