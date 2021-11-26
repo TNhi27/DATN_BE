@@ -21,9 +21,12 @@ import com.okteam.utils.RegisterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -122,7 +125,7 @@ public class NccController {
 
     @GetMapping("/list")
     public Response<Ncc> getNccs(){
-    	return new Response<Ncc>(nccRepository.findAll(), "OK");
+    	return new Response<Ncc>(nccRepository.findAll(Sort.by(Direction.DESC,"createdate")), "OK");
     }
     
     @PostMapping("/add")
@@ -134,7 +137,27 @@ public class NccController {
     		ncc.setFullname(ncc.getNccname());
     		nccRepository.save(ncc);
     	}
-    	return new Response<Ncc>(nccRepository.findAll(), message);
+    	return new Response<Ncc>(nccRepository.findAll(Sort.by(Direction.DESC,"createdate")), message);
+    }
+    
+    @DeleteMapping("/delete")
+    public Response<Ncc> deleteNcc(@RequestBody Ncc ncc){
+    	String message = "OK";
+    	if(!service.isNcc(ncc.getUsername())) {
+    		message = "Tài khoản không chính xác!";
+    	} else {
+    		ncc = nccRepository.findById(ncc.getUsername()).get();
+    		if(ncc.getProducts().size() > 0) {
+    			message = "Nhà cung cấp đã có sản phẩm!";
+    		} else if(ncc.getOrders().size() > 0) {
+    			message = "Nhà cung cấp đã có đơn hàng!";
+    		} else if(ncc.getFollowSell().size() > 0) {
+    			message = "Nhà cung cấp đang nằm trong danh sách follow!";
+    		} else {
+    			nccRepository.deleteById(ncc.getUsername());
+    		}
+    	}
+    	return new Response<Ncc>(nccRepository.findAll(Sort.by(Direction.DESC,"createdate")), message);
     }
     
 }

@@ -33,6 +33,7 @@ public class Ncc {
 	Date createdate = new Date();
 	String nccname = "Ẩn danh";
 	String ncclogo;
+	String description = "Xin chào";
 
 	int money = 0;
 
