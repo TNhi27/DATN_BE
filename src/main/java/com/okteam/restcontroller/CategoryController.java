@@ -1,9 +1,7 @@
 package com.okteam.restcontroller;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +24,7 @@ import com.okteam.entity.Category;
 import com.okteam.entity.CategoryResponse;
 import com.okteam.entity.Response;
 import com.okteam.exception.NotFoundSomething;
+import com.okteam.utils.DtoUtils;
 
 @RestController
 @CrossOrigin
@@ -33,6 +32,8 @@ import com.okteam.exception.NotFoundSomething;
 public class CategoryController {
 	@Autowired
 	CategoryRepository categoryRepo;
+	@Autowired
+	DtoUtils dtoUtils;
 
 	@GetMapping
 	public ResponseEntity<List<Category>> get_all() {
@@ -40,12 +41,12 @@ public class CategoryController {
 	}
 
 	@GetMapping("/list")
-	public Response<Category> getCategories() {
-		return new Response<Category>(categoryRepo.findAll(), "OK");
+	public Response<Categorydto> getCategories() {
+		return new Response<Categorydto>(dtoUtils.mapCategoryToDto(categoryRepo.findAll()), "OK");
 	}
 
 	@PostMapping("/add")
-	public Response<Category> addCategory(@RequestBody Category category) {
+	public Response<Categorydto> addCategory(@RequestBody Category category) {
 		String message = "OK";
 		if (categoryRepo.existsById(category.getIdcate())) {
 			message = "Mã loại đã tồn tại!";
@@ -54,11 +55,11 @@ public class CategoryController {
 		} else {
 			categoryRepo.save(category);
 		}
-		return new Response<Category>(categoryRepo.findAll(), message);
+		return new Response<Categorydto>(dtoUtils.mapCategoryToDto(categoryRepo.findAll()), message);
 	}
 
 	@PutMapping("/update")
-	public Response<Category> updateCategory(@RequestParam(name = "idcate") String idcate,
+	public Response<Categorydto> updateCategory(@RequestParam(name = "idcate") String idcate,
 			@RequestParam(name = "value") String value, @RequestParam(name = "thaotac") Integer thaotac) {
 		Category category = categoryRepo.findById(idcate).get();
 		String message = "Không tìm thấy thao tác!";
@@ -88,11 +89,11 @@ public class CategoryController {
 				message = "OK";
 			}
 		}
-		return new Response<Category>(null, message);
+		return new Response<Categorydto>(null, message);
 	}
 
 	@DeleteMapping("/delete")
-	public Response<Category> deleteCategory(@RequestParam(name = "idcate") String idcate) {
+	public Response<Categorydto> deleteCategory(@RequestParam(name = "idcate") String idcate) {
 		String message = "Không tìm thấy loại hàng!";
 		if (categoryRepo.existsById(idcate)) {
 			Category c = categoryRepo.findById(idcate).get();
@@ -110,7 +111,7 @@ public class CategoryController {
 				}
 			}
 		}
-		return new Response<Category>(categoryRepo.findAll(), message);
+		return new Response<Categorydto>(dtoUtils.mapCategoryToDto(categoryRepo.findAll()), message);
 	}
 
 	@PostMapping
