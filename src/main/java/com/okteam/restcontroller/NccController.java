@@ -16,6 +16,7 @@ import com.okteam.entity.Ncc;
 import com.okteam.entity.Products;
 import com.okteam.entity.Response;
 import com.okteam.exception.NotFoundSomething;
+import com.okteam.utils.DtoUtils;
 import com.okteam.utils.RegisterService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,8 @@ public class NccController {
     ProductRepository productDAO;
     @Autowired
     RegisterService service;
+    @Autowired
+    DtoUtils dtoUtils;
 
     //
     @GetMapping("/get/{idncc}")
@@ -125,12 +128,12 @@ public class NccController {
     }
 
     @GetMapping("/list")
-    public Response<Ncc> getNccs(){
-    	return new Response<Ncc>(nccRepository.findAll(Sort.by(Direction.DESC,"createdate")), "OK");
+    public Response<NccResponseDTO> getNccs(){
+    	return new Response<NccResponseDTO>(dtoUtils.mapNccToDto(nccRepository.findAll(Sort.by(Direction.DESC,"createdate"))), "OK");
     }
     
     @PostMapping("/add")
-    public Response<Ncc> addNcc(@RequestBody Ncc ncc){
+    public Response<NccResponseDTO> addNcc(@RequestBody Ncc ncc){
     	String message = "OK";
     	if(service.checkUsername(ncc.getUsername())) {
     		message = "Tài khoản đã tồn tại, vui lòng chọn tên khác!";
@@ -138,11 +141,11 @@ public class NccController {
     		ncc.setFullname(ncc.getNccname());
     		nccRepository.save(ncc);
     	}
-    	return new Response<Ncc>(nccRepository.findAll(Sort.by(Direction.DESC,"createdate")), message);
+    	return new Response<NccResponseDTO>(dtoUtils.mapNccToDto(nccRepository.findAll(Sort.by(Direction.DESC,"createdate"))), message);
     }
     
     @DeleteMapping("/delete")
-    public Response<Ncc> deleteNcc(@RequestBody Ncc ncc){
+    public Response<NccResponseDTO> deleteNcc(@RequestBody Ncc ncc){
     	String message = "OK";
     	if(!service.isNcc(ncc.getUsername())) {
     		message = "Tài khoản nhà cung cấp không chính xác!";
@@ -158,11 +161,11 @@ public class NccController {
     			nccRepository.deleteById(ncc.getUsername());
     		}
     	}
-    	return new Response<Ncc>(nccRepository.findAll(Sort.by(Direction.DESC,"createdate")), message);
+    	return new Response<NccResponseDTO>(dtoUtils.mapNccToDto(nccRepository.findAll(Sort.by(Direction.DESC,"createdate"))), message);
     }
     
     @PutMapping("/update-trangthai")
-    public Response<Ncc> update_trangthai(@RequestParam("username") String username){
+    public Response<NccResponseDTO> update_trangthai(@RequestParam("username") String username){
     	String message = "OK";
     	if(!service.isNcc(username)) {
     		message = "Tài khoản nhà cung cấp không chính xác!";
@@ -171,15 +174,15 @@ public class NccController {
         	ncc.setActive(!ncc.isActive());
         	nccRepository.save(ncc);
     	}
-    	return new Response<Ncc>(null, message);
+    	return new Response<NccResponseDTO>(null, message);
     }
     
     @PutMapping("/update/{username}")
-    public Response<Ncc> updateNcc(@PathVariable("username") String username, 
+    public Response<NccResponseDTO> updateNcc(@PathVariable("username") String username, 
     		@RequestParam("thaotac") Integer thaotac, @RequestParam("value") String value){
     	String message = "OK";
     	if(!service.isNcc(username)) {
-    		return new Response<Ncc>(null, "Tài khoản nhà cung cấp không chính xác!");
+    		return new Response<NccResponseDTO>(null, "Tài khoản nhà cung cấp không chính xác!");
     	}
     	Ncc ncc= nccRepository.findById(username).get();
     	switch (thaotac) {
@@ -206,10 +209,10 @@ public class NccController {
 			ncc.setAddress(value);
 			break;
 		default:
-			return new Response<Ncc>(null, "Thao tác không hợp lệ!");
+			return new Response<NccResponseDTO>(null, "Thao tác không hợp lệ!");
 		}
     	nccRepository.save(ncc);
-    	return new Response<Ncc>(null, message);
+    	return new Response<NccResponseDTO>(null, message);
     }
     
 }

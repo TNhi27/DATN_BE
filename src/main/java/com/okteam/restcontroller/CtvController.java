@@ -3,7 +3,6 @@ package com.okteam.restcontroller;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.mail.MessagingException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +28,7 @@ import com.okteam.dto.CtvResponseDTO;
 import com.okteam.entity.Ctv;
 import com.okteam.entity.Response;
 import com.okteam.exception.UsersException;
+import com.okteam.utils.DtoUtils;
 import com.okteam.utils.RegisterService;
 
 @RestController
@@ -42,6 +42,8 @@ public class CtvController {
 	CtvRepository repo;
 	@Autowired
 	CommentRepository cmtRepo;
+	@Autowired
+	DtoUtils dtoUtils;
 
 	@PostMapping("/register")
 	public Response<CtvResponseDTO> register(@RequestBody Ctv ctv)
@@ -83,23 +85,24 @@ public class CtvController {
 	}
 	
 	@GetMapping("/list")
-	public Response<Ctv> getCtvs(){
-		return new Response<Ctv>(repo.findAll(Sort.by(Sort.Direction.DESC, "createdate")),"OK");
+	public Response<CtvResponseDTO> getCtvs(){
+		return new Response<CtvResponseDTO>(dtoUtils.mapCtvToDto(repo.findAll(Sort.by(Sort.Direction.DESC, "createdate"))),"OK");
 	}
 
 	@PostMapping("/add")
-	public Response<Ctv> addCtv(@RequestBody Ctv ctv){
+	public Response<CtvResponseDTO> addCtv(@RequestBody Ctv ctv){
 		String message = "OK";
 		if(service.checkUsername(ctv.getUsername())) {
 			message = "Tài khoản đã tồn tại, vui lòng chọn tên khác!";
 		} else {
+			System.out.println(ctv.getPassword());
 			repo.save(ctv);
 		}
-		return new Response<Ctv>(repo.findAll(Sort.by(Sort.Direction.DESC, "createdate")), message);
+		return new Response<CtvResponseDTO>(dtoUtils.mapCtvToDto(repo.findAll(Sort.by(Sort.Direction.DESC, "createdate"))), message);
 	}
 	
 	@DeleteMapping("/delete")
-	public Response<Ctv> deleteCtv(@RequestBody Ctv ctv){
+	public Response<CtvResponseDTO> deleteCtv(@RequestBody Ctv ctv){
 		String message = "OK";
 		if(!service.isCtv(ctv.getUsername())) {
 			message = "Tài khoản cộng tác viên không chính xác!";
@@ -118,11 +121,11 @@ public class CtvController {
 				repo.delete(ctv);
 			}
 		}
-		return new Response<Ctv>(repo.findAll(Sort.by(Sort.Direction.DESC, "createdate")), message);
+		return new Response<CtvResponseDTO>(dtoUtils.mapCtvToDto(repo.findAll(Sort.by(Sort.Direction.DESC, "createdate"))), message);
 	}
 	
 	@PutMapping("/update-trangthai")
-	public Response<Ctv> update_trangthai(@RequestParam("username") String username){
+	public Response<CtvResponseDTO> update_trangthai(@RequestParam("username") String username){
 		String message = "OK";
 		if(!service.isCtv(username)) {
 			message = "Tài khoản cộng tác viên không chính xác!";
@@ -131,15 +134,15 @@ public class CtvController {
 			ctv.setActive(!ctv.isActive());
 			repo.save(ctv);
 		}
-		return new Response<Ctv>(null, message);
+		return new Response<CtvResponseDTO>(null, message);
 	}
 	
 	@PutMapping("/reform/{username}")
-	public Response<Ctv> reformCtv(@PathVariable("username") String username,
+	public Response<CtvResponseDTO> reformCtv(@PathVariable("username") String username,
 			@RequestParam("thaotac") Integer thaotac, @RequestParam("value") String value){
 		String message = "OK";
 		if(!service.isCtv(username)) {
-			return new Response<Ctv>(null, "Tài khoản cộng tác viên không chính xác!");
+			return new Response<CtvResponseDTO>(null, "Tài khoản cộng tác viên không chính xác!");
 		}
 		Ctv ctv = repo.findById(username).get();
 		switch (thaotac) {
@@ -165,10 +168,10 @@ public class CtvController {
 			ctv.setAddress(value);
 			break;
 		default:
-			return new Response<Ctv>(null, "Thao tác không hợp lệ!");
+			return new Response<CtvResponseDTO>(null, "Thao tác không hợp lệ!");
 		}
 		repo.save(ctv);
-		return new Response<Ctv>(null, message);
+		return new Response<CtvResponseDTO>(null, message);
 	}
 	
 }
