@@ -39,7 +39,7 @@ public class BrandController {
 	public Response<BrandDTO> getBrands(@RequestParam(value = "idcate", required = false) String idcate) {
 		String message = "Không lấy được dữ liệu";
 		List<Brand> list = new ArrayList<>();
-		if (idcate == null || idcate.equals("0")) {
+		if (idcate == null) {
 			list = brandRepo.findAll();
 			message = "OK";
 		} else {
