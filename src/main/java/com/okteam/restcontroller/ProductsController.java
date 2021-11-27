@@ -40,6 +40,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -294,4 +295,9 @@ public class ProductsController {
         }
     }
 
+    @GetMapping("/list")
+    public Response<Products> getAllProducts(){
+    	return new Response<Products>(proDAO.findAll(Sort.by(Direction.DESC,"createdate")), "OK");
+    }
+    
 }
