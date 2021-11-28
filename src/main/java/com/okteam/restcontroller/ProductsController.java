@@ -20,6 +20,7 @@ import com.okteam.dao.OrderRepository;
 import com.okteam.dao.ProductRepository;
 import com.okteam.dto.NccResponseDTO;
 import com.okteam.dto.Productdto;
+import com.okteam.dto.ProductsDTO;
 import com.okteam.entity.Brand;
 import com.okteam.entity.Category;
 import com.okteam.entity.Comments;
@@ -29,6 +30,7 @@ import com.okteam.entity.Products;
 import com.okteam.entity.Rating;
 import com.okteam.entity.Response;
 import com.okteam.exception.NotFoundSomething;
+import com.okteam.utils.DtoUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -74,6 +76,9 @@ public class ProductsController {
 
     @Autowired
     OrderRepository orderRepository;
+    
+    @Autowired
+    DtoUtils dtoUtils;
 
     // Lấy 1 sản phẩm theo ID
     @GetMapping("/getone/{id}")
@@ -296,8 +301,8 @@ public class ProductsController {
     }
 
     @GetMapping("/list")
-    public Response<Products> getAllProducts(){
-    	return new Response<Products>(proDAO.findAll(Sort.by(Direction.DESC,"createdate")), "OK");
+    public Response<ProductsDTO> getAllProducts(){
+    	return new Response<ProductsDTO>(dtoUtils.mapProductsToDto(proDAO.findAll(Sort.by(Direction.DESC,"createdate"))), "OK");
     }
     
 }
