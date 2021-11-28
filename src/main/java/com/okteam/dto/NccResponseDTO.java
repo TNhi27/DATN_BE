@@ -25,6 +25,7 @@ public class NccResponseDTO {
 	String nccname;
 	String ncclogo;
 	String description;
+	String idghn;
 	int money = 0;
 	int countFollow;
 	int countProducts;
@@ -49,6 +50,7 @@ public class NccResponseDTO {
 		this.countOrders = ncc.getOrders() != null ? ncc.getOrders().size() : 0;
 		this.city = ncc.getCity();
 		this.description = ncc.getDescription();
+		this.idghn = ncc.getIdghn();
 		this.money = ncc.getMoney();
 		return this;
 	}

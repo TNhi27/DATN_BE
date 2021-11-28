@@ -9,11 +9,13 @@ import com.okteam.dto.BrandDTO;
 import com.okteam.dto.Categorydto;
 import com.okteam.dto.CtvResponseDTO;
 import com.okteam.dto.NccResponseDTO;
+import com.okteam.dto.OrdersDTO;
 import com.okteam.dto.ProductsDTO;
 import com.okteam.entity.Brand;
 import com.okteam.entity.Category;
 import com.okteam.entity.Ctv;
 import com.okteam.entity.Ncc;
+import com.okteam.entity.Orders;
 import com.okteam.entity.Products;
 
 @Service
@@ -33,5 +35,8 @@ public class DtoUtils {
 	}
 	public List<ProductsDTO> mapProductsToDto(List<Products> list){
 		return list.stream().map(p->new ProductsDTO().createByEntity(p)).collect(Collectors.toList());
+	}
+	public List<OrdersDTO> mapOrdersToDto(List<Orders> list){
+		return list.stream().map(o->new OrdersDTO().createByEntity(o)).collect(Collectors.toList());
 	}
 }
