@@ -5,7 +5,10 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.Date;
 import java.util.List;
 
+import com.okteam.entity.Details;
 import com.okteam.entity.Orders;
+import com.okteam.entity.ProductGroup;
+import com.okteam.entity.Products;
 import com.okteam.entity.ReportbyDay;
 
 import org.springframework.data.domain.Page;
@@ -19,6 +22,12 @@ public interface OrderRepository extends JpaRepository<Orders, Integer> {
 
     @Query("SELECT o from Orders o where o.ctv.username=?1 and o.idorder =?2 ")
     public Page<Orders> getOrdersWithCtvId(String ctv, int id, Pageable pageable);
+
+    @Query("SELECT o from Orders o where o.ncc.username=?1 and CAST(o.status AS string) LIKE ?2 ")
+    public Page<Orders> getOrdersWithNccStatus(String ncc, String status, Pageable pageable);
+
+    @Query("SELECT o from Orders o where o.ncc.username=?1 and o.idorder =?2 ")
+    public Page<Orders> getOrdersWithNccId(String ncc, int id, Pageable pageable);
 
     @Query("SELECT count(o.orders.total) from Details o where  o.orders.ctv =?1 and MONTH(o.orders.dateorder) =?2 and YEAR(o.orders.dateorder)=?3 ")
     public Long getDoanhthuThang(String ctv, int m, int y);
@@ -53,6 +62,7 @@ public interface OrderRepository extends JpaRepository<Orders, Integer> {
     @Query("SELECT new ReportbyDay(1,COUNT(o.orders.idorder),SUM(o.orders.total),SUM(o.qty)  ) from Details o where o.orders.status=0 and DAY(o.orders.dateorder)=?1 and MONTH(o.orders.dateorder) =?2 and YEAR(o.orders.dateorder)=?3 ")
     public ReportbyDay getCancelByDate(int d, int m, int y);
 
-    public void getProduct();
+    @Query("SELECT new ProductGroup(o.products.idpro,o.products.name,count(o.qty)) from Details o where o.orders.ncc.username =?1 group by o.products ")
+    public List<ProductGroup> getProductGroups(String ncc);
 
 }

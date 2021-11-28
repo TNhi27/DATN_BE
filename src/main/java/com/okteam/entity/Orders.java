@@ -33,6 +33,9 @@ public class Orders {
 	String customer;
 	String sdtcustomer;
 	int payment;
+	String order_code;
+	String huyen;
+	String xa;
 	// String xa;
 	// String huyen;
 	// String tinh;

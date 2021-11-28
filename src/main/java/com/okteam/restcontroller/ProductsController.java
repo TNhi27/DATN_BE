@@ -90,7 +90,7 @@ public class ProductsController {
     @GetMapping("/new")
     public ResponseEntity<List<Products>> getProducts(@RequestParam Optional<Integer> num) {
         try {
-            List<Products> sp = proDAO.findAll();
+            List<Products> sp = proDAO.findAll(true);
             Collections.sort(sp, new Comparator<Products>() {
                 @Override
                 public int compare(Products o1, Products o2) {
@@ -271,10 +271,12 @@ public class ProductsController {
         pro.setNcc(nccRepository.findById(productdto.getUsername()).get());
         pro.setActive(true);
         pro.setP_brand(brandRepository.findById(productdto.getIdbrand()).get());
-
+        proDAO.save(pro);
         for (var prt : pro.getProperties()) {
+            System.out.println("hahaha" + prt.getId());
             propertiesReponsitory.deleteById(prt.getId());
         }
+        System.out.println(pro.getProperties().size());
 
         for (var e : productdto.getProperties()) {
             Properties properties = new Properties();
@@ -284,7 +286,7 @@ public class ProductsController {
             propertiesReponsitory.save(properties);
         }
 
-        return new ResponseEntity<Products>(proDAO.save(pro), HttpStatus.OK);
+        return new ResponseEntity<Products>(pro, HttpStatus.OK);
     }
     // xóa
     // @DeleteMapping("/{id}")

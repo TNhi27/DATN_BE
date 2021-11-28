@@ -55,6 +55,7 @@ public class LoginController {
         if (auth.getAuthorities().toString().equals("[ROLE_NCC]")) {
             String img = nccdao.findById(username).get().getNcclogo();
             rs.setImage(img);
+            rs.setShopid(nccdao.findById(username).get().getIdghn());
         }
 
         return new ResponseEntity<UserLoginResponse>(rs, HttpStatus.OK);

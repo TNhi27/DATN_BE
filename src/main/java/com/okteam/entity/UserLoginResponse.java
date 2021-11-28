@@ -9,5 +9,6 @@ public class UserLoginResponse {
     String role;
     String token;
     String image;
+    String shopid;
 
 }

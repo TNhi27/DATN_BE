@@ -25,7 +25,7 @@ public class Properties {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
 
-    @JsonIgnore
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "idpro")
     Products p_properties;

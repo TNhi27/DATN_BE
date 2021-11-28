@@ -21,6 +21,7 @@ public class Details {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	int iddetails;
 	int qty;
+	Integer revenue;
 
 	@ManyToOne
 	@JoinColumn(name = "idpro")

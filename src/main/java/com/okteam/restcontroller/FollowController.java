@@ -56,20 +56,24 @@ public class FollowController {
         Ctv ctv = cdao.findById(name).get();
         Ncc ncc = ndao.findById(idncc.orElse("")).orElseThrow(() -> new NotFoundSomething(":("));
 
-        List<FollowSell> all = fdao.findAll();
+        List<FollowSell> all = ctv.getFollowSell();
+        boolean ck = true;
         for (var fl : all) {
-            if (fl.getFl_ncc().getUsername().equals(ncc.getUsername())
-                    && fl.getFl_ctv().getUsername().equals(ctv.getUsername())) {
-                throw new UserAlreadyExists();
+            if (fl.getFl_ncc().getUsername().equals(ncc.getUsername())) {
+                ck = false;
+                break;
             }
         }
+        FollowSell flo = new FollowSell();
+        if (ck) {
 
-        FollowSell fl = new FollowSell();
-        fl.setDate(new Date());
-        fl.setFl_ncc(ncc);
-        fl.setFl_ctv(cdao.findById(name).get());
+            flo.setDate(new Date());
+            flo.setFl_ncc(ncc);
+            flo.setFl_ctv(ctv);
 
-        return new ResponseEntity<FollowSell>(fdao.save(fl), HttpStatus.OK);
+        }
+
+        return new ResponseEntity<FollowSell>(fdao.save(flo), HttpStatus.OK);
     }
 
     @DeleteMapping("/unfollow/{ncc}")

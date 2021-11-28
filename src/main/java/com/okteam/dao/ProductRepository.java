@@ -51,4 +51,7 @@ public interface ProductRepository extends JpaRepository<Products, String> {
 	@Query("SELECT o.ncc.city FROM Products o group by o.ncc.city")
 	public List<String> getRootCityNcc();
 
+	@Query("select o from Products o where o.active = ?1")
+	public List<Products> findAll(Boolean active);
+
 }

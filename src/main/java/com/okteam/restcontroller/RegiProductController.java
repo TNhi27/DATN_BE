@@ -22,12 +22,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.okteam.dao.CtvRepository;
+import com.okteam.dao.FollowSellRepository;
 import com.okteam.dao.ProductRepository;
 import com.okteam.dao.RegiProductRepository;
 import com.okteam.dto.CommentsDTO;
 import com.okteam.dto.RegiProductsDTO;
 import com.okteam.entity.Comments;
 import com.okteam.entity.Ctv;
+import com.okteam.entity.FollowSell;
 import com.okteam.entity.Ncc;
 import com.okteam.entity.Products;
 import com.okteam.entity.RegiProducts;
@@ -43,6 +45,9 @@ public class RegiProductController {
 	CtvRepository CtvRep;
 	@Autowired
 	ProductRepository ProRep;
+
+	@Autowired
+	FollowSellRepository fdao;
 
 	@GetMapping
 	public ResponseEntity<List<RegiProducts>> getAllRegi() {
@@ -81,6 +86,24 @@ public class RegiProductController {
 		Products products = ProRep.findById(regiproDto.getIdpro()).get();
 		regiproduct.setProducts(products);
 		regiproduct.setPrice(regiproDto.getPrice());
+
+		List<FollowSell> all = ctv.getFollowSell();
+		boolean ck = true;
+		for (var fl : all) {
+			if (fl.getFl_ncc().getUsername().equals(products.getNcc().getUsername())) {
+				ck = false;
+				break;
+			}
+		}
+
+		if (ck) {
+			FollowSell flo = new FollowSell();
+			flo.setDate(new Date());
+			flo.setFl_ncc(products.getNcc());
+			flo.setFl_ctv(ctv);
+			fdao.save(flo);
+		}
+
 		return new ResponseEntity<RegiProducts>(RegiPro.save(regiproduct), HttpStatus.CREATED);
 	}
 

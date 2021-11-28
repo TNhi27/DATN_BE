@@ -13,11 +13,13 @@ import com.okteam.dao.DetailsRepository;
 import com.okteam.dao.FollowSellRepository;
 import com.okteam.dao.NccRepository;
 import com.okteam.dao.OrderRepository;
+import com.okteam.dao.ProductRepository;
 import com.okteam.dto.ReportResponseNcc;
 import com.okteam.entity.Details;
 import com.okteam.entity.FollowSell;
 import com.okteam.entity.Ncc;
 import com.okteam.entity.Orders;
+import com.okteam.entity.ProductGroup;
 import com.okteam.entity.Products;
 import com.okteam.entity.ReportFollow;
 import com.okteam.entity.ReportbyDay;
@@ -34,6 +36,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import lombok.var;
+
 @RestController
 @CrossOrigin("*")
 @RequestMapping("/api/v1/report_ncc")
@@ -46,6 +50,8 @@ public class ReportNCC {
     FollowSellRepository followsellRespository;
     @Autowired
     NccRepository nccRepository;
+    @Autowired
+    ProductRepository productRepository;
 
     // get hóa đơn theo ngày
     @GetMapping("/getorder")
@@ -109,7 +115,7 @@ public class ReportNCC {
         report.setList_orders(listod);
         report.setList_report(listrp);
         report.setCount_orders(ncc_root.getOrders().size());
-
+        report.setCount_products(ncc_root.getProducts().size());
         report.setList_ctv(ncc_root.getFollowSell().stream().map((e) -> e.getFl_ctv()).collect(Collectors.toList()));
 
         report.setList_ctv_d(ncc_root.getFollowSell().stream()
@@ -117,9 +123,16 @@ public class ReportNCC {
                         && ConvertDate.getYear(e.getDate()) == y)
                 .map((e) -> e.getFl_ctv()).collect(Collectors.toList()));
 
-        // List<Products> products =
+        List<ProductGroup> details = orderRepository.getProductGroups("congvinh");
+        details.sort((e1, e2) -> {
+            if (e1.getNum_sell() >= e2.getNum_sell()) {
+                return -1;
+            } else {
+                return 1;
+            }
+        });
 
-        // report.setList_product(products);
+        report.setList_product(details);
 
         return new ResponseEntity<ReportResponseNcc>(report, HttpStatus.OK);
     }
