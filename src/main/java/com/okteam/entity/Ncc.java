@@ -33,11 +33,9 @@ public class Ncc {
 	Date createdate = new Date();
 	String nccname = "Ẩn danh";
 	String ncclogo;
-<<<<<<< HEAD
 	String description = "Xin chào";
-=======
 	String idghn;
->>>>>>> fb08671478137ba5d9eadaece6e0474db84c3c3d
+
 
 	int money = 0;
 

@@ -16,21 +16,15 @@ import com.okteam.entity.Ncc;
 import com.okteam.entity.Products;
 import com.okteam.entity.Response;
 import com.okteam.exception.NotFoundSomething;
-<<<<<<< HEAD
 import com.okteam.utils.DtoUtils;
-=======
 import com.okteam.exception.UsersException;
->>>>>>> fb08671478137ba5d9eadaece6e0474db84c3c3d
 import com.okteam.utils.RegisterService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-<<<<<<< HEAD
 import org.springframework.data.domain.Sort.Direction;
-=======
->>>>>>> fb08671478137ba5d9eadaece6e0474db84c3c3d
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -146,7 +140,6 @@ public class NccController {
         return new Response<NccResponseDTO>(list, message);
     }
 
-<<<<<<< HEAD
     @GetMapping("/list")
     public Response<NccResponseDTO> getNccs(){
     	return new Response<NccResponseDTO>(dtoUtils.mapNccToDto(nccRepository.findAll(Sort.by(Direction.DESC,"createdate"))), "OK");
@@ -235,7 +228,6 @@ public class NccController {
     	return new Response<NccResponseDTO>(null, message);
     }
     
-=======
     @PostMapping("/info")
     public ResponseEntity<Ncc> getInfo() {
         var username = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -254,6 +246,4 @@ public class NccController {
 
         return new ResponseEntity<Ncc>(nccRepository.save(ncc), HttpStatus.OK);
     }
-
->>>>>>> fb08671478137ba5d9eadaece6e0474db84c3c3d
 }

@@ -35,11 +35,8 @@ public class CategoryController {
 	@Autowired
 	CategoryRepository categoryRepo;
 	@Autowired
-<<<<<<< HEAD
 	DtoUtils dtoUtils;
-=======
 	BrandRepository brandRepository;
->>>>>>> fb08671478137ba5d9eadaece6e0474db84c3c3d
 
 	@GetMapping
 	public ResponseEntity<List<Category>> get_all() {

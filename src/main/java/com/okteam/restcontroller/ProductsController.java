@@ -78,14 +78,13 @@ public class ProductsController {
 
     @Autowired
     OrderRepository orderRepository;
-<<<<<<< HEAD
     
     @Autowired
     DtoUtils dtoUtils;
-=======
+
     @Autowired
     PropertiesReponsitory propertiesReponsitory;
->>>>>>> fb08671478137ba5d9eadaece6e0474db84c3c3d
+
 
     // Lấy 1 sản phẩm theo ID
     @GetMapping("/getone/{id}")

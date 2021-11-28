@@ -33,13 +33,7 @@ public class Products {
 	int pricectv;
 	boolean active = true;
 	@Temporal(TemporalType.DATE)
-<<<<<<< HEAD
 	Date createdate = new Date();
-	
-=======
-	Date createdate;
-
->>>>>>> fb08671478137ba5d9eadaece6e0474db84c3c3d
 	int qty;
 	String dvt;
 	String image0;
