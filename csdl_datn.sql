@@ -190,6 +190,7 @@ CREATE TABLE `properties` (
 CREATE TABLE `regi_products` (
   `idregi` int NOT NULL AUTO_INCREMENT,
   `regidate` datetime DEFAULT NULL,
+  `price` int DEFAULT NULL,
   `idpro` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
   `idctv` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`idregi`),

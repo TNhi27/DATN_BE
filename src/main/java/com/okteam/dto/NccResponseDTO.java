@@ -1,11 +1,8 @@
 package com.okteam.dto;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import com.okteam.entity.Ncc;
 import com.okteam.entity.Products;
@@ -21,18 +18,20 @@ public class NccResponseDTO {
 	boolean active;
 	String fullname;
 	String address;
-	String sex;
-	String veryfy;
 	String city;
+	String sex;
+	String verify;
 	Date createdate;
 	String nccname;
 	String ncclogo;
+	String description;
+	int money = 0;
 	int countFollow;
 	int countProducts;
 	int countOrders;
 	List<Products> products;
 
-	public void createByEntity(Ncc ncc) {
+	public NccResponseDTO createByEntity(Ncc ncc) {
 		this.active = ncc.isActive();
 		this.address = ncc.getAddress();
 		this.countFollow = ncc.getFollowSell() != null ? ncc.getFollowSell().size() : 0;
@@ -44,10 +43,13 @@ public class NccResponseDTO {
 		this.sdt = ncc.getSdt();
 		this.sex = ncc.getSex();
 		this.username = ncc.getUsername();
-		this.veryfy = ncc.getVerify();
+		this.verify = ncc.getVerify();
 		this.countProducts = ncc.getProducts() != null ? ncc.getProducts().size() : 0;
 		this.products = ncc.getProducts();
 		this.countOrders = ncc.getOrders() != null ? ncc.getOrders().size() : 0;
 		this.city = ncc.getCity();
+		this.description = ncc.getDescription();
+		this.money = ncc.getMoney();
+		return this;
 	}
 }
