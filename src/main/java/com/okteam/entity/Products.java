@@ -33,8 +33,7 @@ public class Products {
 	int pricectv;
 	boolean active = true;
 	@Temporal(TemporalType.DATE)
-	Date createdate;
-
+	Date createdate = new Date();
 	int qty;
 	String dvt;
 	String image0;

@@ -14,6 +14,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import lombok.Data;
@@ -33,6 +34,9 @@ public class Orders {
 	String customer;
 	String sdtcustomer;
 	int payment;
+//	String xa;
+//	String huyen;
+//	String tinh;
 	String order_code;
 	String huyen;
 	String xa;
@@ -45,9 +49,8 @@ public class Orders {
 	@JoinColumn(name = "idctv")
 	Ctv ctv;
 
-	@JsonManagedReference
-	@ManyToOne
-	@JoinColumn(name = "idncc")
+	@JsonIgnore
+	@ManyToOne @JoinColumn(name = "idncc")
 	Ncc ncc;
 
 	@JsonManagedReference

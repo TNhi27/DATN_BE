@@ -17,9 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.okteam.dao.BrandRepository;
 import com.okteam.dao.CategoryRepository;
+import com.okteam.dto.BrandDTO;
 import com.okteam.entity.Brand;
 import com.okteam.entity.Category;
 import com.okteam.entity.Response;
+import com.okteam.utils.DtoUtils;
 
 @CrossOrigin("*")
 @RequestMapping("/api/v1/brand")
@@ -30,38 +32,40 @@ public class BrandController {
 	BrandRepository brandRepo;
 	@Autowired
 	CategoryRepository categoryRepo;
+	@Autowired
+	DtoUtils dtoUtils;
 
 	@GetMapping("/list")
-	public Response<Brand> getBrands(@RequestParam(value = "idcate", required = false) String idcate) {
+	public Response<BrandDTO> getBrands(@RequestParam(value = "idcate", required = false) String idcate) {
 		String message = "Không lấy được dữ liệu";
 		List<Brand> list = new ArrayList<>();
-		if (idcate == null || idcate.equals("0")) {
+		if (idcate == null) {
 			list = brandRepo.findAll();
 			message = "OK";
 		} else {
 			list = brandRepo.findByIdcate(idcate);
 			message = "OK";
 		}
-		return new Response<Brand>(list, message);
+		return new Response<BrandDTO>(dtoUtils.mapBrandToDto(list), message);
 	}
 
 	@PostMapping("/addTo/{idcate}")
-	public Response<Brand> addBrand(@PathVariable("idcate") String idcate, @RequestBody Brand brand) {
+	public Response<BrandDTO> addBrand(@PathVariable("idcate") String idcate, @RequestBody Brand brand) {
 		String message = "OK";
 		boolean check = brandRepo.findByIdcate(idcate).stream()
 				.allMatch(br -> !brand.getName().equalsIgnoreCase(br.getName()));
 		if (!check) {
 			message = "Tên nhãn hàng đã tồn tại trong loại hàng này!";
-			return new Response<Brand>(brandRepo.findByIdcate(idcate), message);
+			return new Response<BrandDTO>(dtoUtils.mapBrandToDto(brandRepo.findByIdcate(idcate)), message);
 		}
 		Category c = categoryRepo.findById(idcate).get();
 		brand.setBr_category(c);
 		brandRepo.save(brand);
-		return new Response<Brand>(brandRepo.findByIdcate(idcate), message);
+		return new Response<BrandDTO>(dtoUtils.mapBrandToDto(brandRepo.findByIdcate(idcate)), message);
 	}
 
 	@DeleteMapping("/delete/{id}/{idcate}")
-	public Response<Brand> deleteBrand(@PathVariable("id") Integer id, @PathVariable("idcate") String idcate) {
+	public Response<BrandDTO> deleteBrand(@PathVariable("id") Integer id, @PathVariable("idcate") String idcate) {
 		String message = "Không tìm thấy nhãn hàng!";
 		if (brandRepo.existsById(id)) {
 			if (brandRepo.findById(id).get().getProducts().size() > 0) {
@@ -71,11 +75,11 @@ public class BrandController {
 				message = "OK";
 			}
 		}
-		return new Response<Brand>(brandRepo.findByIdcate(idcate), message);
+		return new Response<BrandDTO>(dtoUtils.mapBrandToDto(brandRepo.findByIdcate(idcate)), message);
 	}
 
 	@PutMapping("/update")
-	public Response<Brand> updateBrand(@RequestParam("id") Integer id, @RequestParam("value") String value) {
+	public Response<BrandDTO> updateBrand(@RequestParam("id") Integer id, @RequestParam("value") String value) {
 		String message = "OK";
 		List<Brand>list = new ArrayList<>();
 		Brand brand = brandRepo.findById(id).get();
@@ -92,6 +96,6 @@ public class BrandController {
 			}
 		}
 		list.add(brand);
-		return new Response<Brand>(list, message);
+		return new Response<BrandDTO>(null, message);
 	}
 }
