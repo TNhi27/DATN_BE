@@ -3,11 +3,8 @@ package com.okteam.dto;
 import java.util.Date;
 import java.util.List;
 
-import com.okteam.entity.Brand;
-import com.okteam.entity.Category;
 import com.okteam.entity.Comments;
 import com.okteam.entity.Details;
-import com.okteam.entity.Ncc;
 import com.okteam.entity.Products;
 import com.okteam.entity.Properties;
 import com.okteam.entity.RegiProducts;
@@ -33,10 +30,10 @@ public class ProductsDTO {
 	List<RegiProducts> list_regi;
 	List<Comments> comments;
 	List<Details> details;
-	Category category;
-	Ncc ncc;
+	Categorydto category;
+	NccResponseDTO ncc;
 	List<Properties> properties;
-	Brand p_brand;
+	BrandDTO p_brand;
 	
 	public ProductsDTO createByEntity(Products p) {
 		this.idpro = p.getIdpro();
@@ -56,10 +53,10 @@ public class ProductsDTO {
 		this.list_regi = p.getList_regi();
 		this.comments = p.getComments();
 		this.details = p.getDetails();
-		this.category = p.getCategory();
-		this.ncc = p.getNcc();
+		this.category = new Categorydto().createByEntity(p.getCategory());
+		this.ncc= new NccResponseDTO().createByEntity(p.getNcc());
 		this.properties = p.getProperties();
-		this.p_brand = p.getP_brand();
+		this.p_brand = new BrandDTO().createByEntity(p.getP_brand());
 		return this;
 	}
 	
