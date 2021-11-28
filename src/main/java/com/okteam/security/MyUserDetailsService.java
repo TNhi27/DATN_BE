@@ -49,7 +49,7 @@ public class MyUserDetailsService implements UserDetailsService {
 			return User.withUsername(o.getUsername()).password(pe.encode(o.getPassword())).roles("ADMIN").build();
 		}
 
-		throw new UsernameNotFoundException(":(");
+		throw new UsernameNotFoundException(":( Ngoai le Khong tim thay username");
 
 	}
 }
