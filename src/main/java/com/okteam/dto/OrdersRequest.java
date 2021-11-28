@@ -12,7 +12,8 @@ public class OrdersRequest {
     String sdtcustomer;
     int payment;
     int total;
-
+    String xa;
+    String huyen;
     String idncc;
 
     List<RegiProductsDTO> details;

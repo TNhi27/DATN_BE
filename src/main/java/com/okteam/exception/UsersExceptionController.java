@@ -32,4 +32,9 @@ public class UsersExceptionController {
         return new ResponseEntity<Response>(new Response<String>(null, "khong du tien"), HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(value = UserCommentExists.class)
+    public ResponseEntity<Object> userCommentExists() {
+        return new ResponseEntity<>("Users in comment exist", HttpStatus.BAD_REQUEST);
+    }
+
 }

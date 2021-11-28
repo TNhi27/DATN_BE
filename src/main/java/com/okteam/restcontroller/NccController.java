@@ -16,13 +16,16 @@ import com.okteam.entity.Ncc;
 import com.okteam.entity.Products;
 import com.okteam.entity.Response;
 import com.okteam.exception.NotFoundSomething;
+import com.okteam.exception.UsersException;
 import com.okteam.utils.RegisterService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -86,6 +89,17 @@ public class NccController {
         return new ResponseEntity<Page<Products>>(page, HttpStatus.OK);
     }
 
+    @GetMapping("/productsv2")
+    public ResponseEntity<Page<Products>> getProductv2(@RequestParam String idncc,
+            @RequestParam Optional<Integer> pageNumber, @RequestParam Optional<Integer> size,
+            @RequestParam Optional<String> category, @RequestParam Optional<String> name) {
+
+        Sort s = Sort.by("createdate").descending();
+        Page<Products> page = productDAO.getProductWithNccV2(idncc, category.orElse("%%"), name.orElse(""),
+                PageRequest.of(pageNumber.orElse(0), size.orElse(100), s));
+        return new ResponseEntity<Page<Products>>(page, HttpStatus.OK);
+    }
+
     @GetMapping("/get_ncc_by_product")
     public ResponseEntity<NccResponseDTO> getNccDTOByPro(@RequestParam("idpro") String id) {
         Ncc ncc = nccRepository.getNccByProduct(id);
@@ -118,6 +132,25 @@ public class NccController {
             list.add(nccDTO);
         }
         return new Response<NccResponseDTO>(list, message);
+    }
+
+    @PostMapping("/info")
+    public ResponseEntity<Ncc> getInfo() {
+        var username = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        Ncc ctv = nccRepository.findById(username).orElseThrow(() -> new UsersException());
+
+        return new ResponseEntity<Ncc>(ctv, HttpStatus.OK);
+    }
+
+    @PostMapping("/dangkishop")
+    public ResponseEntity<Ncc> dkshop(@RequestParam String code) {
+        var username = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        Ncc ncc = nccRepository.findById(username).orElseThrow(() -> new UsersException());
+        ncc.setIdghn(code);
+
+        return new ResponseEntity<Ncc>(nccRepository.save(ncc), HttpStatus.OK);
     }
 
 }

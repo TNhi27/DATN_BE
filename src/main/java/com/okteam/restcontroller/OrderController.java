@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import com.okteam.dao.CtvRepository;
 import com.okteam.dao.DetailsRepository;
+import com.okteam.dao.FollowSellRepository;
 import com.okteam.dao.NccRepository;
 import com.okteam.dao.OrderRepository;
 import com.okteam.dao.ProductRepository;
@@ -55,6 +56,8 @@ public class OrderController {
     NccRepository nRepository;
     @Autowired
     DetailsRepository detaildao;
+    @Autowired
+    FollowSellRepository fdao;
 
     // get
     @GetMapping("/get/{idorder}")
@@ -80,6 +83,22 @@ public class OrderController {
 
     }
 
+    @GetMapping("/ncc/{ncc}")
+    public ResponseEntity<Page<Orders>> selectOrdersWithNcc(@PathVariable("ncc") String ncc,
+            @RequestParam Optional<String> status, @RequestParam Optional<Integer> id) {
+        Sort sort = Sort.by("dateorder").descending();
+
+        if (id.orElse(-1) <= 0) {
+            Page<Orders> page = oRepository.getOrdersWithNccStatus(ncc, status.orElse("%%"),
+                    PageRequest.of(0, 20, sort));
+            return new ResponseEntity<Page<Orders>>(page, HttpStatus.OK);
+        } else {
+            Page<Orders> page = oRepository.getOrdersWithNccId(ncc, id.orElse(0), PageRequest.of(0, 20, sort));
+            return new ResponseEntity<Page<Orders>>(page, HttpStatus.OK);
+        }
+
+    }
+
     // post
     @PostMapping
     public ResponseEntity<Orders> saveOrder(@RequestBody OrdersRequest orderdto) {
@@ -94,6 +113,8 @@ public class OrderController {
         order.setSdtcustomer(orderdto.getSdtcustomer());
         order.setPayment(orderdto.getPayment());
         order.setTotal(orderdto.getTotal());
+        order.setHuyen(orderdto.getHuyen());
+        order.setXa(orderdto.getXa());
 
         // lay ctv hien tai
         var username_ctv = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -119,6 +140,7 @@ public class OrderController {
             d.setQty(orderdto.getDetails().get(i).getSl());
             d.setOrders(rsOrder);
             d.setProducts(products);
+            d.setRevenue(orderdto.getDetails().get(i).getPrice());
             details.add(d);
             detaildao.save(d);
         }
@@ -126,11 +148,39 @@ public class OrderController {
         return new ResponseEntity<Orders>(oRepository.findById(rsOrder.getIdorder()).get(), HttpStatus.OK);
     }
 
+    @PostMapping("/update_ghn_code")
+    public ResponseEntity<Orders> update_ghn(@RequestParam Optional<Integer> id, @RequestParam String code) {
+        Orders o = oRepository.findById(id.get()).orElseThrow(() -> new NotFoundSomething("Khong tim thay don hang"));
+        o.setOrder_code(code);
+        o.setStatus(2);
+        oRepository.save(o);
+        return new ResponseEntity<>(o, HttpStatus.OK);
+    }
+
     @PostMapping("/cancel/{id}")
     public ResponseEntity<Object> setStatus(@PathVariable("id") int id) {
         String idctv = SecurityContextHolder.getContext().getAuthentication().getName();
-        Ctv ctv = cRepository.findById(idctv).get();
         Orders o = oRepository.findById(id).orElseThrow(() -> new NotFoundSomething("Đơn không tồn tại"));
+
+        Ctv ctv = cRepository.findById(idctv).get();
+
+        if (o.getStatus() == 0) {
+            o.setStatus(4);
+            ctv.setMoney(ctv.getMoney() + o.getTotal());
+            cRepository.save(ctv);
+        } else {
+            return new ResponseEntity<Object>(oRepository.save(o), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<Object>(oRepository.save(o), HttpStatus.OK);
+    }
+
+    @PostMapping("/cancelncc/{id}")
+    public ResponseEntity<Object> setStatusncc(@PathVariable("id") int id) {
+        String ncc = SecurityContextHolder.getContext().getAuthentication().getName();
+        Orders o = oRepository.findById(id).orElseThrow(() -> new NotFoundSomething("Đơn không tồn tại"));
+
+        Ctv ctv = o.getCtv();
+
         if (o.getStatus() == 0) {
             o.setStatus(4);
             ctv.setMoney(ctv.getMoney() + o.getTotal());

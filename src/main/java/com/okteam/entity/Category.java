@@ -12,11 +12,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-
 import lombok.Data;
 
 @Entity
-@Table(name="category")
+@Table(name = "category")
 @Data
 public class Category {
 	@Id
@@ -26,13 +25,11 @@ public class Category {
 
 	String parent;
 
-
-	
-	@JsonIgnore
+	@JsonBackReference
 	@OneToMany(mappedBy = "category")
 	List<Products> products;
 
-	@JsonIgnore
+	@JsonManagedReference
 	@OneToMany(mappedBy = "br_category")
 	List<Brand> brands;
 }

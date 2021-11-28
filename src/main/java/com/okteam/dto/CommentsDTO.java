@@ -15,4 +15,5 @@ public class CommentsDTO {
 	Date createdate;
 	String products;
 	String username;
+	Integer idorder;
 }

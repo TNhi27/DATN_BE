@@ -34,6 +34,7 @@ public class Ncc {
 	Date createdate = new Date();
 	String nccname = "Ẩn danh";
 	String ncclogo;
+	String idghn;
 
 	int money;
 

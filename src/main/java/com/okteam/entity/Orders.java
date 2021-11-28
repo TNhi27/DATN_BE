@@ -33,9 +33,12 @@ public class Orders {
 	String customer;
 	String sdtcustomer;
 	int payment;
-	String xa;
+	String order_code;
 	String huyen;
-	String tinh;
+	String xa;
+	// String xa;
+	// String huyen;
+	// String tinh;
 
 	@JsonManagedReference
 	@ManyToOne

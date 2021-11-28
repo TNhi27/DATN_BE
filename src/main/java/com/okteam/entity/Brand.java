@@ -18,20 +18,20 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 
 @Entity
-@Table(name="brand")
+@Table(name = "brand")
 @Data
 public class Brand {
-    @Id 
-    @GeneratedValue(strategy =GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
     String name;
-    
 
-    @JsonIgnore
-    @ManyToOne @JoinColumn(name="idcate")
+    @JsonBackReference
+    @ManyToOne
+    @JoinColumn(name = "idcate")
     Category br_category;
 
-    @JsonIgnore
+    @JsonBackReference
     @OneToMany(mappedBy = "p_brand")
     List<Products> products;
 }

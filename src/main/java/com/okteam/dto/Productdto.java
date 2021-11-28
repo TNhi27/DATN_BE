@@ -1,6 +1,8 @@
 package com.okteam.dto;
 
 import java.util.Date;
+import java.util.List;
+
 import lombok.Data;
 
 @Data
@@ -10,9 +12,9 @@ public class Productdto {
 	String name;
 	String description;
 	int pricectv;
-	boolean active=true;	
+	boolean active = true;
 	Date createdate;
-	
+
 	int qty;
 	String dvt;
 	String image0;
@@ -25,4 +27,6 @@ public class Productdto {
 	String idcate;
 	String username;
 	int idbrand;
+
+	List<PropertiesReqDto> properties;
 }
