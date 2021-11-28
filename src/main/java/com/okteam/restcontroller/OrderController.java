@@ -19,10 +19,12 @@ import com.okteam.entity.Orders;
 import com.okteam.entity.Products;
 import com.okteam.entity.RegiProducts;
 import com.okteam.entity.Report;
+import com.okteam.entity.Response;
 import com.okteam.exception.NotEnoughMoney;
 import com.okteam.exception.NotFoundSomething;
 import com.okteam.entity.Ctv;
 import com.okteam.entity.Details;
+import com.okteam.entity.Ncc;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -62,7 +64,7 @@ public class OrderController {
     // get
     @GetMapping("/get/{idorder}")
     public ResponseEntity<Orders> getNcc(@PathVariable("idorder") Integer idorder) {
-        Orders o = oRepository.findById(idorder).get();
+        Orders o = oRepository.findById(idorder).orElseThrow(() -> new NotFoundSomething(":( Khong tim thay don hag"));
 
         return new ResponseEntity<Orders>(o, HttpStatus.OK);
     }
@@ -165,13 +167,13 @@ public class OrderController {
         Ctv ctv = cRepository.findById(idctv).get();
 
         if (o.getStatus() == 0) {
-            o.setStatus(4);
             ctv.setMoney(ctv.getMoney() + o.getTotal());
             cRepository.save(ctv);
+            oRepository.deleteById(id);
         } else {
-            return new ResponseEntity<Object>(oRepository.save(o), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<Object>("Khong the xoa", HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<Object>(oRepository.save(o), HttpStatus.OK);
+        return new ResponseEntity<Object>("Xoa thanh cong", HttpStatus.OK);
     }
 
     @PostMapping("/cancelncc/{id}")
@@ -215,19 +217,48 @@ public class OrderController {
 
     // delete
     @DeleteMapping("/{id}")
-    public void deleteOrders(@PathVariable("id") Integer id) {
-        if (!oRepository.existsById(id)) {
+    public Response<String> deleteOrders(@PathVariable("id") Integer id) {
+        Orders o = oRepository.findById(id).orElseThrow(() -> new NotFoundSomething(":(Khong tim thay don hang"));
 
-        } else {
-            Orders o = oRepository.findById(id).get();
-            if (o.getStatus() == 1) {
-                System.out.println("Hủy cmm à thanh toán rồi");
-            } else {
-                List<Details> list = o.getDetails();
-                // oRepository.deleteAll(list);
-                oRepository.deleteById(id);
-            }
+        if (o.getStatus() == 0) {
+            oRepository.deleteById(id);
+            return new Response<>(null, "Xoa thanh cong");
         }
+
+        return new Response<>(null, "Khong the xoa");
+
+    }
+
+    @PostMapping("/update_status")
+    public ResponseEntity<Orders> updatestatus(@RequestParam int id, @RequestParam int status) {
+        Orders o = oRepository.findById(id).orElseThrow(() -> new NotFoundSomething(":( Khong timthay don hang"));
+        if (status != 5) {
+
+            o.setStatus(status);
+        }
+
+        return new ResponseEntity<Orders>(oRepository.save(o), HttpStatus.OK);
+
+    }
+
+    @PostMapping("/pay_to_ctv")
+    public ResponseEntity<Orders> payctv(@RequestParam int id) {
+        Orders o = oRepository.findById(id).orElseThrow(() -> new NotFoundSomething(":( Khong timthay don hang"));
+        Ncc ncc = o.getNcc();
+        Ctv ctv = o.getCtv();
+
+        ctv.setMoney(ctv.getMoney() + o.getPayment());
+
+        if (o.getStatus() == 1) {
+            ncc.setMoney(ncc.getMoney() + o.getTotal());
+        }
+
+        nRepository.save(ncc);
+        cRepository.save(ctv);
+
+        o.setDatefinish(new Date());
+        o.setStatus(5);
+        return new ResponseEntity<Orders>(oRepository.save(o), HttpStatus.OK);
 
     }
 

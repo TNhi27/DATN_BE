@@ -27,6 +27,8 @@ public class Orders {
 	int idorder;
 	@Temporal(TemporalType.TIMESTAMP)
 	Date dateorder;
+	@Temporal(TemporalType.DATE)
+	Date datefinish;
 	int total;
 	int status = 0;
 	String address;
