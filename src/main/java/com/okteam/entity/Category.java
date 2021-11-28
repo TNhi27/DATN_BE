@@ -22,6 +22,7 @@ public class Category {
 	String idcate;
 	String typename;
 	String img;
+	Integer lv;
 
 	String parent;
 

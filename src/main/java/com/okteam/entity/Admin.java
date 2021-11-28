@@ -29,10 +29,11 @@ public class Admin {
 	String address;
 	String sex;
 	String verify;
+	String image;
 	@Temporal(TemporalType.DATE)
 	Date createdate = new Date();
 
 	@JsonIgnore
-	@OneToMany(mappedBy="acc_post")
+	@OneToMany(mappedBy = "acc_post")
 	List<Post> posts;
 }
