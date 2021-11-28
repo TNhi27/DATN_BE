@@ -54,11 +54,7 @@ public class ReportCTV {
         report.setTotal_d(byDay.getTotal());
 
         List<ReportbyDay> byStatus = orderRepository.getOrderWithStatus(d, m, y, ctv);
-        int order0 = 0;
-        int order1 = 0;
-        int order2 = 0;
-        int order3 = 0;
-        int order4 = 0;
+
         for (int i = 0; i < byStatus.size(); i++) {
             int id = Integer.parseInt(byStatus.get(i).getId().toString());
             if (id == 0) {

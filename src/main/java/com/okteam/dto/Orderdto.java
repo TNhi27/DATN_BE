@@ -13,7 +13,8 @@ public class Orderdto {
 	String sdtcustomer;
 	int payment;
 	int total;
-
+	int huyen;
+	int xa;
 	String idncc;
 
 }

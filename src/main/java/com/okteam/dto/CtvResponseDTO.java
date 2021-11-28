@@ -28,7 +28,7 @@ public class CtvResponseDTO {
 	List<Orders> orders;
 	List<FollowSell> followShell;
 	List<Comments> comments;
-	
+
 	public CtvResponseDTO createByEntity(Ctv ctv) {
 		username = ctv.getUsername();
 		email = ctv.getEmail();
@@ -47,5 +47,5 @@ public class CtvResponseDTO {
 		comments = ctv.getComments();
 		return this;
 	}
-	
+
 }

@@ -34,9 +34,18 @@ public class Orders {
 	String customer;
 	String sdtcustomer;
 	int payment;
+<<<<<<< HEAD
 //	String xa;
 //	String huyen;
 //	String tinh;
+=======
+	String order_code;
+	String huyen;
+	String xa;
+	// String xa;
+	// String huyen;
+	// String tinh;
+>>>>>>> fb08671478137ba5d9eadaece6e0474db84c3c3d
 
 	@JsonManagedReference
 	@ManyToOne
