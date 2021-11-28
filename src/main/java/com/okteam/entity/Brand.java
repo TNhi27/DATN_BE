@@ -26,12 +26,12 @@ public class Brand {
     int id;
     String name;
 
-    @JsonBackReference
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "idcate")
     Category br_category;
 
-    @JsonBackReference
+    @JsonIgnore
     @OneToMany(mappedBy = "p_brand")
     List<Products> products;
 }

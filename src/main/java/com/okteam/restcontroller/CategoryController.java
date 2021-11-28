@@ -53,10 +53,19 @@ public class CategoryController {
 		String message = "OK";
 		if (categoryRepo.existsById(category.getIdcate())) {
 			message = "Mã loại đã tồn tại!";
-		} else if (category.getParent() != null && !categoryRepo.existsById(category.getParent())) {
-			message = "Không tìm thấy loại hàng!";
-		} else {
+		} else if (category.getParent() == null) {
 			categoryRepo.save(category);
+		} else {
+			if(!categoryRepo.existsById(category.getParent())){
+				message = "Không tìm thấy menu cha!";
+			} else {
+				int lvlParent = categoryRepo.findById(category.getParent()).get().getLv();
+				if(lvlParent >= category.getLv() || (category.getLv()-1) != lvlParent) {
+					message = "Cấp menu loại cha không hợp lệ";
+				} else {
+					categoryRepo.save(category);
+				}
+			}
 		}
 		return new Response<Categorydto>(dtoUtils.mapCategoryToDto(categoryRepo.findAll()), message);
 	}
@@ -64,32 +73,50 @@ public class CategoryController {
 	@PutMapping("/update")
 	public Response<Categorydto> updateCategory(@RequestParam(name = "idcate") String idcate,
 			@RequestParam(name = "value") String value, @RequestParam(name = "thaotac") Integer thaotac) {
-		Category category = categoryRepo.findById(idcate).get();
-		String message = "Không tìm thấy thao tác!";
-		if (thaotac == 0) {
-			if (value.isEmpty()) {
-				message = "Không để trống tên loại!";
-			} else {
-				category.setTypename(value);
-				categoryRepo.save(category);
-				message = "OK";
-			}
-		}
-		if (thaotac == 1) {
-			category.setImg(value);
-			categoryRepo.save(category);
-			message = "OK";
-		}
-		if (thaotac == 2) {
-			if (!value.isEmpty() && !categoryRepo.existsById(value)) {
-				message = "Không tìm thấy loại hàng!";
-			} else {
+		String message = "OK";
+		if(!categoryRepo.existsById(idcate)) {
+			message = "Không tìm thấy loại hàng!";
+		} else {
+			Category category = categoryRepo.findById(idcate).get();
+			if (thaotac == 0) {
 				if (value.isEmpty()) {
-					value = null;
+					message = "Không để trống tên loại!";
+				} else {
+					category.setTypename(value);
+					categoryRepo.save(category);
 				}
-				category.setParent(value);
+			}
+			if (thaotac == 1) {
+				category.setImg(value);
 				categoryRepo.save(category);
-				message = "OK";
+			}
+			if (thaotac == 2) {
+				if (!value.isEmpty() && !categoryRepo.existsById(value)) {
+					message = "Không tìm thấy menu cha!";
+				} else {
+					if (value.isEmpty()) {
+						value = null;
+						category.setParent(value);
+						categoryRepo.save(category);
+					} else {
+						int lvlParent = categoryRepo.findById(value).get().getLv();
+						if(lvlParent >= category.getLv() || (category.getLv()-1) != lvlParent) {
+							message = "Cấp menu loại cha không hợp lệ";
+						} else {
+							category.setParent(value.toUpperCase());
+							categoryRepo.save(category);
+						}
+					}
+					
+				}
+			}
+			if(thaotac == 3) {
+				if(category.getParent() != null) {
+					message = "Không thể cập nhật cấp menu khi đang là menu con!";
+				} else {
+					category.setLv(Integer.parseInt(value));
+					categoryRepo.save(category);
+				}
 			}
 		}
 		return new Response<Categorydto>(null, message);

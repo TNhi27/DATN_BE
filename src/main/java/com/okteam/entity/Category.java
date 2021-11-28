@@ -26,11 +26,11 @@ public class Category {
 
 	String parent;
 
-	@JsonBackReference
+	@JsonIgnore
 	@OneToMany(mappedBy = "category")
 	List<Products> products;
 
-	@JsonManagedReference
+	@JsonIgnore
 	@OneToMany(mappedBy = "br_category")
 	List<Brand> brands;
 }

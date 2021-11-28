@@ -93,9 +93,10 @@ public class BrandController {
 			} else {
 				brand.setName(value);
 				brandRepo.save(brand);
+				list.add(brand);
 			}
 		}
 		list.add(brand);
-		return new Response<BrandDTO>(null, message);
+		return new Response<BrandDTO>(dtoUtils.mapBrandToDto(list), message);
 	}
 }
