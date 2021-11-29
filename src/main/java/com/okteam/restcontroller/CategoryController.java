@@ -49,12 +49,12 @@ public class CategoryController {
 	}
 
 	@PostMapping("/add")
-	public Response<Categorydto> addCategory(@RequestBody Category category) {
+	public Response<Categorydto> addCategory(@RequestBody Categorydto category) {
 		String message = "OK";
 		if (categoryRepo.existsById(category.getIdcate())) {
 			message = "Mã loại đã tồn tại!";
 		} else if (category.getParent() == null) {
-			categoryRepo.save(category);
+			categoryRepo.save(new Category().dtoReturnEntity(category));
 		} else {
 			if(!categoryRepo.existsById(category.getParent())){
 				message = "Không tìm thấy menu cha!";
@@ -63,7 +63,7 @@ public class CategoryController {
 				if(lvlParent >= category.getLv() || (category.getLv()-1) != lvlParent) {
 					message = "Cấp menu loại cha không hợp lệ";
 				} else {
-					categoryRepo.save(category);
+					categoryRepo.save(new Category().dtoReturnEntity(category));
 				}
 			}
 		}

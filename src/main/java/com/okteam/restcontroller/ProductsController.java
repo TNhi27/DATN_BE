@@ -21,11 +21,12 @@ import com.okteam.dao.ProductRepository;
 import com.okteam.dao.PropertiesReponsitory;
 import com.okteam.dto.NccResponseDTO;
 import com.okteam.dto.Productdto;
-import com.okteam.dto.ProductsDTO;
+import com.okteam.dto.ProductsResponseDTO;
 import com.okteam.entity.Brand;
 import com.okteam.entity.Category;
 import com.okteam.entity.Comments;
 import com.okteam.entity.Details;
+import com.okteam.entity.Ncc;
 import com.okteam.entity.Orders;
 import com.okteam.entity.Products;
 import com.okteam.entity.Properties;
@@ -317,8 +318,26 @@ public class ProductsController {
     }
 
     @GetMapping("/list")
-    public Response<ProductsDTO> getAllProducts(){
-    	return new Response<ProductsDTO>(dtoUtils.mapProductsToDto(proDAO.findAll(Sort.by(Direction.DESC,"createdate"))), "OK");
+    public Response<ProductsResponseDTO> getAllProducts(){
+    	return new Response<ProductsResponseDTO>(dtoUtils.mapProductsToDto(proDAO.findAll(Sort.by(Direction.DESC,"createdate"))), "OK");
+    }
+    
+    @PostMapping("/add")
+    public Response<ProductsResponseDTO> addSP(@RequestBody Productdto p){
+    	String message = "OK";
+    	if(proDAO.existsById(p.getIdpro())) {
+    		message = "Mã sản phẩm đã tồn tại, vui lòng chọn mã khác!";
+    	} else {
+    		Category c = cateDAO.findById(p.getIdcate()).get();
+    		Brand b = brandRepository.findById(p.getIdbrand()).get();
+    		Ncc ncc = nccRepository.findById(p.getUsername()).get();
+    		Products product = new Products().dtoReturnEntity(p);
+    		product.setCategory(c);
+    		product.setP_brand(b);
+    		product.setNcc(ncc);
+    		proDAO.save(product);
+    	}
+    	return new Response<ProductsResponseDTO>(dtoUtils.mapProductsToDto(proDAO.findAll(Sort.by(Direction.DESC,"createdate"))), message);
     }
     
 }

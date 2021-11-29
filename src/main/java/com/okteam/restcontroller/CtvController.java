@@ -90,35 +90,34 @@ public class CtvController {
 	}
 
 	@PostMapping("/add")
-	public Response<CtvResponseDTO> addCtv(@RequestBody Ctv ctv){
+	public Response<CtvResponseDTO> addCtv(@RequestBody CtvReqDTO ctv){
 		String message = "OK";
 		if(service.checkUsername(ctv.getUsername())) {
 			message = "Tài khoản đã tồn tại, vui lòng chọn tên khác!";
 		} else {
-			System.out.println(ctv.getPassword());
-			repo.save(ctv);
+			repo.save(new Ctv().dtoReturnEntity(ctv));
 		}
 		return new Response<CtvResponseDTO>(dtoUtils.mapCtvToDto(repo.findAll(Sort.by(Sort.Direction.DESC, "createdate"))), message);
 	}
 	
 	@DeleteMapping("/delete")
-	public Response<CtvResponseDTO> deleteCtv(@RequestBody Ctv ctv){
+	public Response<CtvResponseDTO> deleteCtv(@RequestBody CtvReqDTO ctv){
 		String message = "OK";
 		if(!service.isCtv(ctv.getUsername())) {
 			message = "Tài khoản cộng tác viên không chính xác!";
 		} else {
-			ctv = repo.findById(ctv.getUsername()).get();
-			if(ctv.getList_regi().size() > 0) {
+			Ctv c = repo.findById(ctv.getUsername()).get();
+			if(c.getList_regi().size() > 0) {
 				message = "Cộng tác viên đang nằm trong danh sach đăng ký sản phẩm!";
-			} else if(ctv.getOrders().size() > 0) {
+			} else if(c.getOrders().size() > 0) {
 				message = "Cộng tác viên đã có đơn hàng!";
-			} else if(ctv.getFollowSell().size() > 0) {
+			} else if(c.getFollowSell().size() > 0) {
 				message = "Cộng tác viên đang nằm trong danh sách follow!";
 			} else {
-				if(ctv.getComments().size() > 0) {
-					cmtRepo.deleteAll(ctv.getComments());
+				if(c.getComments().size() > 0) {
+					cmtRepo.deleteAll(c.getComments());
 				}
-				repo.delete(ctv);
+				repo.delete(c);
 			}
 		}
 		return new Response<CtvResponseDTO>(dtoUtils.mapCtvToDto(repo.findAll(Sort.by(Sort.Direction.DESC, "createdate"))), message);

@@ -28,7 +28,7 @@ public class FollowSell {
     @Temporal(TemporalType.DATE)
     Date date;
 
-    @JsonIgnore
+    @JsonManagedReference
     @ManyToOne @JoinColumn(name = "ncc")
     Ncc fl_ncc;
 

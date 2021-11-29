@@ -11,6 +11,7 @@ import javax.mail.MessagingException;
 
 import com.okteam.dao.NccRepository;
 import com.okteam.dao.ProductRepository;
+import com.okteam.dto.NccDto;
 import com.okteam.dto.NccResponseDTO;
 import com.okteam.entity.Ncc;
 import com.okteam.entity.Products;
@@ -146,29 +147,29 @@ public class NccController {
     }
     
     @PostMapping("/add")
-    public Response<NccResponseDTO> addNcc(@RequestBody Ncc ncc){
+    public Response<NccResponseDTO> addNcc(@RequestBody NccDto ncc){
     	String message = "OK";
     	if(service.checkUsername(ncc.getUsername())) {
     		message = "Tài khoản đã tồn tại, vui lòng chọn tên khác!";
     	} else {
     		ncc.setFullname(ncc.getNccname());
-    		nccRepository.save(ncc);
+    		nccRepository.save(new Ncc().dtoReturnEntity(ncc));
     	}
     	return new Response<NccResponseDTO>(dtoUtils.mapNccToDto(nccRepository.findAll(Sort.by(Direction.DESC,"createdate"))), message);
     }
     
     @DeleteMapping("/delete")
-    public Response<NccResponseDTO> deleteNcc(@RequestBody Ncc ncc){
+    public Response<NccResponseDTO> deleteNcc(@RequestBody NccDto ncc){
     	String message = "OK";
     	if(!service.isNcc(ncc.getUsername())) {
     		message = "Tài khoản nhà cung cấp không chính xác!";
     	} else {
-    		ncc = nccRepository.findById(ncc.getUsername()).get();
-    		if(ncc.getProducts().size() > 0) {
+    		Ncc n = nccRepository.findById(ncc.getUsername()).get();
+    		if(n.getProducts().size() > 0) {
     			message = "Nhà cung cấp đã có sản phẩm!";
-    		} else if(ncc.getOrders().size() > 0) {
+    		} else if(n.getOrders().size() > 0) {
     			message = "Nhà cung cấp đã có đơn hàng!";
-    		} else if(ncc.getFollowSell().size() > 0) {
+    		} else if(n.getFollowSell().size() > 0) {
     			message = "Nhà cung cấp đang nằm trong danh sách follow!";
     		} else {
     			nccRepository.deleteById(ncc.getUsername());

@@ -13,8 +13,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.okteam.dto.Productdto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -60,7 +60,7 @@ public class Products {
 	@JoinColumn(name = "idcate")
 	Category category;
 
-	@JsonIgnore
+	@JsonManagedReference
 	@ManyToOne
 	@JoinColumn(name = "idncc")
 	Ncc ncc;
@@ -74,4 +74,21 @@ public class Products {
 	@JoinColumn(name = "brand")
 	Brand p_brand;
 
+	public Products dtoReturnEntity(Productdto p) {
+		this.idpro = p.getIdpro();
+		this.name = p.getName();
+		this.description = p.getDescription();
+		this.pricectv = p.getPricectv();
+		this.active = p.isActive();
+		this.qty = p.getQty();
+		this.dvt = p.getDvt();
+		this.image0 = p.getImage0();
+		this.image1 = p.getImage1();
+		this.image2 = p.getImage2();
+		this.image3 = p.getImage3();
+		this.origin = p.getOrigin();
+		this.tags = p.getTags();
+		return this;
+	}
+	
 }

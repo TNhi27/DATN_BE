@@ -50,7 +50,7 @@ public class BrandController {
 	}
 
 	@PostMapping("/addTo/{idcate}")
-	public Response<BrandDTO> addBrand(@PathVariable("idcate") String idcate, @RequestBody Brand brand) {
+	public Response<BrandDTO> addBrand(@PathVariable("idcate") String idcate, @RequestBody BrandDTO brand) {
 		String message = "OK";
 		boolean check = brandRepo.findByIdcate(idcate).stream()
 				.allMatch(br -> !brand.getName().equalsIgnoreCase(br.getName()));
@@ -59,8 +59,9 @@ public class BrandController {
 			return new Response<BrandDTO>(dtoUtils.mapBrandToDto(brandRepo.findByIdcate(idcate)), message);
 		}
 		Category c = categoryRepo.findById(idcate).get();
-		brand.setBr_category(c);
-		brandRepo.save(brand);
+		Brand b =  new Brand().dtoReturnEntity(brand);
+		b.setBr_category(c);
+		brandRepo.save(b);
 		return new Response<BrandDTO>(dtoUtils.mapBrandToDto(brandRepo.findByIdcate(idcate)), message);
 	}
 
