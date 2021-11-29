@@ -9,6 +9,7 @@ import java.util.Optional;
 
 import javax.mail.MessagingException;
 
+import com.okteam.dao.FollowSellRepository;
 import com.okteam.dao.NccRepository;
 import com.okteam.dao.ProductRepository;
 import com.okteam.dto.NccDto;
@@ -50,11 +51,12 @@ public class NccController {
     @Autowired
     ProductRepository productDAO;
     @Autowired
+    FollowSellRepository flRepo;
+    @Autowired
     RegisterService service;
     @Autowired
     DtoUtils dtoUtils;
-
-    //
+    		
     @GetMapping("/get/{idncc}")
     public ResponseEntity<Ncc> get10Ncc(@PathVariable("idncc") String idncc) {
         Ncc n = nccRepository.findById(idncc).get();
@@ -169,10 +171,9 @@ public class NccController {
     			message = "Nhà cung cấp đã có sản phẩm!";
     		} else if(n.getOrders().size() > 0) {
     			message = "Nhà cung cấp đã có đơn hàng!";
-    		} else if(n.getFollowSell().size() > 0) {
-    			message = "Nhà cung cấp đang nằm trong danh sách follow!";
     		} else {
-    			nccRepository.deleteById(ncc.getUsername());
+    			flRepo.deleteAll(n.getFollowSell());
+    			nccRepository.delete(n);
     		}
     	}
     	return new Response<NccResponseDTO>(dtoUtils.mapNccToDto(nccRepository.findAll(Sort.by(Direction.DESC,"createdate"))), message);
@@ -221,6 +222,10 @@ public class NccController {
 			break;
 		case 6:
 			ncc.setAddress(value);
+		case 7:
+			ncc.setIdghn(value);
+		case 8:
+			ncc.setDescription(value);
 			break;
 		default:
 			return new Response<NccResponseDTO>(null, "Thao tác không hợp lệ!");

@@ -23,6 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.okteam.dao.CommentRepository;
 import com.okteam.dao.CtvRepository;
+import com.okteam.dao.FollowSellRepository;
+import com.okteam.dao.RegiProductRepository;
 import com.okteam.dto.CtvReqDTO;
 import com.okteam.dto.CtvResponseDTO;
 import com.okteam.entity.Ctv;
@@ -42,6 +44,10 @@ public class CtvController {
 	CtvRepository repo;
 	@Autowired
 	CommentRepository cmtRepo;
+	@Autowired
+	RegiProductRepository regiRepo;
+	@Autowired
+	FollowSellRepository flRepo;
 	@Autowired
 	DtoUtils dtoUtils;
 
@@ -107,16 +113,12 @@ public class CtvController {
 			message = "Tài khoản cộng tác viên không chính xác!";
 		} else {
 			Ctv c = repo.findById(ctv.getUsername()).get();
-			if(c.getList_regi().size() > 0) {
-				message = "Cộng tác viên đang nằm trong danh sach đăng ký sản phẩm!";
-			} else if(c.getOrders().size() > 0) {
+			if(c.getOrders().size() > 0) {
 				message = "Cộng tác viên đã có đơn hàng!";
-			} else if(c.getFollowSell().size() > 0) {
-				message = "Cộng tác viên đang nằm trong danh sách follow!";
 			} else {
-				if(c.getComments().size() > 0) {
-					cmtRepo.deleteAll(c.getComments());
-				}
+				regiRepo.deleteAll(c.getList_regi());
+				flRepo.deleteAll(c.getFollowSell());
+				cmtRepo.deleteAll(c.getComments());
 				repo.delete(c);
 			}
 		}

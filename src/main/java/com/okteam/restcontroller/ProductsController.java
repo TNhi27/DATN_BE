@@ -19,6 +19,7 @@ import com.okteam.dao.NccRepository;
 import com.okteam.dao.OrderRepository;
 import com.okteam.dao.ProductRepository;
 import com.okteam.dao.PropertiesReponsitory;
+import com.okteam.dao.RegiProductRepository;
 import com.okteam.dto.NccResponseDTO;
 import com.okteam.dto.Productdto;
 import com.okteam.dto.ProductsResponseDTO;
@@ -85,6 +86,9 @@ public class ProductsController {
 
     @Autowired
     PropertiesReponsitory propertiesReponsitory;
+    
+    @Autowired
+    RegiProductRepository regiRepo;
 
 
     // Lấy 1 sản phẩm theo ID
@@ -336,6 +340,25 @@ public class ProductsController {
     		product.setP_brand(b);
     		product.setNcc(ncc);
     		proDAO.save(product);
+    	}
+    	return new Response<ProductsResponseDTO>(dtoUtils.mapProductsToDto(proDAO.findAll(Sort.by(Direction.DESC,"createdate"))), message);
+    }
+    
+    @DeleteMapping("/delete")
+    public Response<ProductsResponseDTO> deleteSP(@RequestBody Productdto p){
+    	String message = "OK";
+    	if(!proDAO.existsById(p.getIdpro())) {
+    		message = "Không tìm thấy sản phẩm!";
+    	} else {
+    		Products pro = proDAO.findById(p.getIdpro()).get();
+    		if(pro.getDetails().size() > 0) {
+    			message = "Sản phẩm đã có trong đơn hàng!";
+    		} else {
+    			regiRepo.deleteAll(pro.getList_regi());
+    			commentRepository.deleteAll(pro.getComments());
+    			propertiesReponsitory.deleteAll(pro.getProperties());
+    			proDAO.delete(pro);
+    		}
     	}
     	return new Response<ProductsResponseDTO>(dtoUtils.mapProductsToDto(proDAO.findAll(Sort.by(Direction.DESC,"createdate"))), message);
     }

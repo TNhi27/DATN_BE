@@ -65,7 +65,7 @@ public class Products {
 	@JoinColumn(name = "idncc")
 	Ncc ncc;
 
-	@JsonManagedReference
+	@JsonBackReference
 	@OneToMany(mappedBy = "p_properties")
 	List<Properties> properties;
 

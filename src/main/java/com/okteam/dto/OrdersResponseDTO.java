@@ -11,7 +11,7 @@ import com.okteam.entity.Orders;
 import lombok.Data;
 
 @Data
-public class OrdersDTO {
+public class OrdersResponseDTO {
 	int idorder;
 	Date dateorder;
 	Date datefinish;
@@ -29,7 +29,7 @@ public class OrdersDTO {
 	Ncc ncc;
 	List<Details> details;
 	
-	public OrdersDTO createByEntity(Orders o) {
+	public OrdersResponseDTO createByEntity(Orders o) {
 		this.idorder = o.getIdorder();
 		this.dateorder = o.getDateorder();
 		this.datefinish = o.getDatefinish();

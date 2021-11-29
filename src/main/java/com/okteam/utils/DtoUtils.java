@@ -9,7 +9,7 @@ import com.okteam.dto.BrandDTO;
 import com.okteam.dto.Categorydto;
 import com.okteam.dto.CtvResponseDTO;
 import com.okteam.dto.NccResponseDTO;
-import com.okteam.dto.OrdersDTO;
+import com.okteam.dto.OrdersResponseDTO;
 import com.okteam.dto.ProductsResponseDTO;
 import com.okteam.entity.Brand;
 import com.okteam.entity.Category;
@@ -36,7 +36,7 @@ public class DtoUtils {
 	public List<ProductsResponseDTO> mapProductsToDto(List<Products> list){
 		return list.stream().map(p->new ProductsResponseDTO().createByEntity(p)).collect(Collectors.toList());
 	}
-	public List<OrdersDTO> mapOrdersToDto(List<Orders> list){
-		return list.stream().map(o->new OrdersDTO().createByEntity(o)).collect(Collectors.toList());
+	public List<OrdersResponseDTO> mapOrdersToDto(List<Orders> list){
+		return list.stream().map(o->new OrdersResponseDTO().createByEntity(o)).collect(Collectors.toList());
 	}
 }
