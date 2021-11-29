@@ -94,6 +94,11 @@ public class CtvController {
 	public Response<CtvResponseDTO> getCtvs(){
 		return new Response<CtvResponseDTO>(dtoUtils.mapCtvToDto(repo.findAll(Sort.by(Sort.Direction.DESC, "createdate"))),"OK");
 	}
+	
+	@GetMapping("/check-id/{username}")
+	public Boolean checkusernamectv(@PathVariable("username") String username) {
+		return service.checkUsername(username);
+	}
 
 	@PostMapping("/add")
 	public Response<CtvResponseDTO> addCtv(@RequestBody CtvReqDTO ctv){

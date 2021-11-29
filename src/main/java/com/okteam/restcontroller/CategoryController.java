@@ -47,12 +47,17 @@ public class CategoryController {
 	public Response<Categorydto> getCategories() {
 		return new Response<Categorydto>(dtoUtils.mapCategoryToDto(categoryRepo.findAll()), "OK");
 	}
+	
+	@GetMapping("/check-id/{idcate}")
+	public Boolean checkidcate(@PathVariable("idcate") String idcate) {
+		return categoryRepo.existsById(idcate);
+	}
 
 	@PostMapping("/add")
 	public Response<Categorydto> addCategory(@RequestBody Categorydto category) {
 		String message = "OK";
 		if (categoryRepo.existsById(category.getIdcate())) {
-			message = "Mã loại đã tồn tại!";
+			message = "Mã loại đã tồn tại, vui lòng chọn mã khác!";
 		} else if (category.getParent() == null) {
 			categoryRepo.save(new Category().dtoReturnEntity(category));
 		} else {

@@ -41,7 +41,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -326,6 +325,11 @@ public class ProductsController {
     	return new Response<ProductsResponseDTO>(dtoUtils.mapProductsToDto(proDAO.findAll(Sort.by(Direction.DESC,"createdate"))), "OK");
     }
     
+    @GetMapping("/check-id/{idpro}")
+    public Boolean checkidpro(@PathVariable("idpro") String idpro) {
+    	return proDAO.existsById(idpro);
+    }
+    
     @PostMapping("/add")
     public Response<ProductsResponseDTO> addSP(@RequestBody Productdto p){
     	String message = "OK";
@@ -339,6 +343,37 @@ public class ProductsController {
     		product.setCategory(c);
     		product.setP_brand(b);
     		product.setNcc(ncc);
+    		proDAO.save(product);
+    	}
+    	return new Response<ProductsResponseDTO>(dtoUtils.mapProductsToDto(proDAO.findAll(Sort.by(Direction.DESC,"createdate"))), message);
+    }
+    
+    @PutMapping("/update-all")
+    public Response<ProductsResponseDTO> updateAll(@RequestBody Productdto p){
+    	String message = "OK";
+    	if(!proDAO.existsById(p.getIdpro())) {
+    		message = "Không tìm thấy sản phẩm!";
+    	} else {
+    		Category c = cateDAO.findById(p.getIdcate()).get();
+    		Brand b = brandRepository.findById(p.getIdbrand()).get();
+    		Ncc ncc = nccRepository.findById(p.getUsername()).get();
+    		Products product = new Products().dtoReturnEntity(p);
+    		Products productImg = proDAO.findById(p.getIdpro()).get();
+    		product.setCategory(c);
+    		product.setP_brand(b);
+    		product.setNcc(ncc);
+    		if(product.getImage0() == null) {
+    			product.setImage0(productImg.getImage0());
+    		}
+    		if(product.getImage1() == null) {
+    			product.setImage1(productImg.getImage1());
+    		}
+    		if(product.getImage2() == null) {
+    			product.setImage2(productImg.getImage2());
+    		}
+    		if(product.getImage3() == null) {
+    			product.setImage3(productImg.getImage3());
+    		}
     		proDAO.save(product);
     	}
     	return new Response<ProductsResponseDTO>(dtoUtils.mapProductsToDto(proDAO.findAll(Sort.by(Direction.DESC,"createdate"))), message);

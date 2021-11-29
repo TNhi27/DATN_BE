@@ -148,6 +148,11 @@ public class NccController {
     	return new Response<NccResponseDTO>(dtoUtils.mapNccToDto(nccRepository.findAll(Sort.by(Direction.DESC,"createdate"))), "OK");
     }
     
+    @GetMapping("/check-id/{username}")
+	public Boolean checkusernamectv(@PathVariable("username") String username) {
+		return service.checkUsername(username);
+	}
+    
     @PostMapping("/add")
     public Response<NccResponseDTO> addNcc(@RequestBody NccDto ncc){
     	String message = "OK";
