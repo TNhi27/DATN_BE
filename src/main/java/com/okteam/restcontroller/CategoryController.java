@@ -36,6 +36,7 @@ public class CategoryController {
 	CategoryRepository categoryRepo;
 	@Autowired
 	DtoUtils dtoUtils;
+	@Autowired
 	BrandRepository brandRepository;
 
 	@GetMapping
@@ -170,9 +171,10 @@ public class CategoryController {
 				List<Category> child = list.stream().filter((e) -> e.getParent() != null)
 						.filter((e) -> e.getParent().equals(category.getIdcate())).collect(Collectors.toList());
 				List<Brand> brand = brandRepository.findByIdcate(category.getIdcate());
+				cate.setBrands(brand);
 				cate.setCategory(category);
 				cate.setChild(child);
-				cate.setBrands(brand);
+
 				rs.add(cate);
 			}
 		}
