@@ -197,6 +197,7 @@ public class NccController {
     	} else {
     		Ncc ncc  = nccRepository.findById(username).get();
         	ncc.setActive(!ncc.isActive());
+        	ncc.setVerify(null);
         	nccRepository.save(ncc);
     	}
     	return new Response<NccResponseDTO>(null, null, message);

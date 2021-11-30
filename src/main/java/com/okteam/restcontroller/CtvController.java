@@ -133,6 +133,7 @@ public class CtvController {
 		} else {
 			Ctv ctv =repo.findById(username).get();
 			ctv.setActive(!ctv.isActive());
+			ctv.setVerify(null);
 			repo.save(ctv);
 		}
 		return new Response<CtvResponseDTO>(null, null, message);
