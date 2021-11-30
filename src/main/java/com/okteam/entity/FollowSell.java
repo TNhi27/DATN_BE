@@ -18,21 +18,28 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 
 @Entity
-@Table(name="followsell")
+@Table(name = "followsell")
 @Data
 public class FollowSell {
-    
-    @Id @GeneratedValue(strategy =GenerationType.IDENTITY)
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     int followid;
-    
+
     @Temporal(TemporalType.DATE)
     Date date;
 
     @JsonManagedReference
+<<<<<<< HEAD
     @ManyToOne @JoinColumn(name = "ncc")
+=======
+    @ManyToOne
+    @JoinColumn(name = "ncc")
+>>>>>>> c5bd9ff939c110c165cd4d3d959ed66a45b16877
     Ncc fl_ncc;
 
     @JsonManagedReference
-    @ManyToOne @JoinColumn(name = "ctv")
+    @ManyToOne
+    @JoinColumn(name = "ctv")
     Ctv fl_ctv;
 }

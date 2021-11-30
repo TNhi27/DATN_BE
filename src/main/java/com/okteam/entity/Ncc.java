@@ -11,8 +11,12 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+<<<<<<< HEAD
 import com.okteam.dto.NccDto;
 
+=======
+import com.fasterxml.jackson.annotation.JsonIgnore;
+>>>>>>> c5bd9ff939c110c165cd4d3d959ed66a45b16877
 
 import lombok.Data;
 
@@ -22,22 +26,22 @@ import lombok.Data;
 public class Ncc {
 	@Id
 	String username;
+	@JsonIgnore
 	String password;
 	String email;
 	String sdt;
-	boolean active = false;
+	boolean active = true;
 	String fullname = "Ẩn danh";
 	String address;
 	String city;
 	String sex = "Khác";
-	String verify=null;
+	String verify = null;
 	@Temporal(TemporalType.DATE)
 	Date createdate = new Date();
 	String nccname = "Ẩn danh";
 	String ncclogo;
 	String description = "Xin chào";
 	String idghn;
-
 
 	int money = 0;
 

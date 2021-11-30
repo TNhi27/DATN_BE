@@ -28,11 +28,11 @@ public interface ProductRepository extends JpaRepository<Products, String> {
 	public Page<Products> getProductsByCategoryHasBrand(String category, Integer min, Integer max, List<String> origin,
 			List<String> address_ncc, Integer brand, String q, Pageable pageable);
 
-	@Query("SELECT o FROM Products o WHERE o.category.idcate like ?1 and o.pricectv>= ?2 and o.pricectv<=?3 and o.origin IN (?4) and o.ncc.city in (?5) and o.tags like %?6%  and o.active=true")
+	@Query("SELECT o FROM Products o WHERE o.category.idcate like ?1 and o.pricectv>= ?2 and o.pricectv<=?3 and o.origin IN (?4) and o.ncc.city in (?5) and o.tags like ?6 and o.active=true")
 	public Page<Products> getProductsByCategory(String category, Integer min, Integer max, List<String> origin,
 			List<String> address_ncc, String q, Pageable pageable);
 
-	@Query("SELECT o FROM Products o WHERE  o.category.idcate in ?1 and o.pricectv>= ?2 and o.pricectv<=?3 and o.origin in ?4 and o.ncc.city in (?5) and o.tags like %?6% and o.active=true")
+	@Query("SELECT o FROM Products o WHERE  o.category.idcate in ?1 and o.pricectv>= ?2 and o.pricectv<=?3 and o.origin in ?4 and o.ncc.city in (?5) and o.tags like ?6 and o.active=true")
 	public Page<Products> getProductsByParentCategory(List<String> category, Integer min, Integer max,
 			List<String> origin, List<String> address_ncc, String q, Pageable pageable);
 

@@ -20,6 +20,9 @@ public interface FollowSellRepository extends JpaRepository<FollowSell, Integer>
 	@Query("SELECT o from FollowSell o where o.fl_ctv.username = ?1")
 	public Page<FollowSell> getNccFollow(String ctv, Pageable pageable);
 
+	@Query("SELECT o from FollowSell o where o.fl_ncc.username = ?1")
+	public Page<FollowSell> getCtvFollow(String ncc, Pageable pageable);
+
 	@Query("SELECT o from FollowSell o where o.fl_ctv.username = ?1 and o.fl_ncc.username=?2")
 	public FollowSell getFollow(String ctv, String ncc);
 

@@ -3,13 +3,16 @@ package com.okteam.restcontroller;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import com.okteam.dao.CtvRepository;
 import com.okteam.dao.FollowSellRepository;
 import com.okteam.dao.NccRepository;
+import com.okteam.dao.RegiProductRepository;
 import com.okteam.entity.Ctv;
 import com.okteam.entity.FollowSell;
 import com.okteam.entity.Ncc;
+import com.okteam.entity.RegiProducts;
 import com.okteam.exception.NotFoundSomething;
 import com.okteam.exception.UserAlreadyExists;
 import com.okteam.exception.UsersException;
@@ -40,6 +43,8 @@ public class FollowController {
     NccRepository ndao;
     @Autowired
     CtvRepository cdao;
+    @Autowired
+    RegiProductRepository regiProductRepository;
 
     @GetMapping("/ctv/{ctv}")
     public ResponseEntity<Page<FollowSell>> getFollowByCtv(@PathVariable("ctv") String ctv,
@@ -48,6 +53,17 @@ public class FollowController {
         Page page = fdao.getNccFollow(ctv, PageRequest.of(p.orElse(0), size.orElse(100), s));
 
         return new ResponseEntity<Page<FollowSell>>(page, HttpStatus.OK);
+    }
+
+    @GetMapping("/ncc/{ncc}")
+    public ResponseEntity<Page<RegiProducts>> getFollowByNcc(@PathVariable("ncc") String ncc,
+            @RequestParam Optional<String> idpro, @RequestParam Optional<String> namectv,
+            @RequestParam Optional<Integer> p, @RequestParam Optional<Integer> size) {
+
+        Page<RegiProducts> page = regiProductRepository.getCtvRegi(ncc, idpro.orElse("%%"),
+                "%" + namectv.orElse("") + "%",
+                PageRequest.of(0, 100));
+        return new ResponseEntity<Page<RegiProducts>>(page, HttpStatus.OK);
     }
 
     @PostMapping
