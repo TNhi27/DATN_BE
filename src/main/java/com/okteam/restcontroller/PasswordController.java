@@ -56,14 +56,11 @@ public class PasswordController {
 	@PostMapping("/change")
 	public Response<Object> change(@RequestParam("password") String password, @RequestParam("newP") String newP,
 			@RequestParam("confirmP") String confirmP) {
-
 		String message = "OK";
 		String username = SecurityContextHolder.getContext().getAuthentication().getName();
-
-		if (service.isAdmin(username)) {
+		if(service.isAdmin(username)) {
 			message = "Tài khoản quản trị không dùng chức năng này!";
 		} else {
-<<<<<<< HEAD
 			if(service.isCtv(username) && !password.equalsIgnoreCase(ctvRepo.findById(username).get().getPassword())) {
 				return new Response<Object>(null, null, "Mật khẩu không đúng!");
 				
@@ -73,17 +70,6 @@ public class PasswordController {
 			}
 			if(!newP.equalsIgnoreCase(confirmP)) {
 				return new Response<Object>(null, null, "Xác nhận mật khẩu không đúng!");
-=======
-			if (service.isCtv(username) && !password.equalsIgnoreCase(ctvRepo.findById(username).get().getPassword())) {
-				return new Response<Object>(null, "Mật khẩu không đúng!");
-
-			}
-			if (service.isNcc(username) && !password.equalsIgnoreCase(nccRepo.findById(username).get().getPassword())) {
-				return new Response<Object>(null, "Mật khẩu không đúng!");
-			}
-			if (!newP.equalsIgnoreCase(confirmP)) {
-				return new Response<Object>(null, "Xác nhận mật khẩu không đúng!");
->>>>>>> c5bd9ff939c110c165cd4d3d959ed66a45b16877
 			}
 			service.changePW(username, newP);
 		}

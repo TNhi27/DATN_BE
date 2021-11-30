@@ -11,12 +11,9 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-<<<<<<< HEAD
 import com.okteam.dto.NccDto;
 
-=======
 import com.fasterxml.jackson.annotation.JsonIgnore;
->>>>>>> c5bd9ff939c110c165cd4d3d959ed66a45b16877
 
 import lombok.Data;
 

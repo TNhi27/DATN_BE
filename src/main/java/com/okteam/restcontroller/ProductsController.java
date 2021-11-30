@@ -323,7 +323,6 @@ public class ProductsController {
     }
 
     @GetMapping("/list")
-<<<<<<< HEAD
     public Response<ProductsResponseDTO> getAllProducts(){
     	return new Response<ProductsResponseDTO>(dtoUtils.mapProductsToDto(proDAO.findAll(Sort.by(Direction.DESC,"createdate"))), null, "OK");
     }
@@ -456,11 +455,5 @@ public class ProductsController {
 		}
     	proDAO.save(p);
     	return new Response<ProductsResponseDTO>(null, null, "OK");
-=======
-    public Response<ProductsDTO> getAllProducts() {
-        return new Response<ProductsDTO>(
-                dtoUtils.mapProductsToDto(proDAO.findAll(Sort.by(Direction.DESC, "createdate"))), "OK");
->>>>>>> c5bd9ff939c110c165cd4d3d959ed66a45b16877
     }
-
-}
+  }

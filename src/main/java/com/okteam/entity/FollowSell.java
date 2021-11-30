@@ -12,7 +12,6 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import lombok.Data;
@@ -30,12 +29,7 @@ public class FollowSell {
     Date date;
 
     @JsonManagedReference
-<<<<<<< HEAD
     @ManyToOne @JoinColumn(name = "ncc")
-=======
-    @ManyToOne
-    @JoinColumn(name = "ncc")
->>>>>>> c5bd9ff939c110c165cd4d3d959ed66a45b16877
     Ncc fl_ncc;
 
     @JsonManagedReference
