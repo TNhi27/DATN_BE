@@ -322,7 +322,7 @@ public class ProductsController {
 
     @GetMapping("/list")
     public Response<ProductsResponseDTO> getAllProducts(){
-    	return new Response<ProductsResponseDTO>(dtoUtils.mapProductsToDto(proDAO.findAll(Sort.by(Direction.DESC,"createdate"))), "OK");
+    	return new Response<ProductsResponseDTO>(dtoUtils.mapProductsToDto(proDAO.findAll(Sort.by(Direction.DESC,"createdate"))), null, "OK");
     }
     
     @GetMapping("/check-id/{idpro}")
@@ -345,7 +345,7 @@ public class ProductsController {
     		product.setNcc(ncc);
     		proDAO.save(product);
     	}
-    	return new Response<ProductsResponseDTO>(dtoUtils.mapProductsToDto(proDAO.findAll(Sort.by(Direction.DESC,"createdate"))), message);
+    	return new Response<ProductsResponseDTO>(dtoUtils.mapProductsToDto(proDAO.findAll(Sort.by(Direction.DESC,"createdate"))), null, message);
     }
     
     @PutMapping("/update-all")
@@ -376,7 +376,7 @@ public class ProductsController {
     		}
     		proDAO.save(product);
     	}
-    	return new Response<ProductsResponseDTO>(dtoUtils.mapProductsToDto(proDAO.findAll(Sort.by(Direction.DESC,"createdate"))), message);
+    	return new Response<ProductsResponseDTO>(dtoUtils.mapProductsToDto(proDAO.findAll(Sort.by(Direction.DESC,"createdate"))), null, message);
     }
     
     @DeleteMapping("/delete")
@@ -395,7 +395,64 @@ public class ProductsController {
     			proDAO.delete(pro);
     		}
     	}
-    	return new Response<ProductsResponseDTO>(dtoUtils.mapProductsToDto(proDAO.findAll(Sort.by(Direction.DESC,"createdate"))), message);
+    	return new Response<ProductsResponseDTO>(dtoUtils.mapProductsToDto(proDAO.findAll(Sort.by(Direction.DESC,"createdate"))), null, message);
+    }
+    
+    @PutMapping("/update-trangthai")
+    public Response<ProductsResponseDTO> update_trangthai(@RequestParam("idpro") String idpro){
+    	String message = "OK";
+    	if(!proDAO.existsById(idpro)) {
+    		message = "Không tìm thấy sản phẩm!";
+    	} else {
+    		Products p = proDAO.findById(idpro).get();
+    		p.setActive(!p.isActive());
+    		proDAO.save(p);    	}
+    	return new Response<ProductsResponseDTO>(null, null, message);
+    }
+    
+    @PutMapping("/reform/{idpro}")
+    public Response<ProductsResponseDTO> reformSP(@PathVariable("idpro") String idpro, 
+    		@RequestParam("thaotac") Integer thaotac, @RequestParam("value") String value) {
+    	if(!proDAO.existsById(idpro)) {
+    		return new Response<ProductsResponseDTO>(null, null, "Không tìm thấy sản phẩm!");
+    	}
+    	Products p = proDAO.findById(idpro).get();
+    	switch (thaotac) {
+		case 0:
+			p.setName(value);
+			break;
+		case 1:
+			p.setPricectv(Integer.parseInt(value));
+			break;
+		case 2:
+			p.setQty(Integer.parseInt(value));
+			break;
+		case 3:
+			p.setOrigin(value);
+			break;
+		case 4:
+			p.setDvt(value);
+			break;
+		case 5:
+			p.setDescription(value);
+			break;
+		case 6:
+			p.setImage0(value);
+			break;
+		case 7:
+			p.setImage1(value);
+			break;
+		case 8:
+			p.setImage2(value);
+			break;
+		case 9:
+			p.setImage3(value);
+			break;
+		default:
+			return new Response<ProductsResponseDTO>(null, null, "Thao tác không hợp lệ!");
+		}
+    	proDAO.save(p);
+    	return new Response<ProductsResponseDTO>(null, null, "OK");
     }
     
 }

@@ -131,21 +131,17 @@ public class NccController {
     public Response<NccResponseDTO> register(@RequestBody Ncc ncc)
             throws UnsupportedEncodingException, MessagingException {
         String message = "OK";
-        List<NccResponseDTO> list = new ArrayList<>();
         if (service.checkUsername(ncc.getUsername())) {
             message = "Username đã tồn tại!";
         } else {
             ncc = service.registerNcc(ncc);
-            NccResponseDTO nccDTO = new NccResponseDTO();
-            nccDTO.createByEntity(ncc);
-            list.add(nccDTO);
         }
-        return new Response<NccResponseDTO>(list, message);
+        return new Response<NccResponseDTO>(null, new NccResponseDTO().createByEntity(ncc), message);
     }
 
     @GetMapping("/list")
     public Response<NccResponseDTO> getNccs(){
-    	return new Response<NccResponseDTO>(dtoUtils.mapNccToDto(nccRepository.findAll(Sort.by(Direction.DESC,"createdate"))), "OK");
+    	return new Response<NccResponseDTO>(dtoUtils.mapNccToDto(nccRepository.findAll(Sort.by(Direction.DESC,"createdate"))), null, "OK");
     }
     
     @GetMapping("/check-id/{username}")
@@ -162,7 +158,7 @@ public class NccController {
     		ncc.setFullname(ncc.getNccname());
     		nccRepository.save(new Ncc().dtoReturnEntity(ncc));
     	}
-    	return new Response<NccResponseDTO>(dtoUtils.mapNccToDto(nccRepository.findAll(Sort.by(Direction.DESC,"createdate"))), message);
+    	return new Response<NccResponseDTO>(dtoUtils.mapNccToDto(nccRepository.findAll(Sort.by(Direction.DESC,"createdate"))), null, message);
     }
     
     @DeleteMapping("/delete")
@@ -181,7 +177,7 @@ public class NccController {
     			nccRepository.delete(n);
     		}
     	}
-    	return new Response<NccResponseDTO>(dtoUtils.mapNccToDto(nccRepository.findAll(Sort.by(Direction.DESC,"createdate"))), message);
+    	return new Response<NccResponseDTO>(dtoUtils.mapNccToDto(nccRepository.findAll(Sort.by(Direction.DESC,"createdate"))), null, message);
     }
     
     @PutMapping("/update-trangthai")
@@ -194,15 +190,14 @@ public class NccController {
         	ncc.setActive(!ncc.isActive());
         	nccRepository.save(ncc);
     	}
-    	return new Response<NccResponseDTO>(null, message);
+    	return new Response<NccResponseDTO>(null, null, message);
     }
     
     @PutMapping("/update/{username}")
     public Response<NccResponseDTO> updateNcc(@PathVariable("username") String username, 
     		@RequestParam("thaotac") Integer thaotac, @RequestParam("value") String value){
-    	String message = "OK";
     	if(!service.isNcc(username)) {
-    		return new Response<NccResponseDTO>(null, "Tài khoản nhà cung cấp không chính xác!");
+    		return new Response<NccResponseDTO>(null, null, "Tài khoản nhà cung cấp không chính xác!");
     	}
     	Ncc ncc= nccRepository.findById(username).get();
     	switch (thaotac) {
@@ -233,10 +228,10 @@ public class NccController {
 			ncc.setDescription(value);
 			break;
 		default:
-			return new Response<NccResponseDTO>(null, "Thao tác không hợp lệ!");
+			return new Response<NccResponseDTO>(null, null, "Thao tác không hợp lệ!");
 		}
     	nccRepository.save(ncc);
-    	return new Response<NccResponseDTO>(null, message);
+    	return new Response<NccResponseDTO>(null, null, "OK");
     }
     
     @PostMapping("/info")

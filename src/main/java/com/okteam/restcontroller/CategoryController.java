@@ -45,7 +45,7 @@ public class CategoryController {
 
 	@GetMapping("/list")
 	public Response<Categorydto> getCategories() {
-		return new Response<Categorydto>(dtoUtils.mapCategoryToDto(categoryRepo.findAll()), "OK");
+		return new Response<Categorydto>(dtoUtils.mapCategoryToDto(categoryRepo.findAll()), null, "OK");
 	}
 	
 	@GetMapping("/check-id/{idcate}")
@@ -72,17 +72,18 @@ public class CategoryController {
 				}
 			}
 		}
-		return new Response<Categorydto>(dtoUtils.mapCategoryToDto(categoryRepo.findAll()), message);
+		return new Response<Categorydto>(dtoUtils.mapCategoryToDto(categoryRepo.findAll()), null, message);
 	}
 
 	@PutMapping("/update")
 	public Response<Categorydto> updateCategory(@RequestParam(name = "idcate") String idcate,
 			@RequestParam(name = "value") String value, @RequestParam(name = "thaotac") Integer thaotac) {
 		String message = "OK";
+		Category category = new Category();
 		if(!categoryRepo.existsById(idcate)) {
 			message = "Không tìm thấy loại hàng!";
 		} else {
-			Category category = categoryRepo.findById(idcate).get();
+			category = categoryRepo.findById(idcate).get();
 			if (thaotac == 0) {
 				if (value.isEmpty()) {
 					message = "Không để trống tên loại!";
@@ -96,7 +97,7 @@ public class CategoryController {
 				categoryRepo.save(category);
 			}
 			if (thaotac == 2) {
-				if (!value.isEmpty() && !categoryRepo.existsById(value)) {
+				if (!value.isEmpty() && !categoryRepo.existsById(value.toUpperCase())) {
 					message = "Không tìm thấy menu cha!";
 				} else {
 					if (value.isEmpty()) {
@@ -124,7 +125,7 @@ public class CategoryController {
 				}
 			}
 		}
-		return new Response<Categorydto>(null, message);
+		return new Response<Categorydto>(null, new Categorydto().createByEntity(category), message);
 	}
 
 	@DeleteMapping("/delete")
@@ -146,7 +147,7 @@ public class CategoryController {
 				}
 			}
 		}
-		return new Response<Categorydto>(dtoUtils.mapCategoryToDto(categoryRepo.findAll()), message);
+		return new Response<Categorydto>(dtoUtils.mapCategoryToDto(categoryRepo.findAll()), null, message);
 	}
 
 	@PostMapping

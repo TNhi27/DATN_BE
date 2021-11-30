@@ -46,7 +46,7 @@ public class BrandController {
 			list = brandRepo.findByIdcate(idcate);
 			message = "OK";
 		}
-		return new Response<BrandDTO>(dtoUtils.mapBrandToDto(list), message);
+		return new Response<BrandDTO>(dtoUtils.mapBrandToDto(list), null, message);
 	}
 
 	@PostMapping("/addTo/{idcate}")
@@ -56,18 +56,22 @@ public class BrandController {
 				.allMatch(br -> !brand.getName().equalsIgnoreCase(br.getName()));
 		if (!check) {
 			message = "Tên nhãn hàng đã tồn tại trong loại hàng này!";
-			return new Response<BrandDTO>(dtoUtils.mapBrandToDto(brandRepo.findByIdcate(idcate)), message);
+			return new Response<BrandDTO>(dtoUtils.mapBrandToDto(brandRepo.findByIdcate(idcate)), null, message);
 		}
 		Category c = categoryRepo.findById(idcate).get();
 		Brand b =  new Brand().dtoReturnEntity(brand);
 		b.setBr_category(c);
 		brandRepo.save(b);
-		return new Response<BrandDTO>(dtoUtils.mapBrandToDto(brandRepo.findByIdcate(idcate)), message);
+		return new Response<BrandDTO>(dtoUtils.mapBrandToDto(brandRepo.findByIdcate(idcate)), null, message);
 	}
 
-	@DeleteMapping("/delete/{id}/{idcate}")
-	public Response<BrandDTO> deleteBrand(@PathVariable("id") Integer id, @PathVariable("idcate") String idcate) {
+	@DeleteMapping("/delete/{id}/{isAll}")
+	public Response<BrandDTO> deleteBrand(@PathVariable("id") Integer id, @PathVariable("isAll") Boolean isAll) {
 		String message = "Không tìm thấy nhãn hàng!";
+		if(!brandRepo.existsById(id)) {
+			return new Response<BrandDTO>(null, null, message);
+		}
+		Brand brand = brandRepo.findById(id).get();
 		if (brandRepo.existsById(id)) {
 			if (brandRepo.findById(id).get().getProducts().size() > 0) {
 				message = "Nhãn hàng đã có sản phẩm!";
@@ -76,13 +80,15 @@ public class BrandController {
 				message = "OK";
 			}
 		}
-		return new Response<BrandDTO>(dtoUtils.mapBrandToDto(brandRepo.findByIdcate(idcate)), message);
+		if(isAll == true) {
+			return new Response<BrandDTO>(dtoUtils.mapBrandToDto(brandRepo.findAll()), null, message);
+		}
+		return new Response<BrandDTO>(dtoUtils.mapBrandToDto(brandRepo.findByIdcate(brand.getBr_category().getIdcate())), null, message);
 	}
 
 	@PutMapping("/update")
 	public Response<BrandDTO> updateBrand(@RequestParam("id") Integer id, @RequestParam("value") String value) {
 		String message = "OK";
-		List<Brand>list = new ArrayList<>();
 		Brand brand = brandRepo.findById(id).get();
 		if (value.isEmpty()) {
 			message = "Không được đễ trống tên";
@@ -94,10 +100,8 @@ public class BrandController {
 			} else {
 				brand.setName(value);
 				brandRepo.save(brand);
-				list.add(brand);
 			}
 		}
-		list.add(brand);
-		return new Response<BrandDTO>(dtoUtils.mapBrandToDto(list), message);
+		return new Response<BrandDTO>(null, new BrandDTO().createByEntity(brand), message);
 	}
 }
