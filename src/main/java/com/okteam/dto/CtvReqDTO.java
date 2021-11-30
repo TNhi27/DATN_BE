@@ -8,7 +8,6 @@ import lombok.Data;
 @Data
 public class CtvReqDTO {
 	String username;
-	String password;
 	String email;
 	String sdt;
 	boolean active;
