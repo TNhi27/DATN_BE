@@ -34,7 +34,7 @@ public class RegiProducts {
 	@JoinColumn(name = "idpro")
 	Products products;
 
-	@JsonBackReference
+	@JsonManagedReference
 	@ManyToOne
 	@JoinColumn(name = "idctv")
 	Ctv ctv;

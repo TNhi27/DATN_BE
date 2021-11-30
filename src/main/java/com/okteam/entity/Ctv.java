@@ -20,6 +20,7 @@ import lombok.Data;
 public class Ctv {
 	@Id
 	String username;
+	@JsonIgnore
 	String password;
 	String email;
 	String sdt;
@@ -27,7 +28,7 @@ public class Ctv {
 	String fullname = "Ẩn danh";
 	String address;
 	String sex;
-	String verify=null;
+	String verify = null;
 	@Temporal(TemporalType.DATE)
 	Date createdate = new Date();
 	String image;

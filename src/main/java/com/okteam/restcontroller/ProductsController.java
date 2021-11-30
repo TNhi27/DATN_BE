@@ -78,13 +78,12 @@ public class ProductsController {
 
     @Autowired
     OrderRepository orderRepository;
-    
+
     @Autowired
     DtoUtils dtoUtils;
 
     @Autowired
     PropertiesReponsitory propertiesReponsitory;
-
 
     // Lấy 1 sản phẩm theo ID
     @GetMapping("/getone/{id}")
@@ -175,20 +174,23 @@ public class ProductsController {
                 return e.getIdcate();
 
             }).collect(Collectors.toList());
-            page = proDAO.getProductsByParentCategory(cate, min_price.orElse(0), max_price.orElse(1000000000),
-                    origin.orElse(root_origin), city.orElse(root_city_ncc), q.orElse(""),
+            page = proDAO.getProductsByParentCategory(cate, min_price.orElse(0), max_price.orElse(Integer.MAX_VALUE),
+                    origin.orElse(root_origin), city.orElse(root_city_ncc), "%" + q.orElse("") + "%",
                     PageRequest.of(p.orElse(0), size.orElse(25), s));
             return new ResponseEntity<Page<Products>>(page, HttpStatus.OK);
 
         }
 
-        page = proDAO.getProductsByCategory(category.orElse("%%"), min_price.orElse(0), max_price.orElse(1000000000),
-                origin.orElse(root_origin), city.orElse(root_city_ncc), q.orElse(""),
+        page = proDAO.getProductsByCategory(category.orElse("%%"), min_price.orElse(0),
+                max_price.orElse(Integer.MAX_VALUE),
+                origin.orElse(root_origin), city.orElse(root_city_ncc), "%" + q.orElse("") + "%",
                 PageRequest.of(p.orElse(0), size.orElse(25), s));
 
         // page = proDAO.getProductsByCategoryHasBrand("PK1", 0, 10000000,
         // origin.orElse(root_origin),
         // city.orElse(root_city_ncc), 17, PageRequest.of(0, 10));
+
+        System.out.println(page.getContent().size());
 
         return new ResponseEntity<Page<Products>>(page, HttpStatus.OK);
     }
@@ -317,8 +319,9 @@ public class ProductsController {
     }
 
     @GetMapping("/list")
-    public Response<ProductsDTO> getAllProducts(){
-    	return new Response<ProductsDTO>(dtoUtils.mapProductsToDto(proDAO.findAll(Sort.by(Direction.DESC,"createdate"))), "OK");
+    public Response<ProductsDTO> getAllProducts() {
+        return new Response<ProductsDTO>(
+                dtoUtils.mapProductsToDto(proDAO.findAll(Sort.by(Direction.DESC, "createdate"))), "OK");
     }
-    
+
 }
