@@ -9,6 +9,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.okteam.dto.PropertiesReqDto;
 
 import lombok.Data;
 
@@ -29,4 +30,12 @@ public class Properties {
 
     String valuep;
     String keyp;
+    
+    public Properties dtoReturnEntity(PropertiesReqDto pro) {
+    	this.id = pro.getId();
+    	this.keyp = pro.getKeyp();
+    	this.valuep = pro.getValuep();
+    	return this;
+    }
+    
 }

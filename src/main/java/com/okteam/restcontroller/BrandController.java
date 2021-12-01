@@ -1,6 +1,5 @@
 package com.okteam.restcontroller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,9 +37,8 @@ public class BrandController {
 	@GetMapping("/list")
 	public Response<BrandDTO> getBrands(@RequestParam(value = "idcate", required = false) String idcate) {
 		String message = "Không lấy được dữ liệu";
-		List<Brand> list = new ArrayList<>();
+		List<Brand> list = brandRepo.findAll();
 		if (idcate == null) {
-			list = brandRepo.findAll();
 			message = "OK";
 		} else {
 			list = brandRepo.findByIdcate(idcate);
@@ -55,7 +53,7 @@ public class BrandController {
 		boolean check = brandRepo.findByIdcate(idcate).stream()
 				.allMatch(br -> !brand.getName().equalsIgnoreCase(br.getName()));
 		if (!check) {
-			message = "Tên nhãn hàng đã tồn tại trong loại hàng này!";
+			message = "Nhãn hàng đã tồn tại trong loại hàng này!";
 			return new Response<BrandDTO>(dtoUtils.mapBrandToDto(brandRepo.findByIdcate(idcate)), null, message);
 		}
 		Category c = categoryRepo.findById(idcate).get();
@@ -72,13 +70,11 @@ public class BrandController {
 			return new Response<BrandDTO>(null, null, message);
 		}
 		Brand brand = brandRepo.findById(id).get();
-		if (brandRepo.existsById(id)) {
-			if (brandRepo.findById(id).get().getProducts().size() > 0) {
-				message = "Nhãn hàng đã có sản phẩm!";
-			} else {
-				brandRepo.deleteById(id);
-				message = "OK";
-			}
+		if (brandRepo.findById(id).get().getProducts().size() > 0) {
+			message = "Nhãn hàng đã có sản phẩm!";
+		} else {
+			brandRepo.deleteById(id);
+			message = "OK";
 		}
 		if(isAll == true) {
 			return new Response<BrandDTO>(dtoUtils.mapBrandToDto(brandRepo.findAll()), null, message);
@@ -93,10 +89,10 @@ public class BrandController {
 		if (value.isEmpty()) {
 			message = "Không được đễ trống tên";
 		} else {
-			String idcate = brandRepo.findById(id).get().getBr_category().getIdcate();
+			String idcate = brand.getBr_category().getIdcate();
 			boolean check = brandRepo.findByIdcate(idcate).stream().allMatch(br -> !value.equalsIgnoreCase(br.getName()));
 			if (!check) {
-				message = "Tên nhãn hàng đã tồn tại trong loại hàng này!";
+				message = "Tên nhãn hàng đã tồn tại trong cùng loại hàng!";
 			} else {
 				brand.setName(value);
 				brandRepo.save(brand);

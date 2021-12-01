@@ -11,12 +11,14 @@ import com.okteam.dto.Categorydto;
 import com.okteam.dto.CtvResponseDTO;
 import com.okteam.dto.NccResponseDTO;
 import com.okteam.dto.ProductsResponseDTO;
+import com.okteam.dto.PropertiesReqDto;
 import com.okteam.entity.Admin;
 import com.okteam.entity.Brand;
 import com.okteam.entity.Category;
 import com.okteam.entity.Ctv;
 import com.okteam.entity.Ncc;
 import com.okteam.entity.Products;
+import com.okteam.entity.Properties;
 
 @Service
 public class DtoUtils {
@@ -38,5 +40,8 @@ public class DtoUtils {
 	}
 	public List<AdminResponseDto> mapAdminToDto(List<Admin> list){
 		return list.stream().map(ad->new AdminResponseDto().createByEntity(ad)).collect(Collectors.toList());
+	}
+	public List<PropertiesReqDto> mapPropertiesToDto(List<Properties> list){
+		return list.stream().map(pro->new PropertiesReqDto().createByEntity(pro)).collect(Collectors.toList());
 	}
 }
