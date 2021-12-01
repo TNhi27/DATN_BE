@@ -40,42 +40,40 @@ public class PasswordController {
 			message = "Không tìm thấy tài khoản!";
 		} else {
 			if (service.isCtv(username) && !email.equalsIgnoreCase(ctvRepo.findById(username).get().getEmail())) {
-				return new Response<Object>(null, "Email tài khoản không đúng!");
+				return new Response<Object>(null, null, "Email tài khoản không đúng!");
 			}
 			if (service.isNcc(username) && !email.equalsIgnoreCase(nccRepo.findById(username).get().getEmail())) {
-				return new Response<Object>(null, "Email tài khoản không đúng!");
+				return new Response<Object>(null, null, "Email tài khoản không đúng!");
 			}
 			if (service.isAdmin(username) && !email.equalsIgnoreCase(adRepo.findById(username).get().getEmail())) {
-				return new Response<Object>(null, "Email tài khoản không đúng!");
+				return new Response<Object>(null, null, "Email tài khoản không đúng!");
 			}
 			service.forgetPW(username);
 		}
-		return new Response<Object>(null, message);
+		return new Response<Object>(null, null, message);
 	}
 
 	@PostMapping("/change")
 	public Response<Object> change(@RequestParam("password") String password, @RequestParam("newP") String newP,
 			@RequestParam("confirmP") String confirmP) {
-
 		String message = "OK";
 		String username = SecurityContextHolder.getContext().getAuthentication().getName();
-
-		if (service.isAdmin(username)) {
+		if(service.isAdmin(username)) {
 			message = "Tài khoản quản trị không dùng chức năng này!";
 		} else {
-			if (service.isCtv(username) && !password.equalsIgnoreCase(ctvRepo.findById(username).get().getPassword())) {
-				return new Response<Object>(null, "Mật khẩu không đúng!");
-
+			if(service.isCtv(username) && !password.equalsIgnoreCase(ctvRepo.findById(username).get().getPassword())) {
+				return new Response<Object>(null, null, "Mật khẩu không đúng!");
+				
 			}
-			if (service.isNcc(username) && !password.equalsIgnoreCase(nccRepo.findById(username).get().getPassword())) {
-				return new Response<Object>(null, "Mật khẩu không đúng!");
+			if(service.isNcc(username) && !password.equalsIgnoreCase(nccRepo.findById(username).get().getPassword())) {
+				return new Response<Object>(null, null, "Mật khẩu không đúng!");
 			}
-			if (!newP.equalsIgnoreCase(confirmP)) {
-				return new Response<Object>(null, "Xác nhận mật khẩu không đúng!");
+			if(!newP.equalsIgnoreCase(confirmP)) {
+				return new Response<Object>(null, null, "Xác nhận mật khẩu không đúng!");
 			}
 			service.changePW(username, newP);
 		}
-		return new Response<Object>(null, message);
+		return new Response<Object>(null, null, message);
 	}
 
 }

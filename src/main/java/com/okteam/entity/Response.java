@@ -11,5 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Response<V> {
 	List<V> result;
+	Object object;
 	String message;
 }

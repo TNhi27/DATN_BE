@@ -8,9 +8,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.okteam.dto.Categorydto;
 
 import lombok.Data;
 
@@ -30,7 +28,17 @@ public class Category {
 	@OneToMany(mappedBy = "category")
 	List<Products> products;
 
-	@JsonManagedReference
+	@JsonBackReference
 	@OneToMany(mappedBy = "br_category")
 	List<Brand> brands;
+	
+	public Category dtoReturnEntity(Categorydto c) {
+		this.idcate = c.getIdcate();
+		this.typename = c.getTypename();
+		this.img = c.getImg();
+		this.lv = c.getLv();
+		this.parent= c.getParent();
+		return this;
+	}
+	
 }

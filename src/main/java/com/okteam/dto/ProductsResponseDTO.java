@@ -12,7 +12,7 @@ import com.okteam.entity.RegiProducts;
 import lombok.Data;
 
 @Data
-public class ProductsDTO {
+public class ProductsResponseDTO {
 	String idpro = null;
 	String name;
 	String description;
@@ -35,7 +35,7 @@ public class ProductsDTO {
 	List<Properties> properties;
 	BrandDTO p_brand;
 	
-	public ProductsDTO createByEntity(Products p) {
+	public ProductsResponseDTO createByEntity(Products p) {
 		this.idpro = p.getIdpro();
 		this.name = p.getName();
 		this.description = p.getDescription();

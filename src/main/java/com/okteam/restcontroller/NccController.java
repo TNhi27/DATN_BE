@@ -10,10 +10,12 @@ import java.util.stream.Collectors;
 
 import javax.mail.MessagingException;
 
-import com.okteam.dao.CtvAndListOrder;
-import com.okteam.dao.CtvRepository;
+import com.okteam.dao.FollowSellRepository;
 import com.okteam.dao.NccRepository;
 import com.okteam.dao.ProductRepository;
+import com.okteam.dto.NccDto;
+import com.okteam.dao.CtvAndListOrder;
+import com.okteam.dao.CtvRepository;
 import com.okteam.dto.NccRequestDTO;
 import com.okteam.dto.NccResponseDTO;
 import com.okteam.entity.Ctv;
@@ -55,6 +57,8 @@ public class NccController {
     @Autowired
     ProductRepository productDAO;
     @Autowired
+    FollowSellRepository flRepo;
+    @Autowired
     RegisterService service;
     @Autowired
     DtoUtils dtoUtils;
@@ -62,7 +66,6 @@ public class NccController {
     @Autowired
     CtvRepository ctvRepository;
 
-    //
     @GetMapping("/get/{idncc}")
     public ResponseEntity<Ncc> get10Ncc(@PathVariable("idncc") String idncc) {
         Ncc n = nccRepository.findById(idncc).get();
@@ -137,107 +140,108 @@ public class NccController {
     public Response<NccResponseDTO> register(@RequestBody Ncc ncc)
             throws UnsupportedEncodingException, MessagingException {
         String message = "OK";
-        List<NccResponseDTO> list = new ArrayList<>();
         if (service.checkUsername(ncc.getUsername())) {
             message = "Username đã tồn tại!";
         } else {
             ncc = service.registerNcc(ncc);
-            NccResponseDTO nccDTO = new NccResponseDTO();
-            nccDTO.createByEntity(ncc);
-            list.add(nccDTO);
         }
-        return new Response<NccResponseDTO>(list, message);
+        return new Response<NccResponseDTO>(null, new NccResponseDTO().createByEntity(ncc), message);
     }
 
     @GetMapping("/list")
-    public Response<NccResponseDTO> getNccs() {
-        return new Response<NccResponseDTO>(
-                dtoUtils.mapNccToDto(nccRepository.findAll(Sort.by(Direction.DESC, "createdate"))), "OK");
+    public Response<NccResponseDTO> getNccs(){
+    	return new Response<NccResponseDTO>(dtoUtils.mapNccToDto(nccRepository.findAll(Sort.by(Direction.DESC,"createdate"))), null, "OK");
     }
-
+    
+    @GetMapping("/check-id/{username}")
+	public Boolean checkusernamectv(@PathVariable("username") String username) {
+		return service.checkUsername(username);
+	}
+    
     @PostMapping("/add")
-    public Response<NccResponseDTO> addNcc(@RequestBody Ncc ncc) {
-        String message = "OK";
-        if (service.checkUsername(ncc.getUsername())) {
-            message = "Tài khoản đã tồn tại, vui lòng chọn tên khác!";
-        } else {
-            ncc.setFullname(ncc.getNccname());
-            nccRepository.save(ncc);
-        }
-        return new Response<NccResponseDTO>(
-                dtoUtils.mapNccToDto(nccRepository.findAll(Sort.by(Direction.DESC, "createdate"))), message);
+    public Response<NccResponseDTO> addNcc(@RequestBody NccDto ncc){
+    	String message = "OK";
+    	if(service.checkUsername(ncc.getUsername())) {
+    		message = "Tài khoản đã tồn tại, vui lòng chọn tên khác!";
+    	} else {
+    		ncc.setFullname(ncc.getNccname());
+    		nccRepository.save(new Ncc().dtoReturnEntity(ncc));
+    	}
+    	return new Response<NccResponseDTO>(dtoUtils.mapNccToDto(nccRepository.findAll(Sort.by(Direction.DESC,"createdate"))), null, message);
     }
-
+    
     @DeleteMapping("/delete")
-    public Response<NccResponseDTO> deleteNcc(@RequestBody Ncc ncc) {
-        String message = "OK";
-        if (!service.isNcc(ncc.getUsername())) {
-            message = "Tài khoản nhà cung cấp không chính xác!";
-        } else {
-            ncc = nccRepository.findById(ncc.getUsername()).get();
-            if (ncc.getProducts().size() > 0) {
-                message = "Nhà cung cấp đã có sản phẩm!";
-            } else if (ncc.getOrders().size() > 0) {
-                message = "Nhà cung cấp đã có đơn hàng!";
-            } else if (ncc.getFollowSell().size() > 0) {
-                message = "Nhà cung cấp đang nằm trong danh sách follow!";
-            } else {
-                nccRepository.deleteById(ncc.getUsername());
-            }
-        }
-        return new Response<NccResponseDTO>(
-                dtoUtils.mapNccToDto(nccRepository.findAll(Sort.by(Direction.DESC, "createdate"))), message);
+    public Response<NccResponseDTO> deleteNcc(@RequestBody NccDto ncc){
+    	String message = "OK";
+    	if(!service.isNcc(ncc.getUsername())) {
+    		message = "Tài khoản nhà cung cấp không chính xác!";
+    	} else {
+    		Ncc n = nccRepository.findById(ncc.getUsername()).get();
+    		if(n.getProducts().size() > 0) {
+    			message = "Nhà cung cấp đã có sản phẩm!";
+    		} else if(n.getOrders().size() > 0) {
+    			message = "Nhà cung cấp đã có đơn hàng!";
+    		} else {
+    			flRepo.deleteAll(n.getFollowSell());
+    			nccRepository.delete(n);
+    		}
+    	}
+    	return new Response<NccResponseDTO>(dtoUtils.mapNccToDto(nccRepository.findAll(Sort.by(Direction.DESC,"createdate"))), null, message);
     }
-
+    
     @PutMapping("/update-trangthai")
-    public Response<NccResponseDTO> update_trangthai(@RequestParam("username") String username) {
-        String message = "OK";
-        if (!service.isNcc(username)) {
-            message = "Tài khoản nhà cung cấp không chính xác!";
-        } else {
-            Ncc ncc = nccRepository.findById(username).get();
-            ncc.setActive(!ncc.isActive());
-            nccRepository.save(ncc);
-        }
-        return new Response<NccResponseDTO>(null, message);
+    public Response<NccResponseDTO> update_trangthai(@RequestParam("username") String username){
+    	String message = "OK";
+    	if(!service.isNcc(username)) {
+    		message = "Tài khoản nhà cung cấp không chính xác!";
+    	} else {
+    		Ncc ncc  = nccRepository.findById(username).get();
+        	ncc.setActive(!ncc.isActive());
+        	ncc.setVerify(null);
+        	nccRepository.save(ncc);
+    	}
+    	return new Response<NccResponseDTO>(null, null, message);
     }
-
+    
     @PutMapping("/update/{username}")
-    public Response<NccResponseDTO> updateNcc(@PathVariable("username") String username,
-            @RequestParam("thaotac") Integer thaotac, @RequestParam("value") String value) {
-        String message = "OK";
-        if (!service.isNcc(username)) {
-            return new Response<NccResponseDTO>(null, "Tài khoản nhà cung cấp không chính xác!");
-        }
-        Ncc ncc = nccRepository.findById(username).get();
-        switch (thaotac) {
-            case 0:
-                ncc.setPassword(value);
-                break;
-            case 1:
-                ncc.setNccname(value);
-                ncc.setFullname(value);
-                break;
-            case 2:
-                ncc.setNcclogo(value);
-                break;
-            case 3:
-                ncc.setEmail(value);
-                break;
-            case 4:
-                ncc.setSdt(value);
-                break;
-            case 5:
-                ncc.setCity(value);
-                break;
-            case 6:
-                ncc.setAddress(value);
-                break;
-            default:
-                return new Response<NccResponseDTO>(null, "Thao tác không hợp lệ!");
-        }
-        nccRepository.save(ncc);
-        return new Response<NccResponseDTO>(null, message);
+    public Response<NccResponseDTO> updateNcc(@PathVariable("username") String username, 
+    		@RequestParam("thaotac") Integer thaotac, @RequestParam("value") String value){
+    	if(!service.isNcc(username)) {
+    		return new Response<NccResponseDTO>(null, null, "Tài khoản nhà cung cấp không chính xác!");
+    	}
+    	Ncc ncc= nccRepository.findById(username).get();
+    	switch (thaotac) {
+		case 0:
+			ncc.setPassword(value);
+			break;
+		case 1:
+			ncc.setNccname(value);
+    		ncc.setFullname(value);
+			break;
+		case 2:
+			ncc.setNcclogo(value);
+			break;
+		case 3:
+			ncc.setEmail(value);
+			break;
+		case 4:
+			ncc.setSdt(value);
+			break;
+		case 5:
+			ncc.setCity(value);
+			break;
+		case 6:
+			ncc.setAddress(value);
+		case 7:
+			ncc.setIdghn(value);
+		case 8:
+			ncc.setDescription(value);
+			break;
+		default:
+			return new Response<NccResponseDTO>(null, null, "Thao tác không hợp lệ!");
+		}
+    	nccRepository.save(ncc);
+    	return new Response<NccResponseDTO>(null, null, "OK");
     }
 
     @PostMapping("/info")

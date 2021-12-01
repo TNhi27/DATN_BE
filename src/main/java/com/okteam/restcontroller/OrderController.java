@@ -222,10 +222,10 @@ public class OrderController {
 
         if (o.getStatus() == 0) {
             oRepository.deleteById(id);
-            return new Response<>(null, "Xoa thanh cong");
+            return new Response<>(null, null, "Xoa thanh cong");
         }
 
-        return new Response<>(null, "Khong the xoa");
+        return new Response<>(null, null, "Khong the xoa");
 
     }
 

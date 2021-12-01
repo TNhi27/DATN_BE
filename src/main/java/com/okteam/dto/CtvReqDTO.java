@@ -1,14 +1,8 @@
 package com.okteam.dto;
 
 import java.util.Date;
-import java.util.List;
 
-import com.okteam.entity.Comments;
 import com.okteam.entity.Ctv;
-import com.okteam.entity.FollowSell;
-import com.okteam.entity.Orders;
-import com.okteam.entity.RegiProducts;
-
 import lombok.Data;
 
 @Data

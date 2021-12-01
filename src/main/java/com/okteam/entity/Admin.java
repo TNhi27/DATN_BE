@@ -29,7 +29,6 @@ public class Admin {
 	String fullname;
 	String address;
 	String sex;
-	String verify;
 	String image;
 	@Temporal(TemporalType.DATE)
 	Date createdate = new Date();
