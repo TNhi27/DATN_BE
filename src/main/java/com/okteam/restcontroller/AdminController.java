@@ -7,8 +7,10 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.okteam.dao.AdminRepository;
@@ -20,8 +22,8 @@ import com.okteam.entity.Response;
 import com.okteam.utils.DtoUtils;
 import com.okteam.utils.RegisterService;
 
-@CrossOrigin("*")
 @RestController
+@CrossOrigin("*")
 @RequestMapping("/api/v1/admin")
 public class AdminController {
 
@@ -35,17 +37,17 @@ public class AdminController {
 	RegisterService service;
 	
 	@GetMapping("/list")
-	public Response<AdminResponseDto> allAdmin() {
+	public Response<AdminResponseDto> allAdmin(){
 		return new Response<AdminResponseDto>(dtoUtils.mapAdminToDto(adRepo.findAll(Sort.by(Sort.Direction.DESC, "createdate"))), null, "OK");
 	}
 	
 	@GetMapping("/check-id/{username}")
-	public Boolean checkusername(@PathVariable("username") String username) {
+	public Boolean checkusername(@PathVariable("username") String username){
 		return service.checkUsername(username);
 	}
 	
 	@PostMapping("/add")
-	public Response<AdminResponseDto> addAdmin(@RequestBody AdminDto ad) {
+	public Response<AdminResponseDto> addAdmin(@RequestBody AdminDto ad){
 		String message = "OK";
 		if(service.checkUsername(ad.getUsername())) {
 			message = "Tài khoản đã tồn tại, vui lòng chọn tên khác!";
@@ -56,15 +58,63 @@ public class AdminController {
 	}
 	
 	@DeleteMapping("/delete")
-	public Response<AdminResponseDto> deleteAdmin(@RequestBody AdminDto ad) {
+	public Response<AdminResponseDto> deleteAdmin(@RequestBody AdminDto ad){
 		String messgae = "OK";
 		if(!service.isAdmin(ad.getUsername())) {
-			messgae = "Tài khoản admin không chính xác!";
+			messgae = "Tài khoản quản trị viên không chính xác!";
 		} else {
 //			postRepo.deleteAll(adRepo.findById(ad.getUsername()).get().getPosts());
 			adRepo.deleteById(ad.getUsername());
 		}
 		return new Response<AdminResponseDto>(dtoUtils.mapAdminToDto(adRepo.findAll(Sort.by(Sort.Direction.DESC, "createdate"))), null, messgae);
+	}
+	
+	@PutMapping("/update-trangthai")
+	public Response<AdminResponseDto> update_trangthai(@RequestParam("username") String username){
+		String message = "OK";
+		if(!service.isAdmin(username)) {
+			message = "Tài khoản quản trị viên không chính xác!";
+		} else {
+			Admin ad = adRepo.findById(username).get();
+			ad.setActive(!ad.isActive());
+			adRepo.save(ad);
+		}
+		return new Response<AdminResponseDto>(null, null, message);
+	}
+	
+	@PutMapping("/reform/{username}")
+	public Response<AdminResponseDto> reformAd(@PathVariable("username") String username, 
+			@RequestParam("thaotac") Integer thaotac, @RequestParam("value") String value){
+		if(!service.isAdmin(username)) {
+			return new Response<AdminResponseDto>(null, null, "Tài khoản quản trị viên không chính xác!");
+		}
+		Admin ad = adRepo.findById(username).get();
+		switch (thaotac) {
+		case 0:
+			ad.setPassword(value);
+		case 1:
+			ad.setFullname(value);
+			break;
+		case 2:
+			ad.setImage(value);
+			break;
+		case 3:
+			ad.setSex(value);
+			break;
+		case 4:
+			ad.setEmail(value);
+			break;
+		case 5:
+			ad.setSdt(value);
+			break;
+		case 6:
+			ad.setAddress(value);
+			break;
+		default:
+			return new Response<AdminResponseDto>(null, null, "Thao tác không hợp lệ");
+		}
+		adRepo.save(ad);
+		return new Response<AdminResponseDto>(null, null, "OK");
 	}
 	
 }
