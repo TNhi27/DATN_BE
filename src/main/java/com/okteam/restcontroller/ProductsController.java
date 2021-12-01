@@ -359,23 +359,10 @@ public class ProductsController {
     		Category c = cateDAO.findById(p.getIdcate()).get();
     		Brand b = brandRepository.findById(p.getIdbrand()).get();
     		Ncc ncc = nccRepository.findById(p.getUsername()).get();
-    		Products product = new Products().dtoReturnEntity(p);
-    		Products productImg = proDAO.findById(p.getIdpro()).get();
+    		Products product = proDAO.findById(p.getIdpro()).get();
     		product.setCategory(c);
     		product.setP_brand(b);
     		product.setNcc(ncc);
-    		if(product.getImage0() == null) {
-    			product.setImage0(productImg.getImage0());
-    		}
-    		if(product.getImage1() == null) {
-    			product.setImage1(productImg.getImage1());
-    		}
-    		if(product.getImage2() == null) {
-    			product.setImage2(productImg.getImage2());
-    		}
-    		if(product.getImage3() == null) {
-    			product.setImage3(productImg.getImage3());
-    		}
     		proDAO.save(product);
     	}
     	return new Response<ProductsResponseDTO>(dtoUtils.mapProductsToDto(proDAO.findAll(Sort.by(Direction.DESC,"createdate"))), null, message);
