@@ -25,7 +25,7 @@ public class Transaction {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	int idtran;
 	int type;
-	String value;
+	int value;
 	String note;
 	String username;
 	boolean done;

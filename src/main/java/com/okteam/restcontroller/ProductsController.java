@@ -323,8 +323,16 @@ public class ProductsController {
     }
 
     @GetMapping("/list")
-    public Response<ProductsResponseDTO> getAllProducts(){
-    	return new Response<ProductsResponseDTO>(dtoUtils.mapProductsToDto(proDAO.findAll(Sort.by(Direction.DESC,"createdate"))), null, "OK");
+    public Response<ProductsResponseDTO> getAllProducts(@RequestParam(value = "username", required = false) String username){
+    	String message = "Không lấy được dữ liệu";
+    	List<Products> list = proDAO.findAll(Sort.by(Direction.DESC,"createdate"));
+    	if(username == null) {
+			message="OK";
+		} else {
+			message="OK";
+			list = proDAO.findByIdNcc(username);
+		}
+    	return new Response<ProductsResponseDTO>(dtoUtils.mapProductsToDto(list), null, message);
     }
     
     @GetMapping("/check-id/{idpro}")
