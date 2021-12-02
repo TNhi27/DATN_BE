@@ -27,12 +27,15 @@ import com.okteam.dao.ProductRepository;
 import com.okteam.dao.RegiProductRepository;
 import com.okteam.dto.CommentsDTO;
 import com.okteam.dto.RegiProductsDTO;
+import com.okteam.dto.RegiProductsRespDto;
 import com.okteam.entity.Comments;
 import com.okteam.entity.Ctv;
 import com.okteam.entity.FollowSell;
 import com.okteam.entity.Ncc;
 import com.okteam.entity.Products;
 import com.okteam.entity.RegiProducts;
+import com.okteam.entity.Response;
+import com.okteam.utils.DtoUtils;
 
 @RestController
 @CrossOrigin("*")
@@ -48,6 +51,9 @@ public class RegiProductController {
 
 	@Autowired
 	FollowSellRepository fdao;
+	
+	@Autowired
+	DtoUtils dtoUtils;
 
 	@GetMapping
 	public ResponseEntity<List<RegiProducts>> getAllRegi() {
@@ -126,4 +132,21 @@ public class RegiProductController {
 		return new ResponseEntity<Page<RegiProducts>>(page, HttpStatus.OK);
 	}
 
+	@GetMapping("/list")
+	public Response<RegiProductsRespDto> listRegi(@RequestParam(value = "username", required = false) String username){
+		String message = "Không lấy được dữ liệu";
+		List<RegiProducts> list = RegiPro.findAll(Sort.by(Sort.Direction.DESC, "regidate"));
+		if(username == null) {
+			message = "OK";
+		} else {
+			if(!CtvRep.existsById(username)) {
+				return new Response<RegiProductsRespDto>(null, null, message);
+			} else {
+				message = "OK";
+				list = RegiPro.findbyIdCtv(username);
+			}
+		}
+		return new Response<RegiProductsRespDto>(dtoUtils.mapRegiProductsToDto(list), null, message);
+	}
+	
 }

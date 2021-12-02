@@ -14,6 +14,7 @@ import com.okteam.dao.ProductRepository;
 import com.okteam.dto.DetailsDTO;
 import com.okteam.dto.Orderdto;
 import com.okteam.dto.OrdersRequest;
+import com.okteam.dto.OrdersResponseDTO;
 import com.okteam.dto.RegiProductsDTO;
 import com.okteam.entity.Orders;
 import com.okteam.entity.Products;
@@ -22,6 +23,7 @@ import com.okteam.entity.RegiProducts;
 import com.okteam.entity.Response;
 import com.okteam.exception.NotEnoughMoney;
 import com.okteam.exception.NotFoundSomething;
+import com.okteam.utils.DtoUtils;
 import com.okteam.entity.Ctv;
 import com.okteam.entity.Details;
 import com.okteam.entity.Ncc;
@@ -60,6 +62,8 @@ public class OrderController {
     DetailsRepository detaildao;
     @Autowired
     FollowSellRepository fdao;
+    @Autowired
+    DtoUtils dtoUtils;
 
     // get
     @GetMapping("/get/{idorder}")
@@ -262,4 +266,9 @@ public class OrderController {
 
     }
 
+    @GetMapping("/list")
+    public Response<OrdersResponseDTO> listOrders(){
+    	return new Response<OrdersResponseDTO>(dtoUtils.mapOrdersToDto(oRepository.findAll(Sort.by(Sort.Direction.DESC,"dateorder"))), null, "OK");
+    }
+    
 }
