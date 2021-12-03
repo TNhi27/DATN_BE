@@ -1,5 +1,6 @@
 package com.okteam.restcontroller;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -303,7 +304,7 @@ public class OrderController {
     	if(!oRepository.existsById(ord.getIdorder())) {
     		message = "Không tìm thấy đơn hàng!";
     	} else {
-    		if(ord.getStatus() == 0 || ord.getStatus() == 4) {
+    		if(ord.getStatus() == 0 || ord.getStatus() == 3 || ord.getStatus() == 4) {
     			Orders order = oRepository.findById(ord.getIdorder()).get();
         		detaildao.deleteAll(detaildao.findByOrdersEquals(order));
         		oRepository.deleteById(ord.getIdorder());
@@ -320,7 +321,7 @@ public class OrderController {
     	if(!oRepository.existsById(ord.getIdorder())) {
     		message = "Không tìm thấy đơn hàng!";
     	} else {
-    		if(ord.getStatus() == 0 || ord.getStatus() == 4) {
+    		if(ord.getStatus() == 0 || ord.getStatus() == 3 || ord.getStatus() == 4) {
     			Ncc ncc = nRepository.findById(ord.getNcc()).get();
     	    	Ctv ctv = cRepository.findById(ord.getCtv()).get();
     			Orders order = oRepository.findById(ord.getIdorder()).get();
@@ -342,6 +343,50 @@ public class OrderController {
     		}
     	}
     	return new Response<OrdersResponseDTO>(dtoUtils.mapOrdersToDto(oRepository.findAll(Sort.by(Sort.Direction.DESC, "dateorder"))), null, message);
+    }
+    
+    @PutMapping("/reform/{id}")
+    public Response<OrdersResponseDTO> reform(@PathVariable("id") Integer id, 
+    		@RequestParam("thaotac") Integer thaotac, @RequestParam("value") String value){
+    	String datefinish = null;
+    	if(!oRepository.existsById(id)) {
+    		return new Response<OrdersResponseDTO>(null, null, "Không tìm thấy đơn hàng!");
+    	} 
+    	Orders ord = oRepository.findById(id).get();
+    	switch (thaotac) {
+		case 0:
+			int status = Integer.parseInt(value);
+			ord.setStatus(status);
+			 Date date = new Date();  
+			if(status == 5) {
+				SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");  
+				datefinish = formatter.format(date);
+			} 
+			ord.setDatefinish(date);
+			break;
+		case 1:
+			ord.setCustomer(value);
+			break;
+		case 2:
+			ord.setSdtcustomer(value);
+			break;
+		case 3:
+			ord.setHuyen(value);
+			break;
+		case 4:
+			ord.setXa(value);
+			break;
+		case 5:
+			ord.setAddress(value);
+			break;
+		case 6:
+			ord.setOrder_code(value);
+			break;
+		default:
+			return new Response<OrdersResponseDTO>(null, null, "Thao tác không hợp lệ!");
+		}
+    	oRepository.save(ord);
+    	return new Response<OrdersResponseDTO>(null, datefinish, "OK");
     }
     
 }
