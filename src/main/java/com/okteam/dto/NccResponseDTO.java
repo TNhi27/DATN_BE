@@ -2,7 +2,7 @@ package com.okteam.dto;
 
 import java.util.Date;
 import java.util.List;
-
+import java.util.stream.Collectors;
 
 import com.okteam.entity.Ncc;
 import com.okteam.entity.Products;
@@ -44,7 +44,9 @@ public class NccResponseDTO {
 		this.sex = ncc.getSex();
 		this.username = ncc.getUsername();
 		this.verify = ncc.getVerify();
-		this.countProducts = ncc.getProducts() != null ? ncc.getProducts().size() : 0;
+		this.countProducts = ncc.getProducts() != null
+				? ncc.getProducts().stream().filter((e) -> e.isActive()).collect(Collectors.toList()).size()
+				: 0;
 		this.products = ncc.getProducts();
 		this.countOrders = ncc.getOrders() != null ? ncc.getOrders().size() : 0;
 		this.city = ncc.getCity();

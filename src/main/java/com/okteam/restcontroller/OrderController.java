@@ -20,6 +20,7 @@ import com.okteam.entity.Products;
 import com.okteam.entity.RegiProducts;
 
 import com.okteam.entity.Response;
+import com.okteam.entity.ResponseClient;
 import com.okteam.exception.NotEnoughMoney;
 import com.okteam.exception.NotFoundSomething;
 import com.okteam.entity.Ctv;
@@ -103,7 +104,7 @@ public class OrderController {
 
     // post
     @PostMapping
-    public ResponseEntity<Orders> saveOrder(@RequestBody OrdersRequest orderdto) {
+    public ResponseClient<Orders> saveOrder(@RequestBody OrdersRequest orderdto) {
 
         Orders order = new Orders();
 
@@ -123,14 +124,15 @@ public class OrderController {
         Ctv ctv = cRepository.findById(username_ctv).get();
 
         if (ctv.getMoney() < orderdto.getTotal()) {
-            throw new NotEnoughMoney();
+            return new ResponseClient<Orders>(order, "Khong du tien trong tai khoan");
         } else {
             ctv.setMoney(ctv.getMoney() - orderdto.getTotal());
             cRepository.save(ctv);
         }
         order.setCtv(ctv);
 
-        order.setNcc(nRepository.findById(orderdto.getIdncc()).orElseThrow(() -> new NotFoundSomething(":(")));
+        order.setNcc(nRepository.findById(orderdto.getIdncc())
+                .orElseThrow(() -> new NotFoundSomething(":( Khong tim thay nha cung cap")));
 
         Orders rsOrder = oRepository.save(order);
 
@@ -147,7 +149,7 @@ public class OrderController {
             detaildao.save(d);
         }
 
-        return new ResponseEntity<Orders>(oRepository.findById(rsOrder.getIdorder()).get(), HttpStatus.OK);
+        return new ResponseClient<Orders>(oRepository.findById(rsOrder.getIdorder()).get(), "Tao thanh cong don hang");
     }
 
     @PostMapping("/update_ghn_code")
@@ -169,6 +171,9 @@ public class OrderController {
         if (o.getStatus() == 0) {
             ctv.setMoney(ctv.getMoney() + o.getTotal());
             cRepository.save(ctv);
+            for (var d : o.getDetails()) {
+                detaildao.delete(d);
+            }
             oRepository.deleteById(id);
         } else {
             return new ResponseEntity<Object>("Khong the xoa", HttpStatus.BAD_REQUEST);

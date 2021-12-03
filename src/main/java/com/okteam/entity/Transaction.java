@@ -25,16 +25,17 @@ public class Transaction {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	int idtran;
 	int type;
-	String value;
+	int value;
 	String note;
 	String username;
 	boolean done;
+	String idpaypal;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	Date createdate;
 
-	@JsonIgnore
-	@ManyToOne
-	@JoinColumn(name = "idbank")
-	InfoBanks tran_bank;
+	// @JsonIgnore
+	// @ManyToOne
+	// @JoinColumn(name = "idbank")
+	// InfoBanks tran_bank;
 }

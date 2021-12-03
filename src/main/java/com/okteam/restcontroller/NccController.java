@@ -10,10 +10,10 @@ import java.util.stream.Collectors;
 
 import javax.mail.MessagingException;
 
-import com.okteam.dao.CtvAndListOrder;
 import com.okteam.dao.CtvRepository;
 import com.okteam.dao.NccRepository;
 import com.okteam.dao.ProductRepository;
+import com.okteam.dto.CtvAndListOrder;
 import com.okteam.dto.NccRequestDTO;
 import com.okteam.dto.NccResponseDTO;
 import com.okteam.entity.Ctv;

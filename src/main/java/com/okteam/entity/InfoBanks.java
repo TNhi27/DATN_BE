@@ -27,9 +27,10 @@ public class InfoBanks {
     String bankname;
     String banknumber;
     String username;
-    boolean isctv;
+    String name;
+    Boolean isctv;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "tran_bank")
-    List<Transaction> transaction;
+    // @JsonIgnore
+    // @OneToMany(mappedBy = "tran_bank")
+    // List<Transaction> transaction;
 }
