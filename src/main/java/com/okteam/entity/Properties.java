@@ -8,12 +8,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.okteam.dto.PropertiesReqDto;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "properties")
@@ -25,11 +23,19 @@ public class Properties {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
 
-    @JsonBackReference
+    @JsonManagedReference
     @ManyToOne
     @JoinColumn(name = "idpro")
     Products p_properties;
 
     String valuep;
     String keyp;
+    
+    public Properties dtoReturnEntity(PropertiesReqDto pro) {
+    	this.id = pro.getId();
+    	this.keyp = pro.getKeyp();
+    	this.valuep = pro.getValuep();
+    	return this;
+    }
+    
 }

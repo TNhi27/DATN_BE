@@ -88,7 +88,7 @@ public class LoginController {
     	        list.add(user);
     		}
     	}
-    	return new Response<UserLoginResponse>(list, message);
+    	return new Response<UserLoginResponse>(list, null, message);
     }
     
 }

@@ -10,7 +10,9 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.okteam.dto.CtvReqDTO;
 
 import lombok.Data;
 
@@ -34,20 +36,33 @@ public class Ctv {
 	String image;
 	int money = 0;
 
-	@JsonIgnore
+	@JsonBackReference
 	@OneToMany(mappedBy = "ctv")
 	List<RegiProducts> list_regi;
 
-	@JsonIgnore
+	@JsonBackReference
 	@OneToMany(mappedBy = "ctv")
 	List<Orders> orders;
 
-	@JsonIgnore
+	@JsonBackReference
 	@OneToMany(mappedBy = "fl_ctv")
 	List<FollowSell> followSell;
 
-	@JsonIgnore
+	@JsonBackReference
 	@OneToMany(mappedBy = "ctv_cmt")
 	List<Comments> comments;
 
+	public Ctv dtoReturnEntity(CtvReqDTO ctv) {
+		username = ctv.getUsername();
+		password = ctv.getPassword();
+		email = ctv.getEmail();
+		sdt = ctv.getSdt();
+		active = ctv.isActive();
+		fullname = ctv.getFullname();
+		address = ctv.getAddress();
+		sex = ctv.getSex();
+		image = ctv.getImage();
+		return this;
+	}
+	
 }

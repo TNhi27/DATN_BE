@@ -2,21 +2,19 @@ package com.okteam.dto;
 
 import java.util.Date;
 
+
 import lombok.Data;
 
 @Data
-public class CtvReqDTO {
+public class AdminDto {
 	String username;
 	String password;
 	String email;
 	String sdt;
-	boolean active;
+	boolean active = true;
 	String fullname;
 	String address;
 	String sex;
-	String verify;
-	Date createdate;
 	String image;
-	int money;
-
+	Date createdate = new Date();
 }

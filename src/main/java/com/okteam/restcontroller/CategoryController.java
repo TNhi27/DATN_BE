@@ -46,54 +46,86 @@ public class CategoryController {
 
 	@GetMapping("/list")
 	public Response<Categorydto> getCategories() {
-		return new Response<Categorydto>(dtoUtils.mapCategoryToDto(categoryRepo.findAll()), "OK");
+		return new Response<Categorydto>(dtoUtils.mapCategoryToDto(categoryRepo.findAll()), null, "OK");
+	}
+	
+	@GetMapping("/check-id/{idcate}")
+	public Boolean checkidcate(@PathVariable("idcate") String idcate) {
+		return categoryRepo.existsById(idcate);
 	}
 
 	@PostMapping("/add")
-	public Response<Categorydto> addCategory(@RequestBody Category category) {
+	public Response<Categorydto> addCategory(@RequestBody Categorydto category) {
 		String message = "OK";
 		if (categoryRepo.existsById(category.getIdcate())) {
-			message = "Mã loại đã tồn tại!";
-		} else if (category.getParent() != null && !categoryRepo.existsById(category.getParent())) {
-			message = "Không tìm thấy loại hàng!";
+			message = "Mã loại đã tồn tại, vui lòng chọn mã khác!";
+		} else if (category.getParent() == null) {
+			categoryRepo.save(new Category().dtoReturnEntity(category));
 		} else {
-			categoryRepo.save(category);
+			if(!categoryRepo.existsById(category.getParent())){
+				message = "Không tìm thấy menu cha!";
+			} else {
+				int lvlParent = categoryRepo.findById(category.getParent()).get().getLv();
+				if(lvlParent >= category.getLv() || (category.getLv()-1) != lvlParent) {
+					message = "Cấp menu loại cha không hợp lệ";
+				} else {
+					categoryRepo.save(new Category().dtoReturnEntity(category));
+				}
+			}
 		}
-		return new Response<Categorydto>(dtoUtils.mapCategoryToDto(categoryRepo.findAll()), message);
+		return new Response<Categorydto>(dtoUtils.mapCategoryToDto(categoryRepo.findAll()), null, message);
 	}
 
 	@PutMapping("/update")
 	public Response<Categorydto> updateCategory(@RequestParam(name = "idcate") String idcate,
 			@RequestParam(name = "value") String value, @RequestParam(name = "thaotac") Integer thaotac) {
-		Category category = categoryRepo.findById(idcate).get();
-		String message = "Không tìm thấy thao tác!";
-		if (thaotac == 0) {
-			if (value.isEmpty()) {
-				message = "Không để trống tên loại!";
-			} else {
-				category.setTypename(value);
-				categoryRepo.save(category);
-				message = "OK";
-			}
-		}
-		if (thaotac == 1) {
-			category.setImg(value);
-			categoryRepo.save(category);
-			message = "OK";
-		}
-		if (thaotac == 2) {
-			if (!value.isEmpty() && !categoryRepo.existsById(value)) {
-				message = "Không tìm thấy loại hàng!";
-			} else {
+		String message = "OK";
+		Category category = new Category();
+		if(!categoryRepo.existsById(idcate)) {
+			message = "Không tìm thấy loại hàng!";
+		} else {
+			category = categoryRepo.findById(idcate).get();
+			if (thaotac == 0) {
 				if (value.isEmpty()) {
-					value = null;
+					message = "Không để trống tên loại!";
+				} else {
+					category.setTypename(value);
+					categoryRepo.save(category);
 				}
-				category.setParent(value);
+			} else if (thaotac == 1) {
+				category.setImg(value);
 				categoryRepo.save(category);
-				message = "OK";
+			} else if (thaotac == 2) {
+				if (!value.isEmpty() && !categoryRepo.existsById(value.toUpperCase())) {
+					message = "Không tìm thấy menu cha!";
+				} else {
+					if (value.isEmpty()) {
+						value = null;
+						category.setParent(value);
+						categoryRepo.save(category);
+					} else {
+						int lvlParent = categoryRepo.findById(value).get().getLv();
+						if(lvlParent >= category.getLv() || (category.getLv()-1) != lvlParent) {
+							message = "Cấp menu loại cha không hợp lệ";
+						} else {
+							category.setParent(value.toUpperCase());
+							categoryRepo.save(category);
+						}
+					}
+					
+				}
+			} else if(thaotac == 3) {
+				if(category.getParent() != null) {
+					message = "Không thể cập nhật cấp menu khi đang là menu con!";
+				} else {
+					category.setLv(Integer.parseInt(value));
+					categoryRepo.save(category);
+				}
+			} else {
+				return new Response<Categorydto>(null, null, "Thao tác không hợp lệ");
 			}
 		}
-		return new Response<Categorydto>(null, message);
+		return new Response<Categorydto>(null, new Categorydto().createByEntity(category), message);
 	}
 
 	@DeleteMapping("/delete")
@@ -115,7 +147,7 @@ public class CategoryController {
 				}
 			}
 		}
-		return new Response<Categorydto>(dtoUtils.mapCategoryToDto(categoryRepo.findAll()), message);
+		return new Response<Categorydto>(dtoUtils.mapCategoryToDto(categoryRepo.findAll()), null, message);
 	}
 
 	@PostMapping

@@ -53,5 +53,7 @@ public interface ProductRepository extends JpaRepository<Products, String> {
 
 	@Query("select o from Products o where o.active = ?1")
 	public List<Products> findAll(Boolean active);
-
+	
+	@Query(value="SELECT * FROM products WHERE idncc=?1 ORDER BY createdate DESC", nativeQuery = true)
+	public List<Products> findByIdNcc(String username);
 }

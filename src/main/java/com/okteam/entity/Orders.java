@@ -51,7 +51,7 @@ public class Orders {
 	@JoinColumn(name = "idctv")
 	Ctv ctv;
 
-	@JsonIgnore
+	@JsonManagedReference
 	@ManyToOne @JoinColumn(name = "idncc")
 	Ncc ncc;
 

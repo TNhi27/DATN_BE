@@ -29,7 +29,7 @@ public class UsersExceptionController {
 
     @ExceptionHandler(value = NotEnoughMoney.class)
     public ResponseEntity<Response> empty(NotEnoughMoney dataEmpty) {
-        return new ResponseEntity<Response>(new Response<String>(null, "khong du tien"), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<Response>(new Response<String>(null, null, "khong du tien"), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(value = UserCommentExists.class)

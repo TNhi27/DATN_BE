@@ -11,6 +11,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.okteam.dto.NccDto;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Data;
@@ -40,11 +42,11 @@ public class Ncc {
 
 	int money = 0;
 
-	@JsonIgnore
+	@JsonBackReference
 	@OneToMany(mappedBy = "ncc")
 	List<Products> products;
 
-	@JsonIgnore
+	@JsonBackReference
 	@OneToMany(mappedBy = "ncc")
 	List<Orders> orders;
 
@@ -52,4 +54,21 @@ public class Ncc {
 	@OneToMany(mappedBy = "fl_ncc")
 	List<FollowSell> followSell;
 
+	public Ncc dtoReturnEntity(NccDto ncc) {
+		Ncc n = new Ncc();
+		n.setActive(ncc.isActive());
+		n.setPassword(ncc.getPassword());
+		n.setAddress(ncc.getAddress());
+		n.setEmail(ncc.getEmail());
+		n.setFullname(ncc.getNccname());
+		n.setNcclogo(ncc.getNcclogo());
+		n.setNccname(ncc.getNccname());
+		n.setSdt(ncc.getSdt());
+		n.setUsername(ncc.getUsername());
+		n.setCity(ncc.getCity());
+		n.setDescription(ncc.getDescription());
+		n.setIdghn(ncc.getIdghn());
+		return n;
+	}
+	
 }

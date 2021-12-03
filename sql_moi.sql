@@ -4,6 +4,10 @@
 -- ------------------------------------------------------
 -- Server version	8.0.27
 
+CREATE SCHEMA `datn` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ;
+
+use datn;
+
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
@@ -478,7 +482,7 @@ CREATE TABLE `transaction` (
   `idtran` int NOT NULL AUTO_INCREMENT,
   `type` int DEFAULT NULL,
   `username` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
-  `value` varchar(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  `value` int DEFAULT NULL,
   `createdate` datetime DEFAULT NULL,
   `note` text CHARACTER SET utf8 COLLATE utf8_unicode_ci,
   `idbank` int DEFAULT NULL,
@@ -495,7 +499,7 @@ CREATE TABLE `transaction` (
 
 LOCK TABLES `transaction` WRITE;
 /*!40000 ALTER TABLE `transaction` DISABLE KEYS */;
-INSERT INTO `transaction` VALUES (1,0,'leo10','120000','2021-11-19 00:00:00','nap tien',1,_binary ''),(2,1,'leo10','120000','2021-11-20 00:00:00','nap tien',1,_binary ''),(3,1,'leo10','120000','2021-11-18 00:00:00','nap tien',1,_binary '\0'),(4,0,'leo10','120000','2021-11-20 00:00:00','nap tien',1,_binary '\0');
+INSERT INTO `transaction` VALUES (1,0,'leo10',120000,'2021-11-19 00:00:00','nap tien',1,_binary ''),(2,1,'leo10',120000,'2021-11-20 00:00:00','nap tien',1,_binary ''),(3,1,'leo10',120000,'2021-11-18 00:00:00','nap tien',1,_binary '\0'),(4,0,'leo10',120000,'2021-11-20 00:00:00','nap tien',1,_binary '\0');
 /*!40000 ALTER TABLE `transaction` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

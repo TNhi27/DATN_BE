@@ -12,8 +12,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.okteam.dto.BrandDTO;
 
 import lombok.Data;
 
@@ -26,7 +26,7 @@ public class Brand {
     int id;
     String name;
 
-    @JsonBackReference
+    @JsonManagedReference
     @ManyToOne
     @JoinColumn(name = "idcate")
     Category br_category;
@@ -34,4 +34,11 @@ public class Brand {
     @JsonBackReference
     @OneToMany(mappedBy = "p_brand")
     List<Products> products;
+    
+    public Brand dtoReturnEntity(BrandDTO b) {
+    	this.id = b.getId();
+    	this.name = b.getName();
+    	return this;
+    }
+    
 }
