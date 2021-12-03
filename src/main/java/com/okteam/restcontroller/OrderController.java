@@ -292,7 +292,8 @@ public class OrderController {
     		dt.setOrders(order);
     		return dt;
     	}).collect(Collectors.toList());
-    	detaildao.saveAll(details);
+    	order.setDetails(detaildao.saveAll(details));
+    	oRepository.save(order);
     	return new Response<OrdersResponseDTO>(dtoUtils.mapOrdersToDto(oRepository.findAll(Sort.by(Sort.Direction.DESC, "dateorder"))), null, "OK");
     }
     
@@ -308,6 +309,36 @@ public class OrderController {
         		oRepository.deleteById(ord.getIdorder());
     		} else {
     			message = "Đơn hàng không ở trạng thái có thể hủy!";
+    		}
+    	}
+    	return new Response<OrdersResponseDTO>(dtoUtils.mapOrdersToDto(oRepository.findAll(Sort.by(Sort.Direction.DESC, "dateorder"))), null, message);
+    }
+    
+    @PutMapping("/update-chitiet")
+    public Response<OrdersResponseDTO> update_chitiet(@RequestBody OrderAdDto ord){
+    	String message = "OK";
+    	if(!oRepository.existsById(ord.getIdorder())) {
+    		message = "Không tìm thấy đơn hàng!";
+    	} else {
+    		if(ord.getStatus() == 0 || ord.getStatus() == 4) {
+    			Ncc ncc = nRepository.findById(ord.getNcc()).get();
+    	    	Ctv ctv = cRepository.findById(ord.getCtv()).get();
+    			Orders order = oRepository.findById(ord.getIdorder()).get();
+        		detaildao.deleteAll(detaildao.findByOrdersEquals(order));
+        		order.setCtv(ctv);
+            	order.setNcc(ncc);
+        		List<Details>details = ord.getDetails().stream().map(o->{
+            		Details dt = new Details();
+            		dt.setQty(o.getSl());
+            		dt.setRevenue(o.getPrice_customer());
+            		dt.setProducts(pRepository.findById(o.getSp()).get());
+            		dt.setOrders(order);
+            		return dt;
+            	}).collect(Collectors.toList());
+        		order.setDetails(detaildao.saveAll(details));
+        		oRepository.save(order);
+    		} else {
+    			message = "Trạng thái đơn hàng không phù hợp để cập nhật!";
     		}
     	}
     	return new Response<OrdersResponseDTO>(dtoUtils.mapOrdersToDto(oRepository.findAll(Sort.by(Sort.Direction.DESC, "dateorder"))), null, message);

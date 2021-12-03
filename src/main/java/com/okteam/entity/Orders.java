@@ -61,6 +61,7 @@ public class Orders {
 	List<Details> details;
 
 	public Orders dtoReturnEntity(OrderAdDto ord) {
+		this.idorder = ord.getIdorder();
 		this.total = ord.getTotal();
 		this.status = ord.getStatus();
 		this.address = ord.getAddress();
