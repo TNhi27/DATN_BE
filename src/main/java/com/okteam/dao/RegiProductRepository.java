@@ -26,4 +26,7 @@ public interface RegiProductRepository extends JpaRepository<RegiProducts, Integ
     @Query("select o from RegiProducts o where o.products.ncc.username like ?1 and o.products.idpro like ?2 and o.ctv.fullname like ?3")
     public Page<RegiProducts> getCtvRegi(String ncc, String idpro, String namectv, Pageable pageable);
 
+    @Query(value="SELECT * FROM regi_products  WHERE idctv=?1 ORDER BY regidate DESC", nativeQuery = true)
+    public List<RegiProducts> findbyIdCtv(String username);
+    
 }

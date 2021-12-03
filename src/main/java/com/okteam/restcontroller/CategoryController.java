@@ -92,12 +92,10 @@ public class CategoryController {
 					category.setTypename(value);
 					categoryRepo.save(category);
 				}
-			}
-			if (thaotac == 1) {
+			} else if (thaotac == 1) {
 				category.setImg(value);
 				categoryRepo.save(category);
-			}
-			if (thaotac == 2) {
+			} else if (thaotac == 2) {
 				if (!value.isEmpty() && !categoryRepo.existsById(value.toUpperCase())) {
 					message = "Không tìm thấy menu cha!";
 				} else {
@@ -116,14 +114,15 @@ public class CategoryController {
 					}
 					
 				}
-			}
-			if(thaotac == 3) {
+			} else if(thaotac == 3) {
 				if(category.getParent() != null) {
 					message = "Không thể cập nhật cấp menu khi đang là menu con!";
 				} else {
 					category.setLv(Integer.parseInt(value));
 					categoryRepo.save(category);
 				}
+			} else {
+				return new Response<Categorydto>(null, null, "Thao tác không hợp lệ");
 			}
 		}
 		return new Response<Categorydto>(null, new Categorydto().createByEntity(category), message);
