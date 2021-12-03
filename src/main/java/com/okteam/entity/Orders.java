@@ -16,6 +16,7 @@ import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.okteam.dto.OrderAdDto;
 
 import lombok.Data;
 
@@ -27,7 +28,7 @@ public class Orders {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	int idorder;
 	@Temporal(TemporalType.TIMESTAMP)
-	Date dateorder;
+	Date dateorder = new Date();
 	@Temporal(TemporalType.DATE)
 	Date datefinish;
 	int total;
@@ -59,4 +60,17 @@ public class Orders {
 	@OneToMany(mappedBy = "orders")
 	List<Details> details;
 
+	public Orders dtoReturnEntity(OrderAdDto ord) {
+		this.total = ord.getTotal();
+		this.status = ord.getStatus();
+		this.address = ord.getAddress();
+		this.customer = ord.getCustomer();
+		this.sdtcustomer = ord.getSdtcustomer();
+		this.payment = ord.getPayment();
+		this.order_code = ord.getOrder_code();
+		this.huyen = ord.getHuyen();
+		this.xa = ord.getXa();
+		return this;
+	}
+	
 }

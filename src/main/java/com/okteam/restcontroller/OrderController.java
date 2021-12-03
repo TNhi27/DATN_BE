@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import com.okteam.dao.CtvRepository;
 import com.okteam.dao.DetailsRepository;
@@ -12,6 +13,7 @@ import com.okteam.dao.NccRepository;
 import com.okteam.dao.OrderRepository;
 import com.okteam.dao.ProductRepository;
 import com.okteam.dto.DetailsDTO;
+import com.okteam.dto.OrderAdDto;
 import com.okteam.dto.Orderdto;
 import com.okteam.dto.OrdersRequest;
 import com.okteam.dto.OrdersResponseDTO;
@@ -269,6 +271,46 @@ public class OrderController {
     @GetMapping("/list")
     public Response<OrdersResponseDTO> listOrders(){
     	return new Response<OrdersResponseDTO>(dtoUtils.mapOrdersToDto(oRepository.findAll(Sort.by(Sort.Direction.DESC,"dateorder"))), null, "OK");
+    }
+    
+    @PostMapping("/add")
+    public Response<OrdersResponseDTO> assOrders(@RequestBody OrderAdDto ord){
+    	Ncc ncc = nRepository.findById(ord.getNcc()).get();
+    	Ctv ctv = cRepository.findById(ord.getCtv()).get();
+    	Orders order = new Orders().dtoReturnEntity(ord);
+    	order.setCtv(ctv);
+    	order.setNcc(ncc);
+    	if(order.getStatus()==5) {
+    		order.setDatefinish(new Date());
+    	}
+    	oRepository.save(order);
+    	List<Details>details = ord.getDetails().stream().map(o->{
+    		Details dt = new Details();
+    		dt.setQty(o.getSl());
+    		dt.setRevenue(o.getPrice_customer());
+    		dt.setProducts(pRepository.findById(o.getSp()).get());
+    		dt.setOrders(order);
+    		return dt;
+    	}).collect(Collectors.toList());
+    	detaildao.saveAll(details);
+    	return new Response<OrdersResponseDTO>(dtoUtils.mapOrdersToDto(oRepository.findAll(Sort.by(Sort.Direction.DESC, "dateorder"))), null, "OK");
+    }
+    
+    @DeleteMapping("/delete")
+    public Response<OrdersResponseDTO> deleteOrders(@RequestBody OrderAdDto ord){
+    	String message = "OK";
+    	if(!oRepository.existsById(ord.getIdorder())) {
+    		message = "Không tìm thấy đơn hàng!";
+    	} else {
+    		if(ord.getStatus() == 0 || ord.getStatus() == 4) {
+    			Orders order = oRepository.findById(ord.getIdorder()).get();
+        		detaildao.deleteAll(detaildao.findByOrdersEquals(order));
+        		oRepository.deleteById(ord.getIdorder());
+    		} else {
+    			message = "Đơn hàng không ở trạng thái có thể hủy!";
+    		}
+    	}
+    	return new Response<OrdersResponseDTO>(dtoUtils.mapOrdersToDto(oRepository.findAll(Sort.by(Sort.Direction.DESC, "dateorder"))), null, message);
     }
     
 }
