@@ -48,19 +48,7 @@ public class CtvController {
 	FollowSellRepository flRepo;
 	@Autowired
 	DtoUtils dtoUtils;
-
-	@PostMapping("/register")
-	public Response<CtvResponseDTO> register(@RequestBody Ctv ctv)
-			throws UnsupportedEncodingException, MessagingException {
-		String message = "OK";
-		if (service.checkUsername(ctv.getUsername())) {
-			message = "Username đã tồn tại!";
-		} else {
-			ctv = service.registerCtv(ctv);
-		}
-		return new Response<CtvResponseDTO>(null, new CtvResponseDTO().createByEntity(ctv), message);
-	}
-
+	
 	@PostMapping("/info")
 	public ResponseEntity<CtvResponseDTO> getInfo() {
 		var username = SecurityContextHolder.getContext().getAuthentication().getName();

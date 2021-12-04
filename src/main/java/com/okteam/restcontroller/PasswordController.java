@@ -7,7 +7,9 @@ import javax.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,12 +17,18 @@ import org.springframework.web.bind.annotation.RestController;
 import com.okteam.dao.AdminRepository;
 import com.okteam.dao.CtvRepository;
 import com.okteam.dao.NccRepository;
+import com.okteam.dto.CtvReqDTO;
+import com.okteam.dto.CtvResponseDTO;
+import com.okteam.dto.NccDto;
+import com.okteam.dto.NccResponseDTO;
+import com.okteam.entity.Ctv;
+import com.okteam.entity.Ncc;
 import com.okteam.entity.Response;
 import com.okteam.utils.RegisterService;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/api/v1/password")
+@RequestMapping("/password")
 public class PasswordController {
 
 	@Autowired
@@ -32,6 +40,71 @@ public class PasswordController {
 	@Autowired
 	AdminRepository adRepo;
 
+	
+	
+	@PostMapping("/ctv/register")
+	public Response<CtvResponseDTO> registerCtv(@RequestBody CtvReqDTO ctv)
+			throws UnsupportedEncodingException, MessagingException {
+		String message = "OK";
+		Ctv ctvDangky = new Ctv().dtoReturnEntity(ctv);
+		if (service.checkUsername(ctv.getUsername())) {
+			message = "Username đã tồn tại!";
+		} else {
+			ctvDangky = service.registerCtv(ctvDangky);
+		}
+		return new Response<CtvResponseDTO>(null, ctvDangky, message);
+	}
+
+	@PostMapping("/ctv/active")
+	public Response<CtvResponseDTO> activeCtv(@RequestParam("username") String username, @RequestParam("verify") String verify){
+		String message = "OK";
+		if(!ctvRepo.existsById(username)) {
+			message = "Tài khoản cộng tác viên không tồn tại!";
+		} else {
+			Ctv ctv = ctvRepo.findById(username).get();
+			if(!ctv.getVerify().equals(verify)) {
+				message = "Mã xác nhận không chính xác!";
+			} else {
+				ctv.setActive(true);
+				ctv.setVerify(null);
+				ctvRepo.save(ctv);
+			}	
+		}
+		return new Response<CtvResponseDTO>(null, null, message);
+	}
+	
+	@PostMapping("/ncc/register")
+    public Response<NccResponseDTO> registerNcc(@RequestBody NccDto ncc)
+            throws UnsupportedEncodingException, MessagingException {
+        String message = "OK";
+        Ncc nccDangky = new Ncc().dtoReturnEntity(ncc);
+        if (service.checkUsername(ncc.getUsername())) {
+            message = "Username đã tồn tại!";
+        } else {
+        	nccDangky = service.registerNcc(nccDangky);
+        }
+        return new Response<NccResponseDTO>(null, nccDangky, message);
+    }
+
+	@PostMapping("/ncc/active")
+    public Response<NccResponseDTO> activeNcc(@RequestParam("username") String username, @RequestParam("verify") String verify){
+    	String message = "OK";
+    	if(!nccRepo.existsById(username)) {
+    		message = "Tài khoản nhà cung cấp không tồn tai!";
+    	} else {
+    		Ncc ncc = nccRepo.findById(username).get();
+    		if(!ncc.getVerify().equals(verify)) {
+    			message = "Mã xác nhận không chính xác!";
+    		}else {
+    			ncc.setActive(true);
+    			ncc.setVerify(null);
+    			nccRepo.save(ncc);
+    		}
+    	}
+    	return new Response<NccResponseDTO>(null, null, message);
+    }
+	
+	
 	@PostMapping("/forget")
 	public Response<Object> forget(@RequestParam("username") String username, @RequestParam("email") String email)
 			throws UnsupportedEncodingException, MessagingException {

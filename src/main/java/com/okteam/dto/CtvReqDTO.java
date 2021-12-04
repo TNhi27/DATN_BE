@@ -10,13 +10,13 @@ public class CtvReqDTO {
 	String password;
 	String email;
 	String sdt;
-	boolean active;
+	boolean active=false;
 	String fullname;
 	String address;
-	String sex;
-	String verify;
-	Date createdate;
-	String image;
-	int money;
+	String sex="Khác";
+	String verify=null;
+	Date createdate= new Date();
+	String image= null;
+	int money=0;
 
 }

@@ -36,7 +36,7 @@ public class RegisterService {
 	List<MimeMessage> list = new ArrayList<>();
 
 	public Ctv registerCtv(Ctv ctv) throws UnsupportedEncodingException, MessagingException {
-		String verify = RandomString.make(64);
+		String verify = RandomString.make(4);
 		ctv.setVerify(verify);
 		ctvRepo.save(ctv);
 		sendVerificationEmail(ctv, 0);
@@ -44,7 +44,7 @@ public class RegisterService {
 	}
 	
 	public Ncc registerNcc(Ncc ncc) throws UnsupportedEncodingException, MessagingException {
-		String verify = RandomString.make(64);
+		String verify = RandomString.make(4);
 		ncc.setVerify(verify);
 		nccRepo.save(ncc);
 		sendVerificationEmail(ncc, 1);
