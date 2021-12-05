@@ -10,19 +10,19 @@ import java.util.stream.Collectors;
 
 import javax.mail.MessagingException;
 
-<<<<<<< HEAD
+
 import com.okteam.dao.CtvRepository;
 import com.okteam.dao.NccRepository;
 import com.okteam.dao.ProductRepository;
 import com.okteam.dto.CtvAndListOrder;
-=======
+
 import com.okteam.dao.FollowSellRepository;
 import com.okteam.dao.NccRepository;
 import com.okteam.dao.ProductRepository;
 import com.okteam.dto.NccDto;
-import com.okteam.dao.CtvAndListOrder;
+
 import com.okteam.dao.CtvRepository;
->>>>>>> 3e80b1baa3d5364cdfc87c90a800a59ddbb4acb2
+
 import com.okteam.dto.NccRequestDTO;
 import com.okteam.dto.NccResponseDTO;
 import com.okteam.entity.Ctv;

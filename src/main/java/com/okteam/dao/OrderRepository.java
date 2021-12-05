@@ -53,6 +53,9 @@ public interface OrderRepository extends JpaRepository<Orders, Integer> {
     @Query("SELECT new ReportbyDay(o.orders.status,COUNT(DISTINCT(o.orders)),SUM(o.orders.total),SUM(o.qty)  ) from Details o where  DAY(o.orders.dateorder)=?1 and MONTH(o.orders.dateorder) =?2 and YEAR(o.orders.dateorder)=?3 and o.orders.ncc.username=?4 group by o.orders.status")
     public List<ReportbyDay> getOrderWithStatusNcc(int d, int m, int y, String ncc);
 
+    @Query("SELECT new ReportbyDay(o.orders.status,COUNT(DISTINCT(o.orders)),SUM(o.orders.total),SUM(o.qty)  ) from Details o where  DAY(o.orders.dateorder)=?1 and MONTH(o.orders.dateorder) =?2 and YEAR(o.orders.dateorder)=?3 group by o.orders.status")
+    public List<ReportbyDay> getOrderWithStatusAdmin(int d, int m, int y);
+
     @Query("SELECT new ReportbyDay(1,COUNT(o.orders.idorder),SUM(o.orders.total),SUM(o.qty)  ) from Details o where o.orders.status=3 and DAY(o.orders.dateorder)=?1 and MONTH(o.orders.dateorder) =?2 and YEAR(o.orders.dateorder)=?3 ")
     public ReportbyDay getOrderWaitingByDay(int d, int m, int y);
 
@@ -64,5 +67,8 @@ public interface OrderRepository extends JpaRepository<Orders, Integer> {
 
     @Query("SELECT new ProductGroup(o.products.idpro,o.products.name,count(o.qty)) from Details o where o.orders.ncc.username =?1 group by o.products ")
     public List<ProductGroup> getProductGroups(String ncc);
+
+    @Query("SELECT new ProductGroup(o.products.idpro,o.products.name,count(o.qty)) from Details o group by o.products ")
+    public List<ProductGroup> getProductGroupsAdmin();
 
 }

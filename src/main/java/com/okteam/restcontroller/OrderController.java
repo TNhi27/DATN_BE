@@ -108,7 +108,7 @@ public class OrderController {
 
     // post
     @PostMapping
-    public ResponseClient<Orders> saveOrder(@RequestBody OrdersRequest orderdto) {
+    public ResponseEntity saveOrder(@RequestBody OrdersRequest orderdto) {
 
         Orders order = new Orders();
 
@@ -128,7 +128,8 @@ public class OrderController {
         Ctv ctv = cRepository.findById(username_ctv).get();
 
         if (ctv.getMoney() < orderdto.getTotal()) {
-            return new ResponseClient<Orders>(order, "Khong du tien trong tai khoan");
+            return new ResponseEntity<>(new ResponseClient<Orders>(order,
+                    "Khong du tien", 400), HttpStatus.OK);
         } else {
             ctv.setMoney(ctv.getMoney() - orderdto.getTotal());
             cRepository.save(ctv);
@@ -153,15 +154,35 @@ public class OrderController {
             detaildao.save(d);
         }
 
-        return new ResponseClient<Orders>(oRepository.findById(rsOrder.getIdorder()).get(), "Tao thanh cong don hang");
+        return new ResponseEntity<>(new ResponseClient<Orders>(oRepository.findById(rsOrder.getIdorder()).get(),
+                "Tao thanh cong", 200), HttpStatus.OK);
+
     }
 
     @PostMapping("/update_ghn_code")
-    public ResponseEntity<Orders> update_ghn(@RequestParam Optional<Integer> id, @RequestParam String code) {
+    public ResponseEntity<Orders> update_ghn(@RequestParam Optional<Integer> id, @RequestParam String code,
+            @RequestParam Integer total_fee) {
+
+        String idncc = SecurityContextHolder.getContext().getAuthentication().getName();
         Orders o = oRepository.findById(id.get()).orElseThrow(() -> new NotFoundSomething("Khong tim thay don hang"));
         o.setOrder_code(code);
         o.setStatus(2);
+        o.setTotal_fee(total_fee);
         oRepository.save(o);
+
+        Ncc ncc = nRepository.findById(idncc, true);
+        if (total_fee > ncc.getMoney()) {
+            throw new NotEnoughMoney();
+        }
+        ncc.setMoney(ncc.getMoney() - total_fee);
+        nRepository.save(ncc);
+
+        o.getDetails().stream().map((e) -> {
+            Products p = e.getProducts();
+            p.setQty(p.getQty() - e.getQty());
+            pRepository.save(p);
+            return -1;
+        });
         return new ResponseEntity<>(o, HttpStatus.OK);
     }
 
@@ -272,8 +293,9 @@ public class OrderController {
     }
 
     @GetMapping("/list")
-    public Response<OrdersResponseDTO> listOrders(){
-    	return new Response<OrdersResponseDTO>(dtoUtils.mapOrdersToDto(oRepository.findAll(Sort.by(Sort.Direction.DESC,"dateorder"))), null, "OK");
+    public Response<OrdersResponseDTO> listOrders() {
+        return new Response<OrdersResponseDTO>(
+                dtoUtils.mapOrdersToDto(oRepository.findAll(Sort.by(Sort.Direction.DESC, "dateorder"))), null, "OK");
     }
-    
+
 }
