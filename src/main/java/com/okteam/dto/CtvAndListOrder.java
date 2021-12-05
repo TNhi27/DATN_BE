@@ -1,4 +1,4 @@
-package com.okteam.dao;
+package com.okteam.dto;
 
 import java.util.List;
 
