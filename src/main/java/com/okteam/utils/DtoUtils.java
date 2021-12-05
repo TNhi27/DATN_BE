@@ -11,6 +11,7 @@ import com.okteam.dto.Categorydto;
 import com.okteam.dto.CtvResponseDTO;
 import com.okteam.dto.NccResponseDTO;
 import com.okteam.dto.OrdersResponseDTO;
+import com.okteam.dto.PostRespDTO;
 import com.okteam.dto.ProductsResponseDTO;
 import com.okteam.dto.PropertiesReqDto;
 import com.okteam.dto.RegiProductsRespDto;
@@ -20,6 +21,7 @@ import com.okteam.entity.Category;
 import com.okteam.entity.Ctv;
 import com.okteam.entity.Ncc;
 import com.okteam.entity.Orders;
+import com.okteam.entity.Post;
 import com.okteam.entity.Products;
 import com.okteam.entity.Properties;
 import com.okteam.entity.RegiProducts;
@@ -53,5 +55,8 @@ public class DtoUtils {
 	}
 	public List<OrdersResponseDTO> mapOrdersToDto(List<Orders> list){
 		return list.stream().map(ord->new OrdersResponseDTO().createByEntity(ord)).collect(Collectors.toList());
+	}
+	public List<PostRespDTO> mapPostToDto(List<Post> list){
+		return list.stream().map(po-> new PostRespDTO().createByEntity(po)).collect(Collectors.toList());
 	}
 }
