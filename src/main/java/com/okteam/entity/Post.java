@@ -31,6 +31,7 @@ public class Post {
     Admin acc_post;
     
     public Post dtoReturnEntity(PostDTO po) {
+    	this.idpost = po.getIdpost();
     	this.title = po.getTitle();
     	this.content = po.getContent();
     	this.image = po.getImage();

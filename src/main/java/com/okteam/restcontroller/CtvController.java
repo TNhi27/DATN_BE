@@ -1,8 +1,5 @@
 package com.okteam.restcontroller;
 
-import java.io.UnsupportedEncodingException;
-import javax.mail.MessagingException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
