@@ -228,7 +228,7 @@ public class NccController {
 			return new Response<NccResponseDTO>(null, null, "Thao tác không hợp lệ!");
 		}
     	nccRepository.save(ncc);
-    	return new Response<NccResponseDTO>(null, null, "OK");
+    	return new Response<NccResponseDTO>(dtoUtils.mapNccToDto(nccRepository.findAll(Sort.by(Direction.DESC,"createdate"))), null, "OK");
     }
 
     @PostMapping("/info")
