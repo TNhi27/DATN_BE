@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @CrossOrigin("*")
-@RequestMapping("/report")
+@RequestMapping("/admin/report")
 public class ReportAdminController {
     @Autowired
     NccRepository nccRepository;
