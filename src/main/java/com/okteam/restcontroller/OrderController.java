@@ -300,7 +300,6 @@ public class OrderController {
         return new Response<OrdersResponseDTO>(
                 dtoUtils.mapOrdersToDto(oRepository.findAll(Sort.by(Sort.Direction.DESC, "dateorder"))), null, "OK");
     }
-<<<<<<< HEAD
     
     @PostMapping("/add")
     public Response<OrdersResponseDTO> assOrders(@RequestBody OrderAdDto ord){
@@ -417,7 +416,4 @@ public class OrderController {
     	return new Response<OrdersResponseDTO>(null, datefinish, "OK");
     }
     
-=======
-
->>>>>>> 0902983d822085912bdd3fb92ebe1bef529dc215
 }
