@@ -60,7 +60,7 @@ public class Ncc {
 		n.setPassword(ncc.getPassword());
 		n.setAddress(ncc.getAddress());
 		n.setEmail(ncc.getEmail());
-		n.setFullname(ncc.getNccname());
+		n.setFullname(ncc.getFullname());
 		n.setNcclogo(ncc.getNcclogo());
 		n.setNccname(ncc.getNccname());
 		n.setSdt(ncc.getSdt());

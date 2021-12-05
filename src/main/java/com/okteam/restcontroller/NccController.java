@@ -1,6 +1,5 @@
 package com.okteam.restcontroller;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -8,7 +7,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import javax.mail.MessagingException;
 
 import com.okteam.dao.FollowSellRepository;
 import com.okteam.dao.NccRepository;
@@ -152,7 +150,6 @@ public class NccController {
     	if(service.checkUsername(ncc.getUsername())) {
     		message = "Tài khoản đã tồn tại, vui lòng chọn tên khác!";
     	} else {
-    		ncc.setFullname(ncc.getNccname());
     		nccRepository.save(new Ncc().dtoReturnEntity(ncc));
     	}
     	return new Response<NccResponseDTO>(dtoUtils.mapNccToDto(nccRepository.findAll(Sort.by(Direction.DESC,"createdate"))), null, message);
@@ -204,7 +201,6 @@ public class NccController {
 			break;
 		case 1:
 			ncc.setNccname(value);
-    		ncc.setFullname(value);
 			break;
 		case 2:
 			ncc.setNcclogo(value);
@@ -224,6 +220,9 @@ public class NccController {
 			ncc.setIdghn(value);
 		case 8:
 			ncc.setDescription(value);
+			break;
+		case 9:
+			ncc.setFullname(value);
 			break;
 		default:
 			return new Response<NccResponseDTO>(null, null, "Thao tác không hợp lệ!");
