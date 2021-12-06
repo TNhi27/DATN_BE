@@ -35,7 +35,7 @@ public class Admin {
 	@Temporal(TemporalType.DATE)
 	Date createdate = new Date();
 
-	@JsonIgnore
+	@JsonBackReference
 	@OneToMany(mappedBy = "acc_post")
 	List<Post> posts; // chưa tạo liên kết trong csdl
 	

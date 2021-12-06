@@ -9,6 +9,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.okteam.dto.PostDTO;
 
 import lombok.Data;
 
@@ -19,7 +20,7 @@ public class Post {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int id;
+    int idpost;
     String title;
     String content;
     String image;
@@ -28,4 +29,13 @@ public class Post {
     @ManyToOne
     @JoinColumn(name = "username")
     Admin acc_post;
+    
+    public Post dtoReturnEntity(PostDTO po) {
+    	this.idpost = po.getIdpost();
+    	this.title = po.getTitle();
+    	this.content = po.getContent();
+    	this.image = po.getImage();
+    	return this;
+    }
+    
 }

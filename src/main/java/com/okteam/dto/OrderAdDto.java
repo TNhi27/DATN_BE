@@ -2,6 +2,9 @@ package com.okteam.dto;
 
 import java.util.List;
 
+import lombok.Data;
+
+@Data
 public class OrderAdDto {
 	int idorder;
 	int total;

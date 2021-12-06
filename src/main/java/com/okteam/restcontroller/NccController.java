@@ -1,6 +1,5 @@
 package com.okteam.restcontroller;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -8,7 +7,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import javax.mail.MessagingException;
 
 
 import com.okteam.dao.CtvRepository;
@@ -142,19 +140,7 @@ public class NccController {
         return new ResponseEntity<NccResponseDTO>(dto, HttpStatus.OK);
 
     }
-
-    @PostMapping("/register")
-    public Response<NccResponseDTO> register(@RequestBody Ncc ncc)
-            throws UnsupportedEncodingException, MessagingException {
-        String message = "OK";
-        if (service.checkUsername(ncc.getUsername())) {
-            message = "Username đã tồn tại!";
-        } else {
-            ncc = service.registerNcc(ncc);
-        }
-        return new Response<NccResponseDTO>(null, new NccResponseDTO().createByEntity(ncc), message);
-    }
-
+    
     @GetMapping("/list")
     public Response<NccResponseDTO> getNccs(){
     	return new Response<NccResponseDTO>(dtoUtils.mapNccToDto(nccRepository.findAll(Sort.by(Direction.DESC,"createdate"))), null, "OK");
@@ -171,7 +157,6 @@ public class NccController {
     	if(service.checkUsername(ncc.getUsername())) {
     		message = "Tài khoản đã tồn tại, vui lòng chọn tên khác!";
     	} else {
-    		ncc.setFullname(ncc.getNccname());
     		nccRepository.save(new Ncc().dtoReturnEntity(ncc));
     	}
     	return new Response<NccResponseDTO>(dtoUtils.mapNccToDto(nccRepository.findAll(Sort.by(Direction.DESC,"createdate"))), null, message);
@@ -223,7 +208,6 @@ public class NccController {
 			break;
 		case 1:
 			ncc.setNccname(value);
-    		ncc.setFullname(value);
 			break;
 		case 2:
 			ncc.setNcclogo(value);
@@ -244,11 +228,14 @@ public class NccController {
 		case 8:
 			ncc.setDescription(value);
 			break;
+		case 9:
+			ncc.setFullname(value);
+			break;
 		default:
 			return new Response<NccResponseDTO>(null, null, "Thao tác không hợp lệ!");
 		}
     	nccRepository.save(ncc);
-    	return new Response<NccResponseDTO>(null, null, "OK");
+    	return new Response<NccResponseDTO>(dtoUtils.mapNccToDto(nccRepository.findAll(Sort.by(Direction.DESC,"createdate"))), null, "OK");
     }
 
     @PostMapping("/info")
