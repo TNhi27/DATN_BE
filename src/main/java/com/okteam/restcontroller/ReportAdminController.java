@@ -36,8 +36,8 @@ public class ReportAdminController {
     TransactionRepository transactionRepository;
 
     @GetMapping
-    public ResponseEntity<ReportAdmin> getMethodName(@RequestParam int d, @RequestParam int m,
-            @RequestParam Optional<Integer> year) {
+    public ResponseEntity<ReportAdmin> getMethodName(@RequestParam("d") int d, @RequestParam("m") int m,
+            @RequestParam("y") Optional<Integer> year) {
 
         ReportAdmin rp = new ReportAdmin();
 
