@@ -348,10 +348,10 @@ public class OrderController {
     	if(!oRepository.existsById(ord.getIdorder())) {
     		message = "Không tìm thấy đơn hàng!";
     	} else {
-    		if(ord.getStatus() == 0 || ord.getStatus() == 3 || ord.getStatus() == 4) {
+    		Orders order = oRepository.findById(ord.getIdorder()).get();
+    		if(order.getStatus() == 0 || order.getStatus() == 3 || order.getStatus() == 4) {
     			Ncc ncc = nRepository.findById(ord.getNcc()).get();
     	    	Ctv ctv = cRepository.findById(ord.getCtv()).get();
-    			Orders order = oRepository.findById(ord.getIdorder()).get();
         		detaildao.deleteAll(detaildao.findByOrdersEquals(order));
         		order.setCtv(ctv);
             	order.setNcc(ncc);
@@ -380,6 +380,9 @@ public class OrderController {
     		return new Response<OrdersResponseDTO>(null, null, "Không tìm thấy đơn hàng!");
     	} 
     	Orders ord = oRepository.findById(id).get();
+    	if(thaotac != 0 && ord.getStatus() != 0 && ord.getStatus() != 3 && ord.getStatus() != 4) {
+    		return new Response<OrdersResponseDTO>(null, null, "Trạng thái đơn hàng không phù hợp để cập nhật!");
+    	}
     	switch (thaotac) {
 		case 0:
 			int status = Integer.parseInt(value);
