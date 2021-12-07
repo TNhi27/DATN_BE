@@ -1,19 +1,17 @@
 package com.okteam.entity;
 
+
+
 import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import lombok.Data;
 
@@ -27,10 +25,10 @@ public class InfoBanks {
     String bankname;
     String banknumber;
     String username;
-    String name;
+//    String name;
     Boolean isctv;
 
-    // @JsonIgnore
-    // @OneToMany(mappedBy = "tran_bank")
-    // List<Transaction> transaction;
+     @JsonBackReference
+     @OneToMany(mappedBy = "tran_bank")
+     List<Transaction> transaction;
 }

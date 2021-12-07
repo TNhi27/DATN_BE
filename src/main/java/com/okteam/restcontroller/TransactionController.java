@@ -1,12 +1,13 @@
 package com.okteam.restcontroller;
 
-import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 import com.okteam.dao.TransactionRepository;
+import com.okteam.dto.TransactionDTO;
+import com.okteam.entity.Response;
 import com.okteam.entity.Transaction;
+import com.okteam.utils.DtoUtils;
 import com.okteam.utils.RegisterService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,12 +18,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
 @RestController
 @CrossOrigin("*")
@@ -32,6 +33,8 @@ public class TransactionController {
     TransactionRepository tdao;
     @Autowired
     RegisterService registerService;
+    @Autowired
+    DtoUtils dtoUtils;
 
     @PostMapping("/get")
     public ResponseEntity<Page<Transaction>> get(@RequestParam Optional<String> type,
@@ -48,7 +51,7 @@ public class TransactionController {
             @RequestParam Optional<String> paypal) {
         Transaction tr = new Transaction();
         tr.setCreatedate(new Date());
-        tr.setDone(false);
+        tr.setDone(0);
         tr.setIdpaypal(paypal.orElse(""));
         tr.setNote("");
         tr.setType(type);
@@ -56,5 +59,10 @@ public class TransactionController {
         tr.setUsername(SecurityContextHolder.getContext().getAuthentication().getName());
 
         return new ResponseEntity<Transaction>(tdao.save(tr), HttpStatus.OK);
+    }
+    
+    @GetMapping("/list")
+    public Response<TransactionDTO> getAll(){
+    	return new Response<TransactionDTO>(dtoUtils.mapTransactionToDto(tdao.findAll(Sort.by(Sort.Direction.DESC, "createdate"))), null, "OK");
     }
 }
