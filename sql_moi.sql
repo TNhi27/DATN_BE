@@ -246,6 +246,7 @@ CREATE TABLE `infobanks` (
   `bankname` varchar(250) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `banknumber` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `username` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  `name` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `isctv` bit(1) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb3 COLLATE=utf8_unicode_ci;
@@ -257,7 +258,7 @@ CREATE TABLE `infobanks` (
 
 LOCK TABLES `infobanks` WRITE;
 /*!40000 ALTER TABLE `infobanks` DISABLE KEYS */;
-INSERT INTO `infobanks` VALUES (1,'BIDV','320290429042','leo10',_binary '');
+INSERT INTO `infobanks` VALUES (1,'BIDV','320290429042','leo10','Trần Quốc Tuấn',_binary '');
 /*!40000 ALTER TABLE `infobanks` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -555,8 +556,9 @@ CREATE TABLE `transaction` (
   `value` int DEFAULT NULL,
   `createdate` datetime DEFAULT NULL,
   `note` text CHARACTER SET utf8 COLLATE utf8_unicode_ci,
+  `idpaypal` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `idbank` int DEFAULT NULL,
-  `done` bit(1) DEFAULT NULL,
+  `done` int DEFAULT NULL,
   PRIMARY KEY (`idtran`),
   KEY `idbank` (`idbank`),
   CONSTRAINT `transaction_ibfk_2` FOREIGN KEY (`idbank`) REFERENCES `infobanks` (`id`)
@@ -569,7 +571,10 @@ CREATE TABLE `transaction` (
 
 LOCK TABLES `transaction` WRITE;
 /*!40000 ALTER TABLE `transaction` DISABLE KEYS */;
-INSERT INTO `transaction` VALUES (1,0,'leo10',120000,'2021-11-19 00:00:00','nap tien',1,_binary ''),(2,1,'leo10',120000,'2021-11-20 00:00:00','nap tien',1,_binary ''),(3,1,'leo10',120000,'2021-11-18 00:00:00','nap tien',1,_binary '\0'),(4,0,'leo10',120000,'2021-11-20 00:00:00','nap tien',1,_binary '\0');
+INSERT INTO `transaction` VALUES (1,0,'leo10',120000,'2021-11-19 00:00:00','duyet_thanhcong','',1,_binary ''),
+								 (2,1,'leo10',120000,'2021-11-20 00:00:00','duyet_thanhcong','',1,_binary ''),
+                                 (3,1,'leo10',120000,'2021-11-18 00:00:00','nap tien','',1,_binary '\0'),
+                                 (4,0,'leo10',120000,'2021-11-20 00:00:00','nap tien','',1,_binary '\0');
 /*!40000 ALTER TABLE `transaction` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
