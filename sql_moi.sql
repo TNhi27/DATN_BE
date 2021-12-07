@@ -353,6 +353,7 @@ CREATE TABLE `post` (
   `content` longtext CHARACTER SET utf8 COLLATE utf8_unicode_ci,
   `image` text CHARACTER SET utf8 COLLATE utf8_unicode_ci,
   `username` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  `createdate` date DEFAULT NULL,
   PRIMARY KEY (`idpost`),
   KEY `username` (`username`),
   CONSTRAINT `post_ibfk_1` FOREIGN KEY (`username`) REFERENCES `admin` (`username`)
@@ -365,6 +366,10 @@ CREATE TABLE `post` (
 
 LOCK TABLES `post` WRITE;
 /*!40000 ALTER TABLE `post` DISABLE KEYS */;
+INSERT INTO `post` VALUES(1,"Âm nhạc","oh đớ mi sơ rì, e rì bo đì quăn tù bi mài e nờ mí",NULL,"admin2",'2021-12-07'),
+						  (2,"Học tập","Bí kíp Dasua 15'gg",NULL,"admin2",'2021-12-07'),
+                          (3,"Bóng đá","Việt Nam vô địch World Cup sau khi hạ Lào",NULL,"admin1",'2021-12-07'),
+                          (4,"Bí kíp làm giàu","Đầu tư tiền ảo",NULL,"admin3",'2021-12-07');
 /*!40000 ALTER TABLE `post` ENABLE KEYS */;
 UNLOCK TABLES;
 

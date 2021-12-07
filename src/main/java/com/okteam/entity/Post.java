@@ -1,5 +1,7 @@
 package com.okteam.entity;
 
+import java.util.Date;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -24,6 +26,7 @@ public class Post {
     String title;
     String content;
     String image;
+    Date createdate = new Date();
 
     @JsonManagedReference
     @ManyToOne
