@@ -22,6 +22,7 @@ public class OrdersResponseDTO {
 	String sdtcustomer;
 	int payment;
 	String order_code;
+	String tinh;
 	String huyen;
 	String xa;
 
@@ -40,6 +41,7 @@ public class OrdersResponseDTO {
 		this.sdtcustomer = o.getSdtcustomer();
 		this.payment = o.getPayment();
 		this.order_code = o.getOrder_code();
+		this.tinh = o.getTinh();
 		this.huyen = o.getHuyen();
 		this.xa = o.getXa();
 		this.ctv = o.getCtv();

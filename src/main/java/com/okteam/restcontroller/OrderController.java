@@ -13,15 +13,12 @@ import com.okteam.dao.FollowSellRepository;
 import com.okteam.dao.NccRepository;
 import com.okteam.dao.OrderRepository;
 import com.okteam.dao.ProductRepository;
-import com.okteam.dto.DetailsDTO;
 import com.okteam.dto.OrderAdDto;
 import com.okteam.dto.Orderdto;
 import com.okteam.dto.OrdersRequest;
 import com.okteam.dto.OrdersResponseDTO;
-import com.okteam.dto.RegiProductsDTO;
 import com.okteam.entity.Orders;
 import com.okteam.entity.Products;
-import com.okteam.entity.RegiProducts;
 
 import com.okteam.entity.Response;
 import com.okteam.entity.ResponseClient;
@@ -353,6 +350,9 @@ public class OrderController {
     			Ncc ncc = nRepository.findById(ord.getNcc()).get();
     	    	Ctv ctv = cRepository.findById(ord.getCtv()).get();
         		detaildao.deleteAll(detaildao.findByOrdersEquals(order));
+        		order.setTinh(ord.getTinh());
+        		order.setHuyen(ord.getHuyen());
+        		order.setXa(ord.getXa());
         		order.setCtv(ctv);
             	order.setNcc(ncc);
         		List<Details>details = ord.getDetails().stream().map(o->{
@@ -399,12 +399,6 @@ public class OrderController {
 			break;
 		case 2:
 			ord.setSdtcustomer(value);
-			break;
-		case 3:
-			ord.setHuyen(value);
-			break;
-		case 4:
-			ord.setXa(value);
 			break;
 		case 5:
 			ord.setAddress(value);
