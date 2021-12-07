@@ -1,5 +1,6 @@
 package com.okteam.restcontroller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -9,7 +10,9 @@ import com.okteam.dao.OrderRepository;
 import com.okteam.dao.ProductRepository;
 import com.okteam.dao.TransactionRepository;
 import com.okteam.dto.ReportAdmin;
+import com.okteam.entity.ReportMonth;
 import com.okteam.entity.ReportbyDay;
+import com.okteam.entity.Response;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,6 +21,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
@@ -83,5 +87,20 @@ public class ReportAdminController {
 
         return new ResponseEntity<ReportAdmin>(rp, HttpStatus.OK);
     }
+    
+    @GetMapping("/year/{nam}")
+    public Response<ReportMonth> getProfitsYear(@PathVariable("nam") Integer nam){
+    	List<ReportMonth> list = new ArrayList<>();
+    	for (int i = 1; i < 13; i++) {
+			list.add(orderRepository.getReportMonth(i, nam));
+		}
+    	return new Response<ReportMonth>(list, null, "OK");
+    }
 
+    @GetMapping("/allYears")
+    public Response<Integer> getAllYears(){
+    	List<Integer> list = orderRepository.getYears();
+    	return new Response<Integer>(list, null, "OK");
+    }
+    
 }

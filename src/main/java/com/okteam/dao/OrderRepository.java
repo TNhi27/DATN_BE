@@ -2,13 +2,11 @@ package com.okteam.dao;
 
 import org.springframework.data.jpa.repository.Query;
 
-import java.util.Date;
 import java.util.List;
 
-import com.okteam.entity.Details;
 import com.okteam.entity.Orders;
 import com.okteam.entity.ProductGroup;
-import com.okteam.entity.Products;
+import com.okteam.entity.ReportMonth;
 import com.okteam.entity.ReportbyDay;
 
 import org.springframework.data.domain.Page;
@@ -70,5 +68,14 @@ public interface OrderRepository extends JpaRepository<Orders, Integer> {
 
     @Query("SELECT new ProductGroup(o.products.idpro,o.products.name,count(o.qty)) from Details o group by o.products ")
     public List<ProductGroup> getProductGroupsAdmin();
+    @Query("SELECT new ReportMonth(year(o.dateorder), sum(o.payment)) "
+			+ " FROM Orders o WHERE o.status = 5 AND month(o.dateorder)=?1 AND year(o.dateorder)=?2"
+			+ " GROUP BY year(o.dateorder)"
+			+ " ORDER BY year(o.dateorder) DESC")
+    public ReportMonth getReportMonth(int thang, int nam);
+    @Query("SELECT year(o.dateorder) FROM Orders o WHERE o.status = 5"
+    		+ " GROUP BY year(o.dateorder)"
+			+ " ORDER BY year(o.dateorder) DESC")
+    public List<Integer> getYears();
 
 }
