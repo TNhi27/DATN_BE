@@ -507,7 +507,7 @@ CREATE TABLE `properties` (
 
 LOCK TABLES `properties` WRITE;
 /*!40000 ALTER TABLE `properties` DISABLE KEYS */;
-INSERT INTO `properties` VALUES (11,NULL,NULL,'418a4bad-bcc7-4f07-955a-f1af823c56c1'),(12,'ulala','ulatr','72d9f565-6124-4652-816d-4aa050660102'),(13,'1','1','e252e2df-d98f-4f4e-8930-5f2440b95b68'),(42,'ualtr','adad','SP134'),(43,'jaj','ada','SP134');
+INSERT INTO `properties` VALUES (11,'Màu sắc','đỏ','418a4bad-bcc7-4f07-955a-f1af823c56c1'),(12,'ulala','ulatr','72d9f565-6124-4652-816d-4aa050660102'),(13,'1','1','e252e2df-d98f-4f4e-8930-5f2440b95b68'),(42,'ualtr','adad','SP134'),(43,'jaj','ada','SP134');
 /*!40000 ALTER TABLE `properties` ENABLE KEYS */;
 UNLOCK TABLES;
 

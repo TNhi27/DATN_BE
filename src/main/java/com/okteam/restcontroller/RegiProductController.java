@@ -1,5 +1,6 @@
 package com.okteam.restcontroller;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -46,11 +48,15 @@ public class RegiProductController {
 
 	@Autowired
 	CtvRepository CtvRep;
+	
 	@Autowired
 	ProductRepository ProRep;
 
 	@Autowired
 	FollowSellRepository fdao;
+	
+	@Autowired
+	RegiProductRepository regiRepo;
 	
 	@Autowired
 	DtoUtils dtoUtils;
@@ -147,6 +153,60 @@ public class RegiProductController {
 			}
 		}
 		return new Response<RegiProductsRespDto>(dtoUtils.mapRegiProductsToDto(list), null, message);
+	}
+	
+	@PostMapping("/add")
+	public Response<RegiProductsRespDto> addRegi(@RequestBody RegiProductsDTO regi,
+			@RequestParam(value = "idctv", required = false) String idctv){
+		String message = "OK";
+		List<RegiProducts> list = new ArrayList<>();
+		if(regiRepo.getByCtvSP(regi.getUsername(), regi.getIdpro()) != null) {
+			message = "Sản phẩm đã được cộng tác viên đăng ký rồi!";
+		} else {
+			RegiProducts r = new RegiProducts();
+			r.setPrice(regi.getPrice());
+			r.setCtv(CtvRep.findById(regi.getUsername()).get());
+			r.setProducts(ProRep.findById(regi.getIdpro()).get());
+			regiRepo.save(r);
+		}
+		System.out.println(idctv);
+		if(idctv == null) {
+			list = RegiPro.findAll(Sort.by(Sort.Direction.DESC, "regidate"));
+		} else {
+			list = regiRepo.findbyIdCtv(idctv);
+		}
+		return new Response<RegiProductsRespDto>(dtoUtils.mapRegiProductsToDto(list), null, message);
+	}
+	
+	@DeleteMapping("/delete")
+	public Response<RegiProductsRespDto> deleteRegi(@RequestParam("idregi") Integer idregi,
+			@RequestParam(value = "idctv", required = false) String idctv){
+		String message = "OK";
+		List<RegiProducts> list = new ArrayList<>();
+		if(!regiRepo.existsById(idregi)) {
+			message = "Không tìm thấy đăng ký!";
+		} else {
+			regiRepo.deleteById(idregi);
+		}
+		if(idctv == null) {
+			list = RegiPro.findAll(Sort.by(Sort.Direction.DESC, "regidate"));
+		} else {
+			list = regiRepo.findbyIdCtv(idctv);
+		}
+		return new Response<RegiProductsRespDto>(dtoUtils.mapRegiProductsToDto(list), null, message);
+	}
+	
+	@PutMapping("/update_gia/{idregi}")
+	public Response<RegiProductsRespDto> update_gia(@PathVariable("idregi") Integer idregi, @RequestParam("value") Integer value){
+		String message = "OK";
+		if(!regiRepo.existsById(idregi)){
+			message = "Không tìm thấy đăng ký!";
+		} else {
+			RegiProducts regi = regiRepo.findById(idregi).get();
+			regi.setPrice(value);
+			regiRepo.save(regi);
+		}
+		return new Response<RegiProductsRespDto>(null, null, message);
 	}
 	
 }
