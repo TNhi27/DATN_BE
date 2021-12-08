@@ -41,10 +41,9 @@ public class Orders {
 	// String huyen;
 	// String tinh;
 	String order_code;
+	String tinh;
 	String huyen;
 	String xa;
-
-	String tinh;
 
 	@JsonManagedReference
 	@ManyToOne
@@ -69,6 +68,7 @@ public class Orders {
 		this.sdtcustomer = ord.getSdtcustomer();
 		this.payment = ord.getPayment();
 		this.order_code = ord.getOrder_code();
+		this.tinh = ord.getTinh();
 		this.huyen = ord.getHuyen();
 		this.xa = ord.getXa();
 		return this;

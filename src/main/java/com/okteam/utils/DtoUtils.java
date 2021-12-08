@@ -15,6 +15,7 @@ import com.okteam.dto.PostRespDTO;
 import com.okteam.dto.ProductsResponseDTO;
 import com.okteam.dto.PropertiesReqDto;
 import com.okteam.dto.RegiProductsRespDto;
+import com.okteam.dto.TransactionDTO;
 import com.okteam.entity.Admin;
 import com.okteam.entity.Brand;
 import com.okteam.entity.Category;
@@ -25,6 +26,7 @@ import com.okteam.entity.Post;
 import com.okteam.entity.Products;
 import com.okteam.entity.Properties;
 import com.okteam.entity.RegiProducts;
+import com.okteam.entity.Transaction;
 
 @Service
 public class DtoUtils {
@@ -58,5 +60,8 @@ public class DtoUtils {
 	}
 	public List<PostRespDTO> mapPostToDto(List<Post> list){
 		return list.stream().map(po-> new PostRespDTO().createByEntity(po)).collect(Collectors.toList());
+	}
+	public List<TransactionDTO> mapTransactionToDto(List<Transaction> list){
+		return list.stream().map(tr->new TransactionDTO().createByEntity(tr)).collect(Collectors.toList());
 	}
 }
