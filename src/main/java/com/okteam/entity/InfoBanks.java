@@ -25,7 +25,7 @@ public class InfoBanks {
     String bankname;
     String banknumber;
     String username;
-//    String name;
+    String name;
     Boolean isctv;
 
      @JsonBackReference
