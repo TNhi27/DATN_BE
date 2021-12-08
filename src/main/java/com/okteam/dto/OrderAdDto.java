@@ -14,6 +14,7 @@ public class OrderAdDto {
 	String sdtcustomer;
 	int payment;
 	String order_code;
+	String tinh;
 	String huyen;
 	String xa;
 	String ctv;
