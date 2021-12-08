@@ -28,7 +28,7 @@ public class Transaction {
 	int value;
 	String note;
 	String username;
-	boolean done;
+	Integer done;
 	String idpaypal;
 
 	@Temporal(TemporalType.TIMESTAMP)

@@ -43,9 +43,8 @@ public class Orders {
 	String order_code;
 	String huyen;
 	String xa;
-	// String xa;
-	// String huyen;
-	// String tinh;
+
+	String tinh;
 
 	@JsonManagedReference
 	@ManyToOne
@@ -74,5 +73,5 @@ public class Orders {
 		this.xa = ord.getXa();
 		return this;
 	}
-	
+
 }

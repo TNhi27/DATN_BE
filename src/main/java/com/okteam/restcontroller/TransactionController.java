@@ -48,7 +48,7 @@ public class TransactionController {
             @RequestParam Optional<String> paypal) {
         Transaction tr = new Transaction();
         tr.setCreatedate(new Date());
-        tr.setDone(false);
+        tr.setDone(0);
         tr.setIdpaypal(paypal.orElse(""));
         tr.setNote("");
         tr.setType(type);
