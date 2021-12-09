@@ -287,10 +287,10 @@ public class ProductsController {
         pro.setP_brand(brandRepository.findById(productdto.getIdbrand()).get());
         proDAO.save(pro);
         for (var prt : pro.getProperties()) {
-            System.out.println("hahaha" + prt.getId());
+          
             propertiesReponsitory.deleteById(prt.getId());
         }
-        System.out.println(pro.getProperties().size());
+       
 
         for (var e : productdto.getProperties()) {
             Properties properties = new Properties();
