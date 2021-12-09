@@ -7,9 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-import com.okteam.dto.ReportFollowInNcc;
 import com.okteam.entity.Ncc;
-import com.okteam.entity.Products;
 import com.okteam.entity.RegiProducts;
 
 public interface RegiProductRepository extends JpaRepository<RegiProducts, Integer> {
@@ -29,4 +27,6 @@ public interface RegiProductRepository extends JpaRepository<RegiProducts, Integ
     @Query(value="SELECT * FROM regi_products  WHERE idctv=?1 ORDER BY regidate DESC", nativeQuery = true)
     public List<RegiProducts> findbyIdCtv(String username);
     
+    @Query("select o from RegiProducts o where o.ctv.username=?1 and o.products.idpro=?2")
+    public RegiProducts getByCtvSP(String username, String idpro);
 }
