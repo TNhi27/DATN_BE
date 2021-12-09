@@ -135,7 +135,10 @@ CREATE TABLE `comments` (
 
 LOCK TABLES `comments` WRITE;
 /*!40000 ALTER TABLE `comments` DISABLE KEYS */;
-INSERT INTO `comments` VALUES (1,'cr7dy','s3333',4,'Gia tot, phan hoi nhanh','2021-11-08 00:00:00',NULL),(2,'cr7dy','SP134',5,'Gia tot, phan hoi nhanh','2021-11-18 00:00:00',NULL),(3,'cr7dy','SP01',1,'Gia tot, phan hoi nhanh','2021-10-18 00:00:00',NULL),(4,'cr7dy','SP12',5,'Gia tot, phan hoi nhanh','2021-11-01 00:00:00',NULL),(5,'cr7dy','SP124',3,'Gia tot, phan hoi nhanh','2021-11-02 00:00:00',NULL),(6,'cr7dy','SP13',5,'Gia tot, phan hoi nhanh','2021-11-03 00:00:00',NULL),(7,'cr7dy','SP134',4,'Gia tot, phan hoi nhanh','2021-11-04 00:00:00',NULL),(8,'cr7dy','s3333',4,'Gia tot, phan hoi nhanh','2021-11-05 00:00:00',NULL),(9,'leo10','SP134',4,'Gia tot, phan hoi nhanh','2021-11-06 00:00:00',NULL),(10,'leo10','SP01',1,'Gia tot, phan hoi nhanh','2021-11-07 00:00:00',NULL),(11,'leo10','SP12',5,'Gia tot, phan hoi nhanh','2021-11-08 00:00:00',NULL),(12,'lewan','SP124',4,'Gia tot, phan hoi nhanh','2021-11-09 00:00:00',NULL),(13,'lewan','SP13',3,'Gia tot, phan hoi nhanh','2021-11-10 00:00:00',NULL),(14,'lewan','SP134',5,'Gia tot, phan hoi nhanh','2021-11-08 00:00:00',NULL),(15,'leo10','tuilaao',4,'hello 4 sao',NULL,21),(16,'leo10','S3333',4,'rat la ok','2021-11-26 22:24:31',22),(17,'leo10','S3333',4,'OK','2021-11-27 14:07:02',25);
+INSERT INTO `comments` VALUES (1,'leo10','S3333',4,'rat la ok','2021-12-06 22:24:31',22),
+                              (2,'leo10','S3333',4,'OK','2021-12-06 14:07:02',25),
+                              (3,'lewan','SP134',5,'Đồ đẹp quá, tôi muốn trả thêm tiền được không?','2021-12-06 14:07:02',27),
+                              (4,'lewan','SP134',5,'tuyệt thật đấy','2021-12-06 22:24:31',29);
 /*!40000 ALTER TABLE `comments` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -200,7 +203,33 @@ CREATE TABLE `details` (
 
 LOCK TABLES `details` WRITE;
 /*!40000 ALTER TABLE `details` DISABLE KEYS */;
-INSERT INTO `details` VALUES (1,12,'s3333',1,NULL),(2,6,'s3333',2,NULL),(3,2,'s3333',4,NULL),(4,3,'sp1',5,NULL),(5,2,'SP1',3,NULL),(6,1,'SP01',7,NULL),(7,2,'SP1',8,NULL),(8,1,'SP01',8,NULL),(9,2,'SP1',9,NULL),(10,1,'SP01',9,NULL),(11,2,'SP1',10,NULL),(12,1,'SP01',10,NULL),(13,2,'SP1',11,NULL),(14,1,'SP01',11,NULL),(15,1,'S3333',11,NULL),(16,2,'SP1',12,NULL),(17,1,'SP01',12,NULL),(18,1,'S3333',12,NULL),(19,1,'S3333',13,NULL),(20,2,'S3333',13,NULL),(21,1,'S3333',14,NULL),(22,2,'S3333',14,NULL),(23,1,'S3333',15,NULL),(24,2,'tuilaao',16,NULL),(25,2,'SP1',17,NULL),(26,1,'S3333',17,NULL),(27,2,'tuilaao',18,NULL),(28,1,'S3333',19,NULL),(29,1,'SP1',19,NULL),(30,1,'tuilaao',20,NULL),(31,1,'tuilaao',21,NULL),(32,2,'S3333',22,1234),(33,1,'SP1',23,500),(34,1,'SP1',24,500),(35,1,'S3333',24,1234),(36,2,'S3333',25,1234),(37,1,'SP134',26,500),(38,3,'SP13',27,500),(39,2,'SP134',28,500),(40,1,'SP134',29,500);
+INSERT INTO `details` VALUES (1,1,'s3333',1,NULL),
+							 (2,1,'s3333',2,2344),
+                             (3,1,'s3333',4,2344),
+                             (4,1,'s3333',5,2344),
+                             (5,1,'s3333',7,2344),
+                             (6,1,'SP134',29,500),
+                             (7,1,'s3333',8,2344),
+                             (8,1,'s3333',9,2344),
+                             (9,1,'s3333',10,2344),
+                             (10,1,'s3333',11,2344),
+                             (11,1,'s3333',12,2344),
+                             (12,1,'s3333',13,2344),
+                             (13,1,'s3333',14,2344),
+                             (14,1,'s3333',15,2344),
+                             (15,1,'S3333',16,2344),
+                             (16,1,'s3333',17,2344),
+                             (17,1,'s3333',18,2344),
+                             (18,1,'S3333',19,2344),
+                             (19,1,'S3333',20,2344),
+                             (20,1,'S3333',21,2344),
+                             (21,1,'S3333',22,2344),
+                             (22,1,'S3333',23,2344),
+                             (23,1,'S3333',24,2344),
+                             (24,1,'s3333',25,2344),
+                             (25,1,'s3333',26,2344),
+                             (26,1,'SP134',27,500),
+                             (27,1,'s3333',28,2344);
 /*!40000 ALTER TABLE `details` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -338,12 +367,11 @@ CREATE TABLE `orders` (
 
 LOCK TABLES `orders` WRITE;
 /*!40000 ALTER TABLE `orders` DISABLE KEYS */;
-INSERT INTO `orders` VALUES (1,'2021-11-15 00:00:00',1200,0,'diachi','khach hang','0948509310',1300,0,'leo10','thuytien',NULL,'268-Hưng Yên','2045-Huyện Văn Giang','221010-Xã Vĩnh Khúc',NULL),
-							(2,'2021-11-15 00:00:00',1100,1,'diachi','khach hang','0948509310',1300,0,'leo10','thuytien',NULL,'268-Hưng Yên','2045-Huyện Văn Giang','221010-Xã Vĩnh Khúc',NULL),
-                            (3,'2021-11-15 00:00:00',1500,2,'diachi','khach hang','0948509310',1300,0,'leo10','thuytien',NULL,'268-Hưng Yên','2045-Huyện Văn Giang','221010-Xã Vĩnh Khúc',NULL),
-                            (4,'2021-11-15 00:00:00',12670,3,'diachi','khach hang','0948509310',1300,0,'leo10','thuytien',NULL,'268-Hưng Yên','2045-Huyện Văn Giang','221010-Xã Vĩnh Khúc',NULL),
-                            (5,'2021-11-15 00:00:00',12300,4,'diachi','khach hang','0948509310',1300,0,'leo10','thuytien',NULL,'268-Hưng Yên','2045-Huyện Văn Giang','221010-Xã Vĩnh Khúc',NULL),
-                            (6,'2021-11-15 00:00:00',12660,1,'diachi','khach hang','0948509310',1300,0,'jack97','thuytien',NULL,'268-Hưng Yên','2045-Huyện Văn Giang','221010-Xã Vĩnh Khúc',NULL),
+INSERT INTO `orders` VALUES (1,'2021-11-15 00:00:00',1200,0,'diachi','khach hang','0948509310',1300,0,'leo10','congvinh',NULL,'268-Hưng Yên','2045-Huyện Văn Giang','221010-Xã Vĩnh Khúc',NULL),
+							(2,'2021-11-15 00:00:00',1100,1,'diachi','khach hang','0948509310',1300,0,'leo10','congvinh',NULL,'268-Hưng Yên','2045-Huyện Văn Giang','221010-Xã Vĩnh Khúc',NULL),
+                            (3,'2021-11-15 00:00:00',1500,2,'diachi','khach hang','0948509310',1300,0,'leo10','congvinh',NULL,'268-Hưng Yên','2045-Huyện Văn Giang','221010-Xã Vĩnh Khúc',NULL),
+                            (4,'2021-11-15 00:00:00',12670,3,'diachi','khach hang','0948509310',1300,0,'leo10','congvinh',NULL,'268-Hưng Yên','2045-Huyện Văn Giang','221010-Xã Vĩnh Khúc',NULL),
+                            (5,'2021-11-15 00:00:00',12300,4,'diachi','khach hang','0948509310',1300,0,'leo10','congvinh',NULL,'268-Hưng Yên','2045-Huyện Văn Giang','221010-Xã Vĩnh Khúc',NULL),
                             (7,'2021-11-18 22:25:28',1243,0,'24/1 tran chien Xã La Bằng - Huyện Đại Từ - Thái Nguyên','Luu Truong Ta','0971519342',0,0,'leo10','congvinh',NULL,'268-Hưng Yên','2045-Huyện Văn Giang','221010-Xã Vĩnh Khúc',NULL),
                             (8,'2021-11-18 22:27:39',1243,5,'24/1 tran chien Xã La Bằng - Huyện Đại Từ - Thái Nguyên','Luu Truong Ta','0971519342',0,0,'leo10','congvinh',NULL,'268-Hưng Yên','2045-Huyện Văn Giang','221010-Xã Vĩnh Khúc',NULL),
                             (9,'2021-11-18 22:35:35',1243,5,'24/1 tran chien Xã La Bằng - Huyện Đại Từ - Thái Nguyên','Luu Truong Ta','0971519342',0,0,'leo10','congvinh',NULL,'268-Hưng Yên','2045-Huyện Văn Giang','221010-Xã Vĩnh Khúc',NULL),
@@ -353,20 +381,20 @@ INSERT INTO `orders` VALUES (1,'2021-11-15 00:00:00',1200,0,'diachi','khach hang
                             (13,'2021-11-19 15:53:48',132,4,' Xã Long Trị A - Thị xã Long Mỹ - Hậu Giang','Luu Truong Ta','0971519342',2480,0,'leo10','congvinh',NULL,'268-Hưng Yên','2045-Huyện Văn Giang','221010-Xã Vĩnh Khúc',NULL),
                             (14,'2021-11-19 15:53:50',132,4,' Xã Long Trị A - Thị xã Long Mỹ - Hậu Giang','Luu Truong Ta','0971519342',2480,0,'leo10','congvinh',NULL,'268-Hưng Yên','2045-Huyện Văn Giang','221010-Xã Vĩnh Khúc',NULL),
                             (15,'2021-11-19 16:07:52',44,4,' Xã Vĩnh Bình - Huyện Hòa Bình - Bạc Liêu','Luu Truong Ta','0971519342',12,0,'leo10','congvinh',NULL,'268-Hưng Yên','2045-Huyện Văn Giang','221010-Xã Vĩnh Khúc',NULL),
-                            (16,'2021-11-20 15:36:14',1268,4,'24/1 tran chien le binh Xã Như Khuê - Huyện Lộc Bình - Lạng Sơn','truongta','0971519342',22,0,'leo10','aomacanada',NULL,'268-Hưng Yên','2045-Huyện Văn Giang','221010-Xã Vĩnh Khúc',NULL),
+                            (16,'2021-11-20 15:36:14',1268,4,'24/1 tran chien le binh Xã Như Khuê - Huyện Lộc Bình - Lạng Sơn','truongta','0971519342',22,0,'leo10','congvinh',NULL,'268-Hưng Yên','2045-Huyện Văn Giang','221010-Xã Vĩnh Khúc',NULL),
                             (17,'2021-11-22 21:58:52',734,4,'24/1 Xã Mẫu Sơn - Huyện Lộc Bình - Lạng Sơn','Luu Truong Ta','0971519342',2234,0,'leo10','congvinh',NULL,'268-Hưng Yên','2045-Huyện Văn Giang','221010-Xã Vĩnh Khúc',NULL),
-                            (18,'2021-11-23 14:11:29',1268,0,' Xã Vĩnh Hưng A - Huyện Vĩnh Lợi - Bạc Liêu','Luu Truong Ta','0971519342',2000,0,'leo10','aomacanada',NULL,'268-Hưng Yên','2045-Huyện Văn Giang','221010-Xã Vĩnh Khúc',NULL),
+                            (18,'2021-11-23 14:11:29',1268,0,' Xã Vĩnh Hưng A - Huyện Vĩnh Lợi - Bạc Liêu','Luu Truong Ta','0971519342',2000,0,'leo10','congvinh',NULL,'268-Hưng Yên','2045-Huyện Văn Giang','221010-Xã Vĩnh Khúc',NULL),
                             (19,'2021-11-23 16:19:28',389,2,' Phường 3 - Quận 11 - Hồ Chí Minh','Luu Truong Ta','0971519342',1734,0,'leo10','congvinh','Z89Z7','268-Hưng Yên','2045-Huyện Văn Giang','221010-Xã Vĩnh Khúc',NULL),
-                            (20,'2021-11-23 16:21:16',634,0,' Xã Khánh Yên Hạ - Huyện Văn Bàn - Lào Cai','Luu Truong Ta','0971519342',1000,0,'leo10','aomacanada',NULL,'268-Hưng Yên','2045-Huyện Văn Giang','221010-Xã Vĩnh Khúc',NULL),
-                            (21,'2021-11-23 16:22:16',634,0,' Xã Cao Thượng - Huyện Tân Yên - Bắc Giang','Luu Truong Ta','0971519342',1000,0,'leo10','aomacanada',NULL,'268-Hưng Yên','2045-Huyện Văn Giang','221010-Xã Vĩnh Khúc',NULL),
+                            (20,'2021-11-23 16:21:16',634,0,' Xã Khánh Yên Hạ - Huyện Văn Bàn - Lào Cai','Luu Truong Ta','0971519342',1000,0,'leo10','congvinh',NULL,'268-Hưng Yên','2045-Huyện Văn Giang','221010-Xã Vĩnh Khúc',NULL),
+                            (21,'2021-11-23 16:22:16',634,0,' Xã Cao Thượng - Huyện Tân Yên - Bắc Giang','Luu Truong Ta','0971519342',1000,0,'leo10','congvinh',NULL,'268-Hưng Yên','2045-Huyện Văn Giang','221010-Xã Vĩnh Khúc',NULL),
                             (22,'2021-11-26 22:24:20',88,2,'24/1 Thị trấn Kinh Cùng - Huyện Phụng Hiệp - Hậu Giang','Tran Dan','0971514343',2468,0,'leo10','congvinh','Z89ZF','268-Hưng Yên','2045-Huyện Văn Giang','221010-Xã Vĩnh Khúc',NULL),
                             (23,'2021-11-26 23:00:10',345,2,' Xã Đông Thới - Huyện Cái Nước - Cà Mau','Tran Dan','0971514343',500,0,'leo10','congvinh','Z892Y','268-Hưng Yên','2045-Huyện Văn Giang','221010-Xã Vĩnh Khúc',NULL),
                             (24,'2021-11-27 13:00:10',389,2,'223 Dinh Tien Hoang Phường 2 - Quận 8 - Hồ Chí Minh','Nguyen Van A','0971519342',1734,0,'leo10','congvinh','Z89ZL','268-Hưng Yên','2045-Huyện Văn Giang','221010-Xã Vĩnh Khúc',NULL),
                             (25,'2021-11-27 14:06:44',88,2,'24/1 Xã Thới Đông - Huyện Cờ Đỏ - Cần Thơ','Luu Truong Ta','0971519342',2468,0,'leo10','congvinh','Z89ZD','268-Hưng Yên','2045-Huyện Văn Giang','221010-Xã Vĩnh Khúc',NULL),
                             (26,'2021-11-27 21:18:19',112,4,'24/1 Phường Cải Đan - Thành Phố Sông Công - Thái Nguyên','Nguyen Van A','0971519342',500,0,'leo10','congvinh',NULL,'268-Hưng Yên','2045-Huyện Văn Giang','221010-Xã Vĩnh Khúc',NULL),
-                            (27,'2021-11-27 21:26:11',1059,2,' Phường Chính Gián - Quận Thanh Khê - Đà Nẵng','Nguyen Van A','0971519342',1500,0,'leo10','congvinh','Z89ZG','268-Hưng Yên','2045-Huyện Văn Giang','221010-Xã Vĩnh Khúc',NULL),
+                            (27,'2021-11-27 21:26:11',1059,2,' Phường Chính Gián - Quận Thanh Khê - Đà Nẵng','Nguyen Van A','0971519342',1500,0,'lewan','congvinh','Z89ZG','268-Hưng Yên','2045-Huyện Văn Giang','221010-Xã Vĩnh Khúc',NULL),
                             (28,'2021-11-28 16:07:54',224,5,'24/1 tran chien Phường Lê Bình - Quận Cái Răng - Cần Thơ','Test va to','0971519342',1000,0,'leo10','congvinh',NULL,'268-Hưng Yên','2045-Huyện Văn Giang','221010-Xã Vĩnh Khúc',NULL),
-                            (29,'2021-11-28 17:08:34',112,5,' Xã Viên An Đông - Huyện Ngọc Hiển - Cà Mau','Nguyen Van A','0971519342',500,0,'leo10','congvinh','Z895V','268-Hưng Yên','2045-Huyện Văn Giang','221010-Xã Vĩnh Khúc','2021-11-28');
+                            (29,'2021-11-28 17:08:34',112,5,' Xã Viên An Đông - Huyện Ngọc Hiển - Cà Mau','Nguyen Van A','0971519342',500,0,'lewan','congvinh','Z895V','268-Hưng Yên','2045-Huyện Văn Giang','221010-Xã Vĩnh Khúc','2021-11-28');
 /*!40000 ALTER TABLE `orders` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -444,13 +472,13 @@ CREATE TABLE `products` (
 
 LOCK TABLES `products` WRITE;
 /*!40000 ALTER TABLE `products` DISABLE KEYS */;
-INSERT INTO `products` VALUES ('2f724bfe-7cc5-429d-a78b-9e176fc3a2e6','Lưu Trường Tá','',2,'2021-11-25','',2,'Doi','','','','','Quảng Châu-TQ','TTN4','thuytien',_binary '\0',9),
-							  ('418a4bad-bcc7-4f07-955a-f1af823c56c1','Lưu Trường Tá','<p><i><strong>doi giay ghi chu*</strong></i></p>',2,'2021-11-25','doi giay',2,'Doi',NULL,NULL,NULL,'','Quảng Châu-TQ','GIAY2','thuytien',_binary '\0',13),
-                              ('72d9f565-6124-4652-816d-4aa050660102','Lưu Trường Tá','<p><i><strong>doi giay ghi chu*</strong></i></p>',2,'2021-11-25','doi giay',3,'Doi',NULL,NULL,NULL,'','Quảng Châu-TQ','GIAY1','thuytien',_binary '\0',13),
-                              ('9a0845bd-d9cd-4056-8916-35a7122fc8eb','demo','',3,'2021-11-25','adad',0,'','','','','','','THN5','thuytien',_binary '\0',12),
-                              ('a8d7bc81-b51d-42ae-abb0-2874db3e5398','truongta','',1,'2021-11-25','',3,'Doi','','','','','Hàn Quốc','GIAY1','thuytien',_binary '\0',13),
-                              ('ae27b5f1-5707-405e-8b68-f69ec581a4d5','Lưu Trường Tá','<p><i><strong>doi giay ghi chu*</strong></i></p>',2,'2021-11-25','doi giay',2,'Doi',NULL,NULL,NULL,'','Quảng Châu-TQ','GIAY2','thuytien',_binary '\0',13),
-                              ('bf86a9f0-02d3-466d-aed4-7c61c5e45a21','Trun','',2,'2021-11-25','doi giay',2,'Doi','','','','','Hàn Quốc','TTN2','thuytien',_binary '\0',8),
+INSERT INTO `products` VALUES ('spa','Máy dập','',2,'2021-11-25','',2,'Doi','','','','','Quảng Châu-TQ','TTN4','thuytien',_binary '\0',9),
+							  ('sp2','Laptop gaming','<p><i><strong>doi giay ghi chu*</strong></i></p>',2,'2021-11-25','doi giay',2,'Doi',NULL,NULL,NULL,'','Quảng Châu-TQ','GIAY2','thuytien',_binary '\0',13),
+                              ('sp3','Khô bò','<p><i><strong>doi giay ghi chu*</strong></i></p>',2,'2021-11-25','doi giay',3,'Doi',NULL,NULL,NULL,'','Quảng Châu-TQ','GIAY1','thuytien',_binary '\0',13),
+                              ('sp4','Nồi cơm điện','',3,'2021-11-25','adad',0,'','','','','','','THN5','thuytien',_binary '\0',12),
+                              ('sp5','Quần tây','',1,'2021-11-25','',3,'Doi','','','','','Hàn Quốc','GIAY1','thuytien',_binary '\0',13),
+                              ('sp6','Kem đánh răng colgate','<p><i><strong>doi giay ghi chu*</strong></i></p>',2,'2021-11-25','doi giay',2,'Doi',NULL,NULL,NULL,'','Quảng Châu-TQ','GIAY2','thuytien',_binary '\0',13),
+                              ('sp7','Bột giặc Aba','',2,'2021-11-25','doi giay',2,'Doi','','','','','Hàn Quốc','TTN2','thuytien',_binary '\0',8),
                               ('combo1','Combo vintage 01','Combo. Chất: KAKI. Size: M L',350000,'2021-01-01','Combo',69,'bo',NULL,NULL,NULL,NULL,'QuangChau','TTN','congvinh',_binary '\0',8),
                               ('combo2','Combo vintage 01','Combo. Chất: KAKI. Size: M L',350000,'2021-01-01','Combo',69,'bo',NULL,NULL,NULL,NULL,'QuangChau','TTN','congvinh',_binary '\0',8),
                               ('combo3','Combo vintage 01','Combo. Chất: KAKI. Size: M L',350000,'2021-01-01','Combo',69,'bo',NULL,NULL,NULL,NULL,'QuangChau','TTN','congvinh',_binary '\0',8),
@@ -461,12 +489,12 @@ INSERT INTO `products` VALUES ('2f724bfe-7cc5-429d-a78b-9e176fc3a2e6','Lưu Trư
                               ('combo8','Combo vintage 01','Combo. Chất: KAKI. Size: M L',350000,'2021-01-01','Combo',69,'bo',NULL,NULL,NULL,NULL,'QuangChau','TTN','congvinh',_binary '\0',8),
                               ('d918ada4-fc0a-498f-b2a9-dba280c6dfae','demo','',2,'2021-11-25','ada',2,'Doi','','','','','','GIAY1','thuytien',_binary '\0',13),
                               ('e252e2df-d98f-4f4e-8930-5f2440b95b68','san pham moi ne','',1209000,'2021-11-25','ao thun',3,'Doi',NULL,'','','','Việt Nam','THN3','thuytien',_binary '',11),
-                              ('f1c7bcd0-dc9f-4879-9f62-b829e2d546cb','Lưu Trường Tá','<h2>chi tiet san pham</h2><p><i>san pham tot</i></p>',2,'2021-11-25','giay',5,'Doi','','','','','Hàn Quốc','GIAY1','thuytien',_binary '\0',18),
+                              ('f1c7bcd0-dc9f-4879-9f62-b829e2d546cb','Máy bơm nước','<h2>chi tiet san pham</h2><p><i>san pham tot</i></p>',2,'2021-11-25','giay',5,'Doi','','','','','Hàn Quốc','GIAY1','thuytien',_binary '\0',18),
                               ('qq','Quần camo 2hand','Quần short camo. Chất: KAKI. Size: M L',150000,'2021-01-01','quan ngan',69,'cai',NULL,NULL,NULL,NULL,'QuangChau','TTN','congvinh',_binary '',8),
                               ('qq1','Quần camo 2hand','Quần short camo. Chất: KAKI. Size: M L',150000,'2021-01-01','quan ngan',69,'cai',NULL,NULL,NULL,NULL,'QuangChau','TTN','congvinh',_binary '\0',8),
                               ('qq2','Quần camo 2hand','Quần short camo. Chất: KAKI. Size: M L',150000,'2021-01-01','quan ngan',69,'cai',NULL,NULL,NULL,NULL,'QuangChau','TTN','congvinh',_binary '\0',8),
                               ('qq3','Quần camo dài2','Quần camo. Chất: KAKI. Size: M L',150000,'2021-01-01','quan dai',69,'cai',NULL,NULL,NULL,NULL,'QuangChau','TTN','congvinh',_binary '',8),
-                              ('S3333','Tai nghe không dây','Xốp dán tường giả gạch 3d Cao Cấp, kích thước 70*77cm, dày 5mm, đầy đủ màu sắcXốp dán tường giả gạch 3d Cao Cấp,',44,'2021-10-30','tainghe,tainghekhongday',239,'Hộp',NULL,NULL,NULL,NULL,'Hàn Quốc','PK1','congvinh',_binary '\0',17),
+                              ('S3333','Laptop Asus GPMN30041975','Xốp dán tường giả gạch 3d Cao Cấp, kích thước 70*77cm, dày 5mm, đầy đủ màu sắcXốp dán tường giả gạch 3d Cao Cấp,',44,'2021-10-30','tainghe,tainghekhongday',239,'Hộp',NULL,NULL,NULL,NULL,'Hàn Quốc','PK1','congvinh',_binary '\0',17),
                               ('SP01','Tai nghe không dây','Xốp dán tường giả gạch 3d Cao Cấp, kích thước 70*77cm, dày 5mm, đầy đủ màu sắcXốp dán tường giả gạch 3d Cao Cấp,',553,'2021-10-30','tainghe,tainghekhongday',239,'Hộp',NULL,NULL,NULL,NULL,'Hàn Quốc','PK2','congvinh',_binary '\0',17),
                               ('SP1','Tai nghe không dây','Xốp dán tường giả gạch 3d Cao Cấp, kích thước 70*77cm, dày 5mm, đầy đủ màu sắcXốp dán tường giả gạch 3d Cao Cấp,',345,'2021-10-30','tainghe,tainghekhongday',239,'Hộp',NULL,NULL,NULL,NULL,'Hàn Quốc','PK1','congvinh',_binary '\0',17),
                               ('SP12','Tai nghe không dây','Xốp dán tường giả gạch 3d Cao Cấp, kích thước 70*77cm, dày 5mm, đầy đủ màu sắcXốp dán tường giả gạch 3d Cao Cấp,',234,'2021-10-30','tainghe,tainghekhongday',239,'Hộp',NULL,NULL,NULL,NULL,'Hàn Quốc','PK1','congvinh',_binary '\0',17),
@@ -538,7 +566,7 @@ CREATE TABLE `regi_products` (
 
 LOCK TABLES `regi_products` WRITE;
 /*!40000 ALTER TABLE `regi_products` DISABLE KEYS */;
-INSERT INTO `regi_products` VALUES (19,'2021-11-10 21:24:30','s3333','lewan',2344),(40,'2021-11-28 16:06:57','SP134','leo10',500);
+INSERT INTO `regi_products` VALUES (1,'2021-11-10 21:24:30','SP134','lewan',2344),(2,'2021-11-28 16:06:57','s3333','leo10',500);
 /*!40000 ALTER TABLE `regi_products` ENABLE KEYS */;
 UNLOCK TABLES;
 

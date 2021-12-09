@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.okteam.dto.AdminResponseDto;
 import com.okteam.dto.BrandDTO;
 import com.okteam.dto.Categorydto;
+import com.okteam.dto.CommentsRespDto;
 import com.okteam.dto.CtvResponseDTO;
 import com.okteam.dto.NccResponseDTO;
 import com.okteam.dto.OrdersResponseDTO;
@@ -19,6 +20,7 @@ import com.okteam.dto.TransactionDTO;
 import com.okteam.entity.Admin;
 import com.okteam.entity.Brand;
 import com.okteam.entity.Category;
+import com.okteam.entity.Comments;
 import com.okteam.entity.Ctv;
 import com.okteam.entity.Ncc;
 import com.okteam.entity.Orders;
@@ -63,5 +65,8 @@ public class DtoUtils {
 	}
 	public List<TransactionDTO> mapTransactionToDto(List<Transaction> list){
 		return list.stream().map(tr->new TransactionDTO().createByEntity(tr)).collect(Collectors.toList());
+	}
+	public List<CommentsRespDto> mapCommentsToDto(List<Comments> list){
+		return list.stream().map(cmt->new CommentsRespDto().createByEntity(cmt)).collect(Collectors.toList());
 	}
 }

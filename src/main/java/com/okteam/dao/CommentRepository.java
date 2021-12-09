@@ -17,6 +17,8 @@ public interface CommentRepository extends JpaRepository<Comments, Integer> {
 	
 	@Query("select o from Comments o where o.products.idpro=?1")
 	public Page<Comments> getCommentsOfProduct(String idpro,Pageable pageable);
-		
+	
+	@Query("select o from Comments o where o.products.idpro=?1 order by o.idcmt desc")
+	public List<Comments> getCommentByIdpro(String idpro);
 	
 }
