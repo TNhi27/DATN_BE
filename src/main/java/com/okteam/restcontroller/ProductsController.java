@@ -370,6 +370,7 @@ public class ProductsController {
             Brand b = brandRepository.findById(p.getIdbrand()).get();
             Ncc ncc = nccRepository.findById(p.getUsername()).get();
             Products product = proDAO.findById(p.getIdpro()).get();
+            product = product.dtoReturnEntity(p);
             product.setCategory(c);
             product.setP_brand(b);
             product.setNcc(ncc);
@@ -456,4 +457,14 @@ public class ProductsController {
         proDAO.save(p);
         return new Response<ProductsResponseDTO>(null, null, "OK");
     }
+    
+    @GetMapping("/getone")
+    public Response<ProductsResponseDTO> getOne(@RequestParam("idpro") String idpro){
+    	if(!proDAO.existsById(idpro)) {
+    		return new Response<ProductsResponseDTO>(null, null, "Không tim thấy sản phẩm!");
+    	}
+    	Products p = proDAO.findById(idpro).get();
+    	return new Response<ProductsResponseDTO>(dtoUtils.mapProductsToDto(proDAO.findAll(Sort.by(Direction.DESC, "createdate"))), new ProductsResponseDTO().createByEntity(p), "OK");
+    }
+    
 }

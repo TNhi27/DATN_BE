@@ -428,7 +428,7 @@ public class OrderController {
     		return new Response<OrdersResponseDTO>(null, null, "Không tìm thấy đơn hàng");
     	} 
     	Orders ord = oRepository.findById(idorder).get();
-    	return new Response<OrdersResponseDTO>(null, new OrdersResponseDTO().createByEntity(ord), "OK");
+    	return new Response<OrdersResponseDTO>(dtoUtils.mapOrdersToDto(oRepository.findAll(Sort.by(Sort.Direction.DESC, "dateorder"))), new OrdersResponseDTO().createByEntity(ord), "OK");
     }
     
 }
