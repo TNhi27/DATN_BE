@@ -90,9 +90,15 @@ public class PostController {
 	public Response<PostRespDTO> update(@PathVariable("idpost") Integer idpost,
 			@RequestParam("thaotac") Integer thaotac, @RequestParam("value") String value) {
 		if (!poRepo.existsById(idpost)) {
-			return new Response<PostRespDTO>(null, null, "Không tìm thấy báu viết!");
+			return new Response<PostRespDTO>(null, null, "Không tìm thấy bài viết!");
 		}
 		Post post = poRepo.findById(idpost).get();
+		if(thaotac == 0 && value.isEmpty()) {
+			return new Response<PostRespDTO>(null, post, "Giá trị không hợp lệ");
+		}
+		if(thaotac == 1 && value.replace("<br />", "").isEmpty()) {
+			return new Response<PostRespDTO>(null, post, "Giá trị không hợp lệ");
+		}
 		switch (thaotac) {
 		case 0:
 			post.setTitle(value);
@@ -107,6 +113,6 @@ public class PostController {
 			return new Response<PostRespDTO>(null, null, "Thao tác không hợp lệ!");
 		}
 		poRepo.save(post);
-		return new Response<PostRespDTO>(null, null, "OK");
+		return new Response<PostRespDTO>(null, post, "OK");
 	}
 }

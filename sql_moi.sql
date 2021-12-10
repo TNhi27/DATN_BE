@@ -48,7 +48,9 @@ CREATE TABLE `admin` (
 
 LOCK TABLES `admin` WRITE;
 /*!40000 ALTER TABLE `admin` DISABLE KEYS */;
-INSERT INTO `admin` VALUES ('admin1','12345','0975837193','admin@gmail.com',_binary '','Lưu Tá Tá','Kien Giang','Nam','09458','2021-10-30',NULL),('admin2','12345','0975837193','admin@gmail.com',_binary '','Tá Lưu Lưu','Kien Giang','Nam','09458','2021-10-30',NULL),('admin3','12345','0975837193','admin@gmail.com',_binary '','Tá Lưu Tá','Kien Giang','Nam','09458','2021-10-30',NULL);
+INSERT INTO `admin` VALUES ('admin1','12345','0975837193','admin@gmail.com',_binary '','Định Thiên','Kien Giang','Nam','09458','2021-10-30',NULL),
+						   ('admin2','12345','0975837193','admin@gmail.com',_binary '','Tá Lưu Lưu','Kien Giang','Nam','09458','2021-10-30',NULL),
+                           ('admin3','12345','0975837193','admin@gmail.com',_binary '','Lạc Gia','Kien Giang','Nam','09458','2021-10-30',NULL);
 /*!40000 ALTER TABLE `admin` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -172,7 +174,10 @@ CREATE TABLE `ctv` (
 
 LOCK TABLES `ctv` WRITE;
 /*!40000 ALTER TABLE `ctv` DISABLE KEYS */;
-INSERT INTO `ctv` VALUES ('cr7dy','0707','095768374','cr7dy@gmail.com',_binary '','Bảy Việt Vị','Kiên Giang','Nam',NULL,'2021-10-30','https://images.pexels.com/photos/9813701/pexels-photo-9813701.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',10939000),('jack97','1010','095768374','jack97@gmail.com',_binary '','Chịnh Chần Hương Tứng','Bến Tre','Nam',NULL,'2021-10-30','https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqrH7n7B9jZpesW3nKZeNtzmkMdAFhG9Igeg&usqp=CAU',5000000),('leo10','1010','095768374','leo10@gmail.com',_binary '','Lưu Mét Sisss','Kiên Giangggg','Nam',NULL,'2021-10-30','http://res.cloudinary.com/duan2021/image/upload/v1637996870/avatar/vwbogctj413kxrdh5xtq.jpg',33290),('lewan','1010','095768374','lewan@gmail.com',_binary '','Lê Quang Đô Ki','Kiên Giang','Nam',NULL,'2021-10-30','https://images.pexels.com/photos/5422753/pexels-photo-5422753.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',10939000);
+INSERT INTO `ctv` VALUES ('cr7dy','0707','0329711724','cr7dy@gmail.com',_binary '','Bảy Việt Vị','Kiên Giang','Nam',NULL,'2021-10-30','https://images.pexels.com/photos/9813701/pexels-photo-9813701.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',10939000),
+						 ('jack97','1010','0329711724','jack97@gmail.com',_binary '','Chịnh Chần Hương Tứng','Bến Tre','Nam',NULL,'2021-10-30','https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqrH7n7B9jZpesW3nKZeNtzmkMdAFhG9Igeg&usqp=CAU',5000000),
+                         ('leo10','1010','0329711724','leo10@gmail.com',_binary '','Lưu Mét Sisss','Kiên Giangggg','Nam',NULL,'2021-10-30','http://res.cloudinary.com/duan2021/image/upload/v1637996870/avatar/vwbogctj413kxrdh5xtq.jpg',33290),
+                         ('lewan','1010','0329711724','lewan@gmail.com',_binary '','Lê Quang Đô Ki','Kiên Giang','Nam',NULL,'2021-10-30','https://images.pexels.com/photos/5422753/pexels-photo-5422753.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',10939000);
 /*!40000 ALTER TABLE `ctv` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -325,10 +330,10 @@ CREATE TABLE `ncc` (
 
 LOCK TABLES `ncc` WRITE;
 /*!40000 ALTER TABLE `ncc` DISABLE KEYS */;
-INSERT INTO `ncc` VALUES ('aomacanada','1234','0329711724','info@gmail.com',_binary '','Lưu  Tá','Kiên Giang','Nam','452','2021-10-30',2000,'BANGIARE','https://images.pexels.com/photos/9831840/pexels-photo-9831840.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500','Bán vì đam mê','HCM',NULL),
+INSERT INTO `ncc` VALUES ('aomacanada','1234','0329711724','info@gmail.com',_binary '','Định Trần','Kiên Giang','Nam','452','2021-10-30',2000,'BANGIARE','https://images.pexels.com/photos/9831840/pexels-photo-9831840.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500','Bán vì đam mê','HCM',NULL),
 						 ('congvinh','1234','0329711724','info@gmail.com',_binary '','Kông Zing','TP.HCM','Nam','452','2021-10-30',2112,'DINH LŨ','https://images.pexels.com/photos/9831840/pexels-photo-9831840.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500','Bán vì đam mê','HCM','83994'),
                          ('ncc1','1234','0329711724','info@gmail.com',_binary '',' Trường Tá','Kiên Giang','Nam','452','2021-10-30',2000,'ODAYRE','https://images.pexels.com/photos/9831840/pexels-photo-9831840.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500','Bán vì đam mê','HCM',NULL),
-                         ('ncc4','1234','0329711724','info@gmail.com',_binary '','Lưu Trường Tá','Kiên Giang','Nam','452','2021-10-30',2000,'BANNHA','https://images.pexels.com/photos/9831840/pexels-photo-9831840.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500','Bán vì đam mê','CAN THO',NULL),
+                         ('ncc4','1234','0329711724','info@gmail.com',_binary '','Khoa Nguyễn','Kiên Giang','Nam','452','2021-10-30',2000,'BANNHA','https://images.pexels.com/photos/9831840/pexels-photo-9831840.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500','Bán vì đam mê','CAN THO',NULL),
                          ('thuytien','1234','0329711724','info@gmail.com',_binary '','Thỉ Tiêng','TP.HCM','Nam','452','2021-10-30',2000,'TIÊN LŨ','https://images.pexels.com/photos/9831840/pexels-photo-9831840.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500','Bán vì đam mê','CAN THO',NULL);
 /*!40000 ALTER TABLE `ncc` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -491,9 +496,9 @@ INSERT INTO `products` VALUES ('spa','Máy dập','',2,'2021-11-25','',2,'Doi','
                               ('combo6','Combo vintage 01','Combo. Chất: KAKI. Size: M L',350000,'2021-01-01','Combo',69,'bo',NULL,NULL,NULL,NULL,'QuangChau','TTN','congvinh',_binary '\0',8),
                               ('combo7','Combo vintage 01','Combo. Chất: KAKI. Size: M L',350000,'2021-01-01','Combo',69,'bo',NULL,NULL,NULL,NULL,'QuangChau','TTN','congvinh',_binary '\0',8),
                               ('combo8','Combo vintage 01','Combo. Chất: KAKI. Size: M L',350000,'2021-01-01','Combo',69,'bo',NULL,NULL,NULL,NULL,'QuangChau','TTN','congvinh',_binary '\0',8),
-                              ('d918ada4-fc0a-498f-b2a9-dba280c6dfae','demo','',2,'2021-11-25','ada',2,'Doi','','','','','Việt Nam','GIAY1','thuytien',_binary '\0',13),
-                              ('e252e2df-d98f-4f4e-8930-5f2440b95b68','san pham moi ne','',1209000,'2021-11-25','ao thun',3,'Doi',NULL,'','','','Việt Nam','THN3','thuytien',_binary '',11),
-                              ('f1c7bcd0-dc9f-4879-9f62-b829e2d546cb','Máy bơm nước','<h2>chi tiet san pham</h2><p><i>san pham tot</i></p>',2,'2021-11-25','giay',5,'Doi','','','','','Hàn Quốc','GIAY1','thuytien',_binary '\0',18),
+                              ('nqq1','demo','',2,'2021-11-25','ada',2,'Doi','','','','','Việt Nam','GIAY1','thuytien',_binary '\0',13),
+                              ('nqq2','san pham moi ne','',1209000,'2021-11-25','ao thun',3,'Doi',NULL,'','','','Việt Nam','THN3','thuytien',_binary '',11),
+                              ('nqq3','Máy bơm nước','<h2>chi tiet san pham</h2><p><i>san pham tot</i></p>',2,'2021-11-25','giay',5,'Doi','','','','','Hàn Quốc','GIAY1','thuytien',_binary '\0',18),
                               ('qq','Quần camo 2hand','Quần short camo. Chất: KAKI. Size: M L',150000,'2021-01-01','quan ngan',69,'cai',NULL,NULL,NULL,NULL,'QuangChau','TTN','congvinh',_binary '',8),
                               ('qq1','Quần camo 2hand','Quần short camo. Chất: KAKI. Size: M L',150000,'2021-01-01','quan ngan',69,'cai',NULL,NULL,NULL,NULL,'QuangChau','TTN','congvinh',_binary '\0',8),
                               ('qq2','Quần camo 2hand','Quần short camo. Chất: KAKI. Size: M L',150000,'2021-01-01','quan ngan',69,'cai',NULL,NULL,NULL,NULL,'QuangChau','TTN','congvinh',_binary '\0',8),
@@ -539,7 +544,11 @@ CREATE TABLE `properties` (
 
 LOCK TABLES `properties` WRITE;
 /*!40000 ALTER TABLE `properties` DISABLE KEYS */;
-INSERT INTO `properties` VALUES (11,'Màu sắc','đỏ','418a4bad-bcc7-4f07-955a-f1af823c56c1'),(12,'ulala','ulatr','72d9f565-6124-4652-816d-4aa050660102'),(13,'1','1','e252e2df-d98f-4f4e-8930-5f2440b95b68'),(42,'ualtr','adad','SP134'),(43,'jaj','ada','SP134');
+INSERT INTO `properties` VALUES (1,'Màu sắc','đỏ','sp4'),
+								(2,'Màu sắc','đen','S3333'),
+                                (3,'Màu sắc','xám','nqq3'),
+                                (4,'Màu','xám tro','SP134'),
+                                (5,'Size','XL','SP134');
 /*!40000 ALTER TABLE `properties` ENABLE KEYS */;
 UNLOCK TABLES;
 

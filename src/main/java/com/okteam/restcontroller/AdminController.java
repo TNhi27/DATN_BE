@@ -1,5 +1,7 @@
 package com.okteam.restcontroller;
 
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -117,4 +119,30 @@ public class AdminController {
 		return new Response<AdminResponseDto>(null, null, "OK");
 	}
 	
+	@GetMapping("/getone")
+	public Response<AdminResponseDto> getOne(@RequestParam("username") String username){
+		if(!adRepo.existsById(username)) {
+			return new Response<AdminResponseDto>(null, null, "Tài khoản quản trị viên không chính xác!");
+		}
+		AdminResponseDto ad = new AdminResponseDto().createByEntity(adRepo.findById(username).get());
+		return new Response<AdminResponseDto>(dtoUtils.mapAdminToDto(adRepo.findAll(Sort.by(Sort.Direction.DESC, "createdate"))), ad, "OK");
+	}
+	
+	@PutMapping("/update-all")
+	public Response<AdminResponseDto> update_all(@RequestBody AdminDto ad){
+		String message = "OK";
+		if(!adRepo.existsById(ad.getUsername())) {
+			message = "Tài khoản quản trị viên không chính xác!";
+		} else {
+			Admin a = adRepo.findById(ad.getUsername()).get();
+			String password = a.getPassword();
+			Date date = a.getCreatedate();
+			a = a.dtoReturnEntity(ad);
+			a.setPassword(password);
+			a.setCreatedate(date);
+			adRepo.save(a);
+		}
+		return new Response<AdminResponseDto>(dtoUtils.mapAdminToDto(adRepo.findAll(Sort.by(Sort.Direction.DESC, "createdate"))),
+				new AdminResponseDto().createByEntity(adRepo.findById(ad.getUsername()).get()), message);
+	}
 }
