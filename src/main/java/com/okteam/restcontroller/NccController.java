@@ -3,6 +3,7 @@ package com.okteam.restcontroller;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -237,7 +238,33 @@ public class NccController {
     	nccRepository.save(ncc);
     	return new Response<NccResponseDTO>(dtoUtils.mapNccToDto(nccRepository.findAll(Sort.by(Direction.DESC,"createdate"))), null, "OK");
     }
+    
+    @GetMapping("/getone")
+    public Response<NccResponseDTO> getOne(@RequestParam("username") String username){
+    	if(!nccRepository.existsById(username)) {
+    		return new Response<NccResponseDTO>(null, null, "Tài khoản nhà cung cấp không chính xác!");
+    	}
+    	NccResponseDTO ncc = new NccResponseDTO().createByEntity(nccRepository.findById(username).get());
+    	return new Response<NccResponseDTO>(dtoUtils.mapNccToDto(nccRepository.findAll(Sort.by(Direction.DESC,"createdate"))), ncc, "OK");
+    }
 
+    @PutMapping("/update-all")
+    public Response<NccResponseDTO> update_all(@RequestBody NccDto ncc){
+    	String message = "OK";
+    	if(!nccRepository.existsById(ncc.getUsername())) {
+    		message = "Tài khoản nhà cung cấp không chính xác!";
+    	} else {
+    		Ncc n = nccRepository.findById(ncc.getUsername()).get();
+    		String password = n.getPassword();
+    		Date date = n.getCreatedate();
+    		n = n.dtoReturnEntity(ncc);
+    		n.setPassword(password);
+    		n.setCreatedate(date);
+    		nccRepository.save(n);
+    	}
+    	return new Response<NccResponseDTO>(dtoUtils.mapNccToDto(nccRepository.findAll(Sort.by(Direction.DESC,"createdate"))), null, message);
+    }
+    
     @PostMapping("/info")
     public ResponseEntity<Ncc> getInfo() {
         var username = SecurityContextHolder.getContext().getAuthentication().getName();
