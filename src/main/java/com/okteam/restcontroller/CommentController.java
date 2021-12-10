@@ -9,6 +9,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -100,6 +101,23 @@ public class CommentController {
 			}
 		}
 		return new Response<CommentsRespDto>(dtoUtils.mapCommentsToDto(list), null, "OK");
+	}
+	
+	@DeleteMapping("/delete/{idcmt}")
+	public Response<CommentsRespDto> deleteCmts(@PathVariable("idcmt") Integer idcmt, @RequestParam(value = "idpro", required = false) String idpro){
+		String message = "OK";
+		List<Comments> list = new ArrayList<>();
+		if(!CmtRep.existsById(idcmt)) {
+			message = "Không tìm thấy bình luận!";
+		} else {
+			CmtRep.deleteById(idcmt);
+		}
+		if(idpro == null) {
+			list = CmtRep.findAll(Sort.by(Sort.Direction.DESC, "idcmt"));
+		} else {
+			list = CmtRep.getCommentByIdpro(idpro);
+		}
+		return new Response<CommentsRespDto>(dtoUtils.mapCommentsToDto(list), null, message);
 	}
 	
 }
