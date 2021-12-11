@@ -1,5 +1,6 @@
 package com.okteam.restcontroller;
 
+import java.util.Arrays;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -133,6 +134,10 @@ public class CtvController {
 			return new Response<CtvResponseDTO>(null, null, "Tài khoản cộng tác viên không chính xác!");
 		}
 		Ctv ctv = repo.findById(username).get();
+		Integer arr[] = { 1, 6 };
+		if(Arrays.asList(arr).contains(thaotac) && value.isEmpty()) {
+			return new Response<CtvResponseDTO>(null, ctv, "Giá trị không hợp lệ!");
+		}
 		switch (thaotac) {
 		case 0:
 			ctv.setPassword(value);

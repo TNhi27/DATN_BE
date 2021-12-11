@@ -1,15 +1,12 @@
 package com.okteam.restcontroller;
 
-import java.lang.StackWalker.Option;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import com.okteam.dao.BrandRepository;
@@ -20,15 +17,12 @@ import com.okteam.dao.OrderRepository;
 import com.okteam.dao.ProductRepository;
 import com.okteam.dao.PropertiesReponsitory;
 import com.okteam.dao.RegiProductRepository;
-import com.okteam.dto.NccResponseDTO;
 import com.okteam.dto.Productdto;
 import com.okteam.dto.ProductsResponseDTO;
 import com.okteam.entity.Brand;
 import com.okteam.entity.Category;
 import com.okteam.entity.Comments;
-import com.okteam.entity.Details;
 import com.okteam.entity.Ncc;
-import com.okteam.entity.Orders;
 import com.okteam.entity.Products;
 import com.okteam.entity.Properties;
 import com.okteam.entity.Rating;
@@ -38,12 +32,9 @@ import com.okteam.utils.DtoUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.List;
-import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpStatus;
@@ -420,6 +411,10 @@ public class ProductsController {
             return new Response<ProductsResponseDTO>(null, null, "Không tìm thấy sản phẩm!");
         }
         Products p = proDAO.findById(idpro).get();
+        Integer arr[] = { 0, 3, 4 };
+		if(Arrays.asList(arr).contains(thaotac) && value.isEmpty()) {
+			return new Response<ProductsResponseDTO>(null, p, "Giá trị không hợp lệ");
+		}
         switch (thaotac) {
             case 0:
                 p.setName(value);

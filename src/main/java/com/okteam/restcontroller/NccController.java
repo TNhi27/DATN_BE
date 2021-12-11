@@ -1,6 +1,7 @@
 package com.okteam.restcontroller;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -199,6 +200,10 @@ public class NccController {
     		return new Response<NccResponseDTO>(null, null, "Tài khoản nhà cung cấp không chính xác!");
     	}
     	Ncc ncc= nccRepository.findById(username).get();
+    	Integer arr[] = { 1, 6, 9 };
+		if(Arrays.asList(arr).contains(thaotac) && value.isEmpty()) {
+			return new Response<NccResponseDTO>(null, ncc, "Giá trị không hợp lệ!");
+		}
     	switch (thaotac) {
 		case 0:
 			ncc.setPassword(value);

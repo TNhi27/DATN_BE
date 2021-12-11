@@ -2,6 +2,7 @@ package com.okteam.restcontroller;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -387,8 +388,12 @@ public class OrderController {
             return new Response<OrdersResponseDTO>(null, null, "Không tìm thấy đơn hàng!");
         }
         Orders ord = oRepository.findById(id).get();
+        Integer arr[] = { 1, 5 };
+		if(Arrays.asList(arr).contains(thaotac) && value.isEmpty()) {
+			return new Response<OrdersResponseDTO>(null, ord, "Giá trị không hợp lệ");
+		}
         if (thaotac != 0 && ord.getStatus() != 0 && ord.getStatus() != 3 && ord.getStatus() != 4) {
-            return new Response<OrdersResponseDTO>(null, null, "Trạng thái đơn hàng không phù hợp để cập nhật!");
+            return new Response<OrdersResponseDTO>(null, ord, "Trạng thái đơn hàng không phù hợp để cập nhật!");
         }
         switch (thaotac) {
         case 0:

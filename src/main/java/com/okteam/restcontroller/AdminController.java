@@ -1,5 +1,6 @@
 package com.okteam.restcontroller;
 
+import java.util.Arrays;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,6 +92,10 @@ public class AdminController {
 			return new Response<AdminResponseDto>(null, null, "Tài khoản quản trị viên không chính xác!");
 		}
 		Admin ad = adRepo.findById(username).get();
+		Integer arr[] = { 1, 6 };
+		if(Arrays.asList(arr).contains(thaotac) && value.isEmpty()) {
+			return new Response<AdminResponseDto>(null, ad, "Giá trị không hợp lệ!");
+		}
 		switch (thaotac) {
 		case 0:
 			ad.setPassword(value);
