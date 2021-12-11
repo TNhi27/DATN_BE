@@ -481,11 +481,11 @@ CREATE TABLE `products` (
 
 LOCK TABLES `products` WRITE;
 /*!40000 ALTER TABLE `products` DISABLE KEYS */;
-INSERT INTO `products` VALUES ('spa','Máy dập','',2,'2021-11-25','',2,'Doi','','','','','Quảng Châu-TQ','TTN4','thuytien',_binary '\0',9),
+INSERT INTO `products` VALUES ('spa','Máy ép trái cây','',2,'2021-11-25','noitro',2,'Doi','','','','','Quảng Châu-TQ','TTN4','thuytien',_binary '\0',9),
 							  ('sp2','Laptop gaming','<p><i><strong>doi giay ghi chu*</strong></i></p>',2,'2021-11-25','doi giay',2,'Doi',NULL,NULL,NULL,'','Quảng Châu-TQ','GIAY2','thuytien',_binary '\0',13),
                               ('sp3','Khô bò','<p><i><strong>doi giay ghi chu*</strong></i></p>',2,'2021-11-25','doi giay',3,'Doi',NULL,NULL,NULL,'','Quảng Châu-TQ','GIAY1','thuytien',_binary '\0',13),
-                              ('sp4','Nồi cơm điện','',3,'2021-11-25','adad',1,'Cái','','','','','Việt Nam','THN5','thuytien',_binary '\0',12),
-                              ('sp5','Quần tây','',1,'2021-11-25','',3,'Doi','','','','','Hàn Quốc','GIAY1','thuytien',_binary '\0',13),
+                              ('sp4','Nồi cơm điện','',3,'2021-11-25','noitro',1,'Cái','','','','','Việt Nam','THN5','thuytien',_binary '\0',12),
+                              ('sp5','Quần tây','',1,'2021-11-25','thoitrang',3,'Doi','','','','','Hàn Quốc','GIAY1','thuytien',_binary '\0',13),
                               ('sp6','Kem đánh răng colgate','<p><i><strong>doi giay ghi chu*</strong></i></p>',2,'2021-11-25','doi giay',2,'Doi',NULL,NULL,NULL,'','Quảng Châu-TQ','GIAY2','thuytien',_binary '\0',13),
                               ('sp7','Bột giặc Aba','',2,'2021-11-25','doi giay',2,'Doi','','','','','Hàn Quốc','TTN2','thuytien',_binary '\0',8),
                               ('combo1','Combo vintage 01','Combo. Chất: KAKI. Size: M L',350000,'2021-01-01','Combo',69,'bo',NULL,NULL,NULL,NULL,'QuangChau','TTN','congvinh',_binary '\0',8),
