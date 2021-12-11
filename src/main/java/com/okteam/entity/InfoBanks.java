@@ -28,7 +28,7 @@ public class InfoBanks {
     String name;
     Boolean isctv;
 
-     @JsonBackReference
-     @OneToMany(mappedBy = "tran_bank")
-     List<Transaction> transaction;
+//     @JsonBackReference
+//     @OneToMany(mappedBy = "tran_bank")
+//     List<Transaction> transaction;
 }

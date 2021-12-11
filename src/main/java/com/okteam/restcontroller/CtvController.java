@@ -1,5 +1,8 @@
 package com.okteam.restcontroller;
 
+import java.util.Arrays;
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -131,6 +134,10 @@ public class CtvController {
 			return new Response<CtvResponseDTO>(null, null, "Tài khoản cộng tác viên không chính xác!");
 		}
 		Ctv ctv = repo.findById(username).get();
+		Integer arr[] = { 1, 6 };
+		if(Arrays.asList(arr).contains(thaotac) && value.isEmpty()) {
+			return new Response<CtvResponseDTO>(null, ctv, "Giá trị không hợp lệ!");
+		}
 		switch (thaotac) {
 		case 0:
 			ctv.setPassword(value);
@@ -158,6 +165,32 @@ public class CtvController {
 		}
 		repo.save(ctv);
 		return new Response<CtvResponseDTO>(null, null, "OK");
+	}
+	
+	@GetMapping("/getone")
+	public Response<CtvResponseDTO> getOne(@RequestParam("username") String username){
+		if(!repo.existsById(username)) {
+			return new Response<CtvResponseDTO>(null, null, "Tài khoản cộng tác viên không chính xác!");
+		}
+		CtvResponseDTO ctv = new CtvResponseDTO().createByEntity(repo.findById(username).get());
+		return new Response<CtvResponseDTO>(dtoUtils.mapCtvToDto(repo.findAll(Sort.by(Sort.Direction.DESC, "createdate"))), ctv, "OK");
+	}
+	
+	@PutMapping("/update-all")
+	public Response<CtvResponseDTO> update_all(@RequestBody CtvReqDTO ctv){
+		String message = "OK";
+		if(!repo.existsById(ctv.getUsername())) {
+			message = "Tài khoản cộng tác viên không chính xác!";
+		} else {
+			Ctv c = repo.findById(ctv.getUsername()).get();
+			String password = c.getPassword();
+			Date date = c.getCreatedate();
+			c = c.dtoReturnEntity(ctv);
+			c.setPassword(password);
+			c.setCreatedate(date);
+			repo.save(c);
+		}
+		return new Response<CtvResponseDTO>(dtoUtils.mapCtvToDto(repo.findAll(Sort.by(Sort.Direction.DESC, "createdate"))), null, message);
 	}
 	
 }

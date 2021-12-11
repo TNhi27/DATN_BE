@@ -2,6 +2,7 @@ package com.okteam.restcontroller;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -347,16 +348,20 @@ public class OrderController {
         if (!oRepository.existsById(ord.getIdorder())) {
             message = "Không tìm thấy đơn hàng!";
         } else {
-            Orders order = oRepository.findById(ord.getIdorder()).get();
-            if (order.getStatus() == 0 || order.getStatus() == 3 || order.getStatus() == 4) {
+            Orders od = oRepository.findById(ord.getIdorder()).get();
+            if (od.getStatus() == 0 || od.getStatus() == 3 || od.getStatus() == 4) {
+            	Orders order = new Orders().dtoReturnEntity(ord);
                 Ncc ncc = nRepository.findById(ord.getNcc()).get();
                 Ctv ctv = cRepository.findById(ord.getCtv()).get();
                 detaildao.deleteAll(detaildao.findByOrdersEquals(order));
-                order.setTinh(ord.getTinh());
-                order.setHuyen(ord.getHuyen());
-                order.setXa(ord.getXa());
                 order.setCtv(ctv);
                 order.setNcc(ncc);
+                order.setDateorder(od.getDateorder());
+                if(ord.getStatus() ==5) {
+                	order.setDatefinish(new Date());
+                } else {
+                	order.setDatefinish(null);
+                }
                 List<Details> details = ord.getDetails().stream().map(o -> {
                     Details dt = new Details();
                     dt.setQty(o.getSl());
@@ -383,8 +388,12 @@ public class OrderController {
             return new Response<OrdersResponseDTO>(null, null, "Không tìm thấy đơn hàng!");
         }
         Orders ord = oRepository.findById(id).get();
+        Integer arr[] = { 1, 5 };
+		if(Arrays.asList(arr).contains(thaotac) && value.isEmpty()) {
+			return new Response<OrdersResponseDTO>(null, ord, "Giá trị không hợp lệ");
+		}
         if (thaotac != 0 && ord.getStatus() != 0 && ord.getStatus() != 3 && ord.getStatus() != 4) {
-            return new Response<OrdersResponseDTO>(null, null, "Trạng thái đơn hàng không phù hợp để cập nhật!");
+            return new Response<OrdersResponseDTO>(null, ord, "Trạng thái đơn hàng không phù hợp để cập nhật!");
         }
         switch (thaotac) {
         case 0:
@@ -394,6 +403,8 @@ public class OrderController {
             if (status == 5) {
                 SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
                 datefinish = formatter.format(date);
+            } else {
+            	date = null;
             }
             ord.setDatefinish(date);
             break;
@@ -416,4 +427,13 @@ public class OrderController {
         return new Response<OrdersResponseDTO>(null, datefinish, "OK");
     }
 
+    @GetMapping("/getone")
+    public Response<OrdersResponseDTO> getOne(@RequestParam("idorder") Integer idorder){
+    	if(!oRepository.existsById(idorder)) {
+    		return new Response<OrdersResponseDTO>(null, null, "Không tìm thấy đơn hàng");
+    	} 
+    	Orders ord = oRepository.findById(idorder).get();
+    	return new Response<OrdersResponseDTO>(dtoUtils.mapOrdersToDto(oRepository.findAll(Sort.by(Sort.Direction.DESC, "dateorder"))), new OrdersResponseDTO().createByEntity(ord), "OK");
+    }
+    
 }

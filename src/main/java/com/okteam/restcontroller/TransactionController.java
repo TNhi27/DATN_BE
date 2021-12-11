@@ -88,7 +88,7 @@ public class TransactionController {
     		} else if(!registerService.checkUsername(tran.getUsername()) || registerService.isAdmin(tran.getUsername())) {
     			message = "Tài khoản không hợp lệ!";
     		} else if(tran.getType() == 1 && tran.getValue() > returnMoney(tran.getUsername())) {
-    			message = "Số tiền rút lơn hơn số dư tài khoản!";
+    			message = "Số tiền rút lớn hơn số dư tài khoản!";
     		} else {
     			tran.setDone(1);
     			handleMoney(tran.getUsername(), tran.getValue(), tran.getType());
