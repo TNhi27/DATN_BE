@@ -22,7 +22,7 @@ import lombok.Data;
 public class Comments {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	int idcmt;
+	Integer idcmt;
 	int star;
 	String content;
 	Integer idorder;

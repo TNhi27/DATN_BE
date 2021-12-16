@@ -52,9 +52,9 @@ public class PostController {
 	}
 
 	@GetMapping("/search")
-	public ResponseEntity<List<Post>> search(@RequestParam Optional<String> title) {
-		Page<Post> rs = poRepo.selectByTitle("%" + title.orElse("") + "%", PageRequest.of(0, 20));
-		return new ResponseEntity<List<Post>>(rs.getContent(), HttpStatus.OK);
+	public ResponseEntity<Page<Post>> search(@RequestParam Optional<Integer> page,@RequestParam Optional<Integer> size ,@RequestParam Optional<String> title) {
+		Page<Post> rs = poRepo.selectByTitle("%" + title.orElse("") + "%", PageRequest.of(page.orElse(0),size.orElse(20)));
+		return new ResponseEntity<Page<Post>>(rs, HttpStatus.OK);
 	}
 
 	@GetMapping("/list")

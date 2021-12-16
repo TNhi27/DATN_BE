@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
+import com.okteam.entity.Comments;
 import com.okteam.entity.Orders;
 import com.okteam.entity.ProductGroup;
 import com.okteam.entity.ReportMonth;
@@ -77,5 +78,10 @@ public interface OrderRepository extends JpaRepository<Orders, Integer> {
     		+ " GROUP BY year(o.dateorder)"
 			+ " ORDER BY year(o.dateorder) DESC")
     public List<Integer> getYears();
+
+
+   
+        
+    
 
 }

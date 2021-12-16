@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.okteam.dao.CommentRepository;
 import com.okteam.dao.CtvRepository;
 import com.okteam.dao.DetailsRepository;
 import com.okteam.dao.FollowSellRepository;
@@ -64,6 +65,8 @@ public class OrderController {
     DetailsRepository detaildao;
     @Autowired
     FollowSellRepository fdao;
+    @Autowired
+    CommentRepository commentRepository;
     @Autowired
     DtoUtils dtoUtils;
 
@@ -166,15 +169,17 @@ public class OrderController {
 
         String idncc = SecurityContextHolder.getContext().getAuthentication().getName();
         Orders o = oRepository.findById(id.get()).orElseThrow(() -> new NotFoundSomething("Khong tim thay don hang"));
+
+        Ncc ncc = nRepository.findById(idncc, true);
+
+        if (total_fee > ncc.getMoney()) {
+            throw new NotEnoughMoney();
+        }
         o.setOrder_code(code);
         o.setStatus(2);
         o.setTotal_fee(total_fee);
         oRepository.save(o);
 
-        Ncc ncc = nRepository.findById(idncc, true);
-        if (total_fee > ncc.getMoney()) {
-            throw new NotEnoughMoney();
-        }
         ncc.setMoney(ncc.getMoney() - total_fee);
         nRepository.save(ncc);
 
@@ -199,6 +204,10 @@ public class OrderController {
             cRepository.save(ctv);
             for (var d : o.getDetails()) {
                 detaildao.delete(d);
+            }
+           
+            for (var cmt : commentRepository.getCommentOfOrder(o.getIdorder())) {
+                commentRepository.delete(cmt);
             }
             oRepository.deleteById(id);
         } else {
@@ -266,6 +275,19 @@ public class OrderController {
         if (status != 5) {
 
             o.setStatus(status);
+            // giao thanh cong
+            if (o.getStatus() == 1) {
+                o.getDetails().stream().map((e) -> {
+                    Products p = e.getProducts();
+                    Integer sl = p.getQty()-e.getQty();
+                    if (sl<0) {
+                        throw new NotFoundSomething("Số lượng sản phẩm trong kho không đủ để giao: "+p.getIdpro());
+                    }
+                    p.setQty(sl);
+                    pRepository.save(p);
+                    return -1;
+                });
+            }
         }
 
         return new ResponseEntity<Orders>(oRepository.save(o), HttpStatus.OK);
@@ -350,17 +372,17 @@ public class OrderController {
         } else {
             Orders od = oRepository.findById(ord.getIdorder()).get();
             if (od.getStatus() == 0 || od.getStatus() == 3 || od.getStatus() == 4) {
-            	Orders order = new Orders().dtoReturnEntity(ord);
+                Orders order = new Orders().dtoReturnEntity(ord);
                 Ncc ncc = nRepository.findById(ord.getNcc()).get();
                 Ctv ctv = cRepository.findById(ord.getCtv()).get();
                 detaildao.deleteAll(detaildao.findByOrdersEquals(order));
                 order.setCtv(ctv);
                 order.setNcc(ncc);
                 order.setDateorder(od.getDateorder());
-                if(ord.getStatus() ==5) {
-                	order.setDatefinish(new Date());
+                if (ord.getStatus() == 5) {
+                    order.setDatefinish(new Date());
                 } else {
-                	order.setDatefinish(null);
+                    order.setDatefinish(null);
                 }
                 List<Details> details = ord.getDetails().stream().map(o -> {
                     Details dt = new Details();
@@ -389,51 +411,53 @@ public class OrderController {
         }
         Orders ord = oRepository.findById(id).get();
         Integer arr[] = { 1, 5 };
-		if(Arrays.asList(arr).contains(thaotac) && value.isEmpty()) {
-			return new Response<OrdersResponseDTO>(null, ord, "Giá trị không hợp lệ");
-		}
+        if (Arrays.asList(arr).contains(thaotac) && value.isEmpty()) {
+            return new Response<OrdersResponseDTO>(null, ord, "Giá trị không hợp lệ");
+        }
         if (thaotac != 0 && ord.getStatus() != 0 && ord.getStatus() != 3 && ord.getStatus() != 4) {
             return new Response<OrdersResponseDTO>(null, ord, "Trạng thái đơn hàng không phù hợp để cập nhật!");
         }
         switch (thaotac) {
-        case 0:
-            int status = Integer.parseInt(value);
-            ord.setStatus(status);
-            Date date = new Date();
-            if (status == 5) {
-                SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
-                datefinish = formatter.format(date);
-            } else {
-            	date = null;
-            }
-            ord.setDatefinish(date);
-            break;
-        case 1:
-            ord.setCustomer(value);
-            break;
-        case 2:
-            ord.setSdtcustomer(value);
-            break;
-        case 5:
-            ord.setAddress(value);
-            break;
-        case 6:
-            ord.setOrder_code(value);
-            break;
-        default:
-            return new Response<OrdersResponseDTO>(null, null, "Thao tác không hợp lệ!");
+            case 0:
+                int status = Integer.parseInt(value);
+                ord.setStatus(status);
+                Date date = new Date();
+                if (status == 5) {
+                    SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
+                    datefinish = formatter.format(date);
+                } else {
+                    date = null;
+                }
+                ord.setDatefinish(date);
+                break;
+            case 1:
+                ord.setCustomer(value);
+                break;
+            case 2:
+                ord.setSdtcustomer(value);
+                break;
+            case 5:
+                ord.setAddress(value);
+                break;
+            case 6:
+                ord.setOrder_code(value);
+                break;
+            default:
+                return new Response<OrdersResponseDTO>(null, null, "Thao tác không hợp lệ!");
         }
         oRepository.save(ord);
         return new Response<OrdersResponseDTO>(null, datefinish, "OK");
     }
 
     @GetMapping("/getone")
-    public Response<OrdersResponseDTO> getOne(@RequestParam("idorder") Integer idorder){
-    	if(!oRepository.existsById(idorder)) {
-    		return new Response<OrdersResponseDTO>(null, null, "Không tìm thấy đơn hàng");
-    	} 
-    	Orders ord = oRepository.findById(idorder).get();
-    	return new Response<OrdersResponseDTO>(dtoUtils.mapOrdersToDto(oRepository.findAll(Sort.by(Sort.Direction.DESC, "dateorder"))), new OrdersResponseDTO().createByEntity(ord), "OK");
+    public Response<OrdersResponseDTO> getOne(@RequestParam("idorder") Integer idorder) {
+        if (!oRepository.existsById(idorder)) {
+            return new Response<OrdersResponseDTO>(null, null, "Không tìm thấy đơn hàng");
+        }
+        Orders ord = oRepository.findById(idorder).get();
+        return new Response<OrdersResponseDTO>(
+                dtoUtils.mapOrdersToDto(oRepository.findAll(Sort.by(Sort.Direction.DESC, "dateorder"))),
+                new OrdersResponseDTO().createByEntity(ord), "OK");
     }
-    
+
 }

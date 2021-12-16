@@ -185,7 +185,7 @@ public class ProductsController {
         // origin.orElse(root_origin),
         // city.orElse(root_city_ncc), 17, PageRequest.of(0, 10));
 
-        System.out.println(page.getContent().size());
+      
 
         return new ResponseEntity<Page<Products>>(page, HttpStatus.OK);
     }
@@ -251,10 +251,7 @@ public class ProductsController {
     @PutMapping("/{id}")
     public ResponseEntity<Products> updateProducts(@PathVariable("id") String id, @RequestBody Productdto productdto) {
         Products pro = proDAO.findById(id).orElseThrow(() -> new NotFoundSomething(":("));
-        if (proDAO.existsById(productdto.getIdpro())) {
-            System.out.print("Mã đã tồn tại");
-            return new ResponseEntity<Products>(pro, HttpStatus.NOT_FOUND);
-        } else if (!cateDAO.existsById(productdto.getIdcate())) {
+        if (!cateDAO.existsById(productdto.getIdcate())) {
             System.out.print("ID loại sản phẩm không tồn tại");
             return new ResponseEntity<Products>(pro, HttpStatus.NOT_FOUND);
         } else if (!brandRepository.existsById(productdto.getIdbrand())) {

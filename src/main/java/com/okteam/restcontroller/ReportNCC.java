@@ -36,7 +36,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import lombok.var;
+
 
 @RestController
 @CrossOrigin("*")
@@ -72,24 +72,27 @@ public class ReportNCC {
 
         List<ReportbyDay> byStatus = orderRepository.getOrderWithStatusNcc(d, m, y, ncc);
 
-        for (int i = 0; i < byStatus.size(); i++) {
-            int id = Integer.parseInt(byStatus.get(i).getId().toString());
-            if (id == 0) {
-                report.setCount_order0(byStatus.get(i).getOrder());
-            }
-            if (id == 1) {
-                report.setCount_order1(byStatus.get(i).getOrder());
-            }
-            if (id == 2) {
-                report.setCount_order2(byStatus.get(i).getOrder());
-            }
-            if (id == 3) {
-                report.setCount_order3(byStatus.get(i).getOrder());
-            }
-            if (id == 4) {
-                report.setCount_order4(byStatus.get(i).getOrder());
+        if (byStatus.size()>0) {
+            for (int i = 0; i < byStatus.size(); i++) {
+                int id = Integer.parseInt(byStatus.get(i).getId().toString());
+                if (id == 0) {
+                    report.setCount_order0(byStatus.get(i).getOrder());
+                }
+                if (id == 1) {
+                    report.setCount_order1(byStatus.get(i).getOrder());
+                }
+                if (id == 2) {
+                    report.setCount_order2(byStatus.get(i).getOrder());
+                }
+                if (id == 3) {
+                    report.setCount_order3(byStatus.get(i).getOrder());
+                }
+                if (id == 4) {
+                    report.setCount_order4(byStatus.get(i).getOrder());
+                }
             }
         }
+        
 
         report.setCount_order_d(report.getCount_order0() + report.getCount_order1() + report.getCount_order2()
                 + report.getCount_order3() + report.getCount_order4());
@@ -108,9 +111,14 @@ public class ReportNCC {
                 }
             }
         });
+       
         List<Orders> listod = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
-            listod.add(or.get(i));
+        if (or.size()<3) {
+            listod=or;
+        }else{
+            for (int i = 0; i < 3; i++) {
+                listod.add(or.get(i));
+            }
         }
         report.setList_orders(listod);
         report.setList_report(listrp);
