@@ -16,6 +16,7 @@ public class OrdersRequest {
     String huyen;
     String tinh;
     String idncc;
+    String note;
 
     List<RegiProductsDTO> details;
 }

@@ -33,8 +33,5 @@ public class Transaction {
 	@Temporal(TemporalType.TIMESTAMP)
 	Date createdate;
 
-	@JsonManagedReference
-	@ManyToOne
-	@JoinColumn(name = "idbank")
-	InfoBanks tran_bank;
+	
 }

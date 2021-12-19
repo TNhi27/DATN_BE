@@ -130,8 +130,8 @@ public class ProductsController {
     }
 
     @GetMapping("/comments")
-    public ResponseEntity<Page<Comments>> getComments(@RequestParam String idpro) {
-        Page<Comments> list = commentRepository.getCommentsOfProduct(idpro, PageRequest.of(0, 10));
+    public ResponseEntity<Page<Comments>> getComments(@RequestParam String idpro,@RequestParam Optional<Integer> size) {
+        Page<Comments> list = commentRepository.getCommentsOfProduct(idpro, PageRequest.of(0, size.orElse(10)));
 
         return new ResponseEntity<Page<Comments>>(list, HttpStatus.OK);
     }

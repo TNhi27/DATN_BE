@@ -127,6 +127,7 @@ public class OrderController {
         order.setHuyen(orderdto.getHuyen());
         order.setXa(orderdto.getXa());
         order.setTinh(orderdto.getTinh());
+        order.setNote(orderdto.getNote());
         // lay ctv hien tai
         var username_ctv = SecurityContextHolder.getContext().getAuthentication().getName();
         Ctv ctv = cRepository.findById(username_ctv).get();
@@ -138,9 +139,14 @@ public class OrderController {
             cRepository.save(ctv);
         }
         order.setCtv(ctv);
-
-        order.setNcc(nRepository.findById(orderdto.getIdncc())
-                .orElseThrow(() -> new NotFoundSomething(":( Khong tim thay nha cung cap")));
+        try {
+            Ncc ncc = nRepository.findById(orderdto.getIdncc(),true);
+            order.setNcc(ncc);
+        } catch (Exception e) {
+           throw new NotFoundSomething(":( Khong tim thay nha cung cap");
+        }
+       
+              
 
         Orders rsOrder = oRepository.save(order);
 
@@ -217,7 +223,7 @@ public class OrderController {
     }
 
     @PostMapping("/cancelncc/{id}")
-    public ResponseEntity<Object> setStatusncc(@PathVariable("id") int id) {
+    public ResponseEntity<Object> setStatusncc(@PathVariable("id") int id,@RequestParam Optional<String> lydo ) {
         String ncc = SecurityContextHolder.getContext().getAuthentication().getName();
         Orders o = oRepository.findById(id).orElseThrow(() -> new NotFoundSomething("Đơn không tồn tại"));
 
@@ -225,6 +231,7 @@ public class OrderController {
 
         if (o.getStatus() == 0) {
             o.setStatus(4);
+            o.setLydo(lydo.orElse("Không xác định !"));
             ctv.setMoney(ctv.getMoney() + o.getTotal());
             cRepository.save(ctv);
         } else {

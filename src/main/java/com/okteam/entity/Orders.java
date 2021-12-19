@@ -45,6 +45,9 @@ public class Orders {
 	String huyen;
 	String xa;
 
+	String note;
+	String lydo;
+
 	@JsonManagedReference
 	@ManyToOne
 	@JoinColumn(name = "idctv")

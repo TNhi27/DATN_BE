@@ -19,6 +19,6 @@ public class Rating {
 	int gia;
 	String origin;
 	String image;
-	double rating;
+	double rating = 0;
 	
 }
