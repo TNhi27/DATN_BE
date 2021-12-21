@@ -23,7 +23,7 @@ import lombok.Data;
 public class Brand {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int id;
+    Integer id;
     String name;
 
     @JsonManagedReference

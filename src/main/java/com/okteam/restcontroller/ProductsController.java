@@ -87,6 +87,11 @@ public class ProductsController {
 
         return new ResponseEntity<Products>(pro, HttpStatus.OK);
     }
+    @GetMapping("/ppt")
+    public ResponseEntity<List<Properties>> getproperti(@RequestParam String idpro) {
+        List<Properties> list = propertiesReponsitory.findByIdpro(idpro);
+        return new ResponseEntity<List<Properties>>(list, HttpStatus.OK);
+    }
 
     // Lấy n sản phẩm mới nhứt
     @GetMapping("/new")
@@ -144,13 +149,13 @@ public class ProductsController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<Products>> newProducts(@RequestParam Optional<Integer> p,
+    public ResponseEntity<Page<Products>> getListProducts(@RequestParam Optional<Integer> p,
             @RequestParam Optional<Integer> size, @RequestParam Optional<String> category,
             @RequestParam Optional<Integer> min_price, @RequestParam Optional<Integer> max_price,
             @RequestParam Optional<List<String>> origin, @RequestParam Optional<List<String>> city,
             @RequestParam Optional<Integer> brand, @RequestParam Optional<String> sort,
             @RequestParam Optional<Boolean> des, @RequestParam Optional<String> q,
-            @RequestParam Optional<String> parent) {
+            @RequestParam Optional<String> parent, @RequestParam Optional<List<Integer>> brands) {
 
         Sort s;
         Page page;
@@ -162,6 +167,7 @@ public class ProductsController {
 
         List<String> root_origin = proDAO.getRootOrigin();
         List<String> root_city_ncc = proDAO.getRootCityNcc();
+        List<Integer> root_brands = brandRepository.findAll().stream().map((e)->e.getId()).collect(Collectors.toList());
         List<Category> children = cateDAO.findByParent(parent.orElse(""));
         if (children.size() > 0) {
             List<String> cate = children.stream().map((e) -> {
@@ -170,7 +176,7 @@ public class ProductsController {
 
             }).collect(Collectors.toList());
             page = proDAO.getProductsByParentCategory(cate, min_price.orElse(0), max_price.orElse(Integer.MAX_VALUE),
-                    origin.orElse(root_origin), city.orElse(root_city_ncc), "%" + q.orElse("") + "%",
+                    origin.orElse(root_origin), city.orElse(root_city_ncc), "%" + q.orElse("") + "%",brands.orElse(root_brands),
                     PageRequest.of(p.orElse(0), size.orElse(25), s));
             return new ResponseEntity<Page<Products>>(page, HttpStatus.OK);
 
@@ -178,7 +184,7 @@ public class ProductsController {
 
         page = proDAO.getProductsByCategory(category.orElse("%%"), min_price.orElse(0),
                 max_price.orElse(Integer.MAX_VALUE),
-                origin.orElse(root_origin), city.orElse(root_city_ncc), "%" + q.orElse("") + "%",
+                origin.orElse(root_origin), city.orElse(root_city_ncc), "%" + q.orElse("") + "%",brands.orElse(root_brands),
                 PageRequest.of(p.orElse(0), size.orElse(25), s));
 
         // page = proDAO.getProductsByCategoryHasBrand("PK1", 0, 10000000,
@@ -199,7 +205,12 @@ public class ProductsController {
     public ResponseEntity<List<String>> get_city_ncc() {
         return new ResponseEntity<List<String>>(proDAO.getRootCityNcc(), HttpStatus.OK);
     }
+    @GetMapping("/brands")
+    public ResponseEntity<Page<Brand>> get_brands(@RequestParam Integer size,@RequestParam Optional<String> idcate) {
+        Page<Brand> page = brandRepository.findByCategory(idcate.orElse("%%"), PageRequest.of(0, size));
 
+        return new ResponseEntity<Page<Brand>>(page, HttpStatus.OK);
+    }
     // post
     @PostMapping
     public ResponseEntity<Products> saveProducts(@RequestBody Productdto productdto) {

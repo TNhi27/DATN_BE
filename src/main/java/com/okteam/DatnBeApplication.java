@@ -12,4 +12,5 @@ public class DatnBeApplication {
 		SpringApplication.run(DatnBeApplication.class, args);
 	}
 
+	
 }
